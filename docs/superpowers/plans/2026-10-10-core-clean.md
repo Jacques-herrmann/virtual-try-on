@@ -93,9 +93,9 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 9 — `generation/listing.py` (spec §4.7)
 
-- [ ] Tests : le prompt envoyé contient `settings.listing_prompt` + bloc « Informations connues » avec uniquement les champs non nuls et les notes ; images envoyées = première image générée OK + photo d'origine (photo d'origine seule si aucune image générée) ; champs `UserInput` renseignés écrasent `Listing` ; signature ajoutée après une ligne vide, rien si vide ; `InvalidModelOutput` propagée.
-- [ ] Implémenter `generate_listing`.
-- [ ] Commit `add listing generation`.
+- [x] Tests : le prompt envoyé contient `settings.listing_prompt` + bloc « Informations connues » avec uniquement les champs non nuls et les notes ; images envoyées = première image générée OK + photo d'origine (photo d'origine seule si aucune image générée) ; champs `UserInput` renseignés écrasent `Listing` ; signature ajoutée après une ligne vide, rien si vide ; `InvalidModelOutput` propagée.
+- [x] Implémenter `generate_listing`.
+- [x] Commit `add listing generation`.
 
 ## Tâche 10 — `pipeline.py` (spec §4.8)
 
