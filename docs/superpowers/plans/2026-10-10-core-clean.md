@@ -41,11 +41,11 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 3 — `config.py` (spec §4.2)
 
-- [ ] Vérifier dans la doc Google AI les noms actuels des modèles image et texte recommandés ; les mettre en défauts.
-- [ ] Copier le prompt de `description.py` dans `backend/src/vto/core/prompts/listing_default.md` en retirant le rappel de promo et en remplaçant les consignes `[x]` par « utilise null si tu ne sais pas » ; le JSON attendu n'est plus décrit dans le prompt (sortie structurée).
-- [ ] Tests : `load_settings()` sans fichier → défauts ; `save_settings` puis `load_settings` → identique ; `GEMINI_API_KEY` dans l'env prioritaire sur le fichier ; fichier corrompu → défauts + avertissement loggé (pas de crash) ; `listing_prompt` par défaut = contenu du fichier `.md`.
-- [ ] Implémenter (`importlib.resources` pour lire le prompt packagé ; déclarer `prompts/*.md` en package data).
-- [ ] Commit `add settings`.
+- [x] Vérifier dans la doc Google AI les noms actuels des modèles image et texte recommandés ; les mettre en défauts.
+- [x] Copier le prompt de `description.py` dans `backend/src/vto/core/prompts/listing_default.md` en retirant le rappel de promo et en remplaçant les consignes `[x]` par « utilise null si tu ne sais pas » ; le JSON attendu n'est plus décrit dans le prompt (sortie structurée).
+- [x] Tests : `load_settings()` sans fichier → défauts ; `save_settings` puis `load_settings` → identique ; `GEMINI_API_KEY` dans l'env prioritaire sur le fichier ; fichier corrompu → défauts + avertissement loggé (pas de crash) ; `listing_prompt` par défaut = contenu du fichier `.md`.
+- [x] Implémenter (`importlib.resources` pour lire le prompt packagé ; déclarer `prompts/*.md` en package data).
+- [x] Commit `add settings`.
 
 ## Tâche 4 — `storage.py` (spec §4.4)
 
