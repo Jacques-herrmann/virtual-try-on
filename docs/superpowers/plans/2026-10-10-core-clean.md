@@ -68,13 +68,13 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 6 — `scenes.py` (spec §4.6)
 
-- [ ] Tests :
+- [x] Tests :
   - `list_scenes` lit `meta.json` + `prompt.md`, trie par `order`, exclut `enabled: false` (sauf `enabled_only=False`), ignore et logge une scène sans `prompt.md` ou sans aucune image ;
   - `pick_background` : sous-dossier du type présent → tire dedans ; absent ou vide → racine ; rien → `NoBackground` ; déterministe avec un `random.Random(seed)` ;
   - `render_prompt` remplace `{garment_type}` et laisse le reste intact (y compris d'autres accolades) ;
   - `ensure_default_scenes(source)` copie si `scenes/` vide, ne fait rien sinon.
-- [ ] Implémenter. `default_scenes` est localisé via un paramètre (le packaging du sous-projet 4 décidera de son emplacement final) ; par défaut `<racine du dépôt>/default_scenes`.
-- [ ] Commit `add scene loading`.
+- [x] Implémenter. `default_scenes` est localisé via un paramètre (le packaging du sous-projet 4 décidera de son emplacement final) ; par défaut `<racine du dépôt>/default_scenes`.
+- [x] Commit `add scene loading`.
 
 ## Tâche 7 — `generation/client.py` (spec §4.7)
 
