@@ -99,7 +99,7 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 10 — `pipeline.py` (spec §4.8)
 
-- [ ] Tests (FakeClient) :
+- [x] Tests (FakeClient) :
   - nominal 2 scènes → 2 `SceneResult` ok, `listing` rempli, statut `TO_REVIEW`, article sauvé après chaque scène (vérifier via `on_progress` ou relecture disque) ;
   - une scène en `NoImageReturned` persistant → l'autre ok, statut `TO_REVIEW`, erreur lisible dans le `SceneResult` ;
   - toutes les scènes en échec → `ERROR` ;
@@ -109,8 +109,8 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
   - régénération d'une seule scène sur un article `TO_REVIEW` : seule cette scène est rappelée, l'annonce n'est pas régénérée ;
   - `regenerate_listing` ne touche pas aux images ;
   - `MissingApiKey` si aucune clé configurée (vérifiée avant de passer en `GENERATING`).
-- [ ] Implémenter `process_article`, `process_batch`, `regenerate_listing` ; `build_client(settings)` construit un `GeminiClient` (le seul endroit qui l'instancie).
-- [ ] Commit `add article pipeline`.
+- [x] Implémenter `process_article`, `process_batch`, `regenerate_listing` ; `build_client(settings)` construit un `GeminiClient` (le seul endroit qui l'instancie).
+- [x] Commit `add article pipeline`.
 
 ## Tâche 11 — Logging
 
