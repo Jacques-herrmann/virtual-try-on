@@ -87,9 +87,9 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 8 — `generation/image.py` (spec §4.7)
 
-- [ ] Tests (FakeClient, scène et article créés dans `data_dir`) : le client reçoit `[prompt rendu, décor, vêtement]` dans cet ordre avec `settings.image_model` ; l'image est écrite dans `generated/<slug>.jpg` ; `NoBackground` propagée ; la photo du vêtement utilisée est la première de l'article.
-- [ ] Implémenter `generate_scene_image`.
-- [ ] Commit `add scene image generation`.
+- [x] Tests (FakeClient, scène et article créés dans `data_dir`) : le client reçoit `[prompt rendu, décor, vêtement]` dans cet ordre avec `settings.image_model` ; l'image est écrite dans `generated/<slug>.jpg` ; `NoBackground` propagée ; la photo du vêtement utilisée est la première de l'article.
+- [x] Implémenter `generate_scene_image`.
+- [x] Commit `add scene image generation`.
 
 ## Tâche 9 — `generation/listing.py` (spec §4.7)
 

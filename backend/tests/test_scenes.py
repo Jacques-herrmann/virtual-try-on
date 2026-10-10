@@ -1,28 +1,9 @@
-import json
 import random
 
 import pytest
 
 from vto.core import paths, scenes
 from vto.core.errors import NoBackground
-
-
-@pytest.fixture
-def make_scene(make_image):
-    def _make(slug, *, order=1, enabled=True, prompt="Habille {garment_type}.", bgs=("a.jpg",)):
-        d = paths.scenes_dir() / slug
-        d.mkdir(parents=True)
-        (d / "meta.json").write_text(
-            json.dumps({"name": slug.title(), "enabled": enabled, "order": order}),
-            encoding="utf-8",
-        )
-        if prompt is not None:
-            (d / "prompt.md").write_text(prompt, encoding="utf-8")
-        for bg in bgs:
-            make_image(d / "backgrounds" / bg)
-        return d
-
-    return _make
 
 
 def test_list_scenes_sorted_and_filtered(data_dir, make_scene):
