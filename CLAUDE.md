@@ -7,7 +7,7 @@ Outil pour vendeurs Vinted : à partir d'une photo de vêtement, génère des ph
 | # | Sous-projet | Statut | Spec / plan |
 |---|---|---|---|
 | 1 | **Cœur propre** — package `vto`, config, stockage, scènes, génération, pipeline, CLI de dev, import du proto, tests + CI | 🟡 implémenté — reste l'essai bout en bout sur données réelles + PR | `docs/superpowers/specs/2026-10-10-core-clean-design.md`, `docs/superpowers/plans/2026-10-10-core-clean.md` |
-| 2 | **App** — API FastAPI + UI Vue/Vite dans une fenêtre `pywebview` ; saisie article par article, écran de relecture | 🟡 plan écrit — implémentation à démarrer | `docs/superpowers/specs/2026-10-10-app-design.md`, `docs/superpowers/plans/2026-10-10-app.md` |
+| 2 | **App** — API FastAPI + UI Vue/Vite dans une fenêtre `pywebview` ; saisie article par article, écran de relecture | 🟡 implémenté (branche `feat/app`) — reste l'acceptation sur données réelles + PR | `docs/superpowers/specs/2026-10-10-app-design.md`, `docs/superpowers/plans/2026-10-10-app.md` |
 | 3 | **Vinted** — profil Chrome persistant (aucun mot de passe stocké), sélecteurs dans un JSON distant, remplissage complet du formulaire | ⚪ à spécifier | — |
 | 4 | **Distribution** — PyInstaller, installeur Inno Setup, mise à jour en un clic, signature de code (plus tard) | ⚪ à spécifier | — |
 | 5 | **Licence** — achat unique + 12 mois de MAJ, abonnement MAJ optionnel ; plateforme *merchant of record* ; Worker qui vérifie la licence avant de servir MAJ et sélecteurs | ⚪ à spécifier | — |
@@ -39,11 +39,20 @@ pip install -e backend[dev]
 pytest backend/tests             # sans réseau
 pytest backend/tests -m live     # nécessite GEMINI_API_KEY
 ruff check backend
+
+cd frontend && npm ci            # Node ≥ 22.12 (nvm-windows sur le poste de dev)
+npm test                         # Vitest
+npm run build                    # compile dans backend/src/vto/api/static (ignoré par git)
+
+vto-app                          # application complète (fenêtre pywebview)
+vto-app --dev                    # API seule sur 127.0.0.1:8765, puis `npm run dev` et
+                                 # http://localhost:5173/api/session?token=dev
 ```
 
 ## État du dépôt
 
 - Prototype supprimé, remplacé par `backend/` (package `vto`). Seul `legacy/create_post.py` (brouillons Vinted Selenium) reste, en attendant le sous-projet 3 ; usage dans `legacy/README.md`.
+- App : API FastAPI locale (`vto.api`, protégée par cookie de session + contrôle du Host) et UI Vue 3 + PrimeVue 4 dans `frontend/`. PrimeVue reste en 4.x : la v5 n'est plus MIT (licence commerciale PrimeTek).
 - Pack de scènes livré : `default_scenes/` (décors de l'auteur, droits OK pour redistribution).
 - Secrets locaux dans `.env` (ignoré par git) : `GEMINI_API_KEY`, `VINTED_EMAIL`, `VINTED_PASSWORD`. Ne jamais les commiter.
 - Historique git nettoyé des secrets le 2026-10-10 (`git filter-repo --replace-text`). Le dépôt GitHub étant public, la clé et le mot de passe y ont été exposés avant le nettoyage.
