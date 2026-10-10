@@ -79,7 +79,11 @@ def make_api(data_dir):
 
     made = []
 
-    def _make(client_factory, *, static_dir=None, login=True, start_queue=True):
+    def _make(client_factory, *, static_dir=None, login=True, start_queue=True, api_key="k"):
+        from vto.core import config
+
+        if api_key:
+            config.save_settings(config.Settings(gemini_api_key=api_key))
         queue = GenerationQueue(client_factory)
         app = create_app(
             client_factory, token=API_TOKEN, port=API_PORT, queue=queue, static_dir=static_dir

@@ -6,6 +6,7 @@ from collections import deque
 from collections.abc import Callable, Sequence
 
 from vto.core import config, errors, pipeline, storage
+from vto.core.models import Article
 
 log = logging.getLogger(__name__)
 
@@ -45,7 +46,8 @@ class GenerationQueue:
         *,
         scene_slugs: Sequence[str] | None = None,
         regenerate_listing: bool = False,
-    ) -> None:
+    ) -> Article:
+        """Met l'article en file et renvoie son état juste après (statut `QUEUED`)."""
         with self._cond:
             article = storage.load(article_id)
             storage.enqueue(
@@ -53,6 +55,7 @@ class GenerationQueue:
             )
             self._pending.append(article_id)
             self._cond.notify_all()
+            return article.model_copy(deep=True)
 
     def cancel(self, article_id: str) -> None:
         with self._cond:
