@@ -34,10 +34,10 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 2 — `models.py` (spec §4.3)
 
-- [ ] Vérifier sur vinted.fr les libellés actuels des états d'article et des tailles de colis ; ajuster les `Literal` si besoin et noter la date de vérification en commentaire.
-- [ ] Tests : aller-retour JSON d'un `Article` complet (`model_dump_json` / `model_validate_json`) ; `UserInput` n'exige que `garment_type` ; `Listing` refuse un `condition` hors liste ; `ArticleStatus` sérialisé en chaîne.
-- [ ] Implémenter `GarmentType`, `ArticleStatus`, `UserInput`, `Listing`, `SceneResult`, `Article`.
-- [ ] Commit `add core data models`.
+- [x] Vérifier sur vinted.fr les libellés actuels des états d'article et des tailles de colis ; ajuster les `Literal` si besoin et noter la date de vérification en commentaire.
+- [x] Tests : aller-retour JSON d'un `Article` complet (`model_dump_json` / `model_validate_json`) ; `UserInput` n'exige que `garment_type` ; `Listing` refuse un `condition` hors liste ; `ArticleStatus` sérialisé en chaîne.
+- [x] Implémenter `GarmentType`, `ArticleStatus`, `UserInput`, `Listing`, `SceneResult`, `Article`.
+- [x] Commit `add core data models`.
 
 ## Tâche 3 — `config.py` (spec §4.2)
 

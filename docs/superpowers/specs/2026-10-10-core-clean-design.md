@@ -164,7 +164,7 @@ class Listing(BaseModel):        # schéma imposé à Gemini (sortie structurée
     category: str | None
     brand: str | None
     size: str | None
-    condition: Literal["Neuf avec étiquette", "Neuf sans étiquette", "Très bon état", "Bon état", "Satisfaisant"] | None
+    condition: Literal["Neuf", "Comme neuf", "Très bon état", "Bon état", "Satisfaisant"] | None
     color: str | None
     price: float | None
     parcel_size: Literal["Petit", "Moyen", "Grand"] | None
