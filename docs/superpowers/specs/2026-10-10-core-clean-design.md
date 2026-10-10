@@ -230,9 +230,9 @@ class GenAIClient(Protocol):
     def generate_json(self, model: str, prompt: str, images: list[Image], schema: type[BaseModel]) -> BaseModel: ...
 ```
 
-- `GeminiClient` implémente ce protocole avec `google-genai`. Clé passée au constructeur.
-- Ratio 3:4 imposé via le paramètre de configuration d'image de l'API s'il existe pour le modèle choisi ; sinon la consigne reste dans le prompt.
-- `generate_json` utilise la sortie structurée (`response_mime_type="application/json"`, `response_schema=schema`) et valide la réponse avec pydantic.
+- `GeminiClient` implémente ce protocole avec `google-genai` ≥ 2 via l'**Interactions API** (`client.interactions.create`), recommandée par Google pour tous les nouveaux modèles depuis juin 2026. Clé passée au constructeur.
+- Ratio 3:4 imposé via `response_format={"type": "image", "aspect_ratio": "3:4"}`.
+- `generate_json` utilise la sortie structurée (`response_format={"type": "text", "mime_type": "application/json", "schema": …}`) et valide `output_text` avec pydantic.
 - Traduction des erreurs SDK en exceptions du cœur (`errors.py`) :
   - `InvalidApiKey`, `QuotaExceeded`, `ModelUnavailable` → définitives ou explicites ;
   - `TransientError` (429 hors quota épuisé, 5xx, timeout réseau) → retentée ;

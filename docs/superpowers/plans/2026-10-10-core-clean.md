@@ -78,12 +78,12 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 7 — `generation/client.py` (spec §4.7)
 
-- [ ] Lire la doc actuelle du SDK `google-genai` : appel `generate_content` avec images PIL, paramètre de ratio d'image (`ImageConfig(aspect_ratio="3:4")` ou équivalent), sortie structurée (`response_mime_type` + `response_schema`), types d'exceptions (`google.genai.errors.ClientError` / `ServerError`, codes 400/401/403/404/429/5xx) et distinction quota épuisé vs limite de débit.
-- [ ] `backend/tests/fakes.py` : `FakeClient(GenAIClient)` avec files de réponses scriptées (`bytes`, objets pydantic ou exceptions) et journal des appels (modèle, prompt, nb d'images).
-- [ ] Tests du helper `with_retry(fn, *, attempts=3, base_delay=2, sleep=…)` (sleep injectable pour ne pas attendre) : `TransientError` puis succès → 2 appels ; `NoImageReturned` retentée ; `InvalidApiKey` → 1 seul appel ; 3 échecs → dernière exception relevée ; délais 2/4/8 s ± jitter.
-- [ ] Tests de `map_sdk_error(exc) -> VtoError` avec des exceptions SDK construites à la main (401/403 → `InvalidApiKey`, 429 quota → `QuotaExceeded`, 429 débit → `TransientError`, 404 modèle → `ModelUnavailable`, 5xx/timeout → `TransientError`).
-- [ ] Implémenter `GenAIClient` (Protocol), `with_retry`, `map_sdk_error`, `GeminiClient` (images converties via `images.py`, réponse image extraite des `inline_data`, aucune image → `NoImageReturned`, JSON validé par le schéma sinon `InvalidModelOutput`).
-- [ ] Commit `add gemini client with retries and error mapping`.
+- [x] Lire la doc actuelle du SDK `google-genai` : appel `generate_content` avec images PIL, paramètre de ratio d'image (`ImageConfig(aspect_ratio="3:4")` ou équivalent), sortie structurée (`response_mime_type` + `response_schema`), types d'exceptions (`google.genai.errors.ClientError` / `ServerError`, codes 400/401/403/404/429/5xx) et distinction quota épuisé vs limite de débit.
+- [x] `backend/tests/fakes.py` : `FakeClient(GenAIClient)` avec files de réponses scriptées (`bytes`, objets pydantic ou exceptions) et journal des appels (modèle, prompt, nb d'images).
+- [x] Tests du helper `with_retry(fn, *, attempts=3, base_delay=2, sleep=…)` (sleep injectable pour ne pas attendre) : `TransientError` puis succès → 2 appels ; `NoImageReturned` retentée ; `InvalidApiKey` → 1 seul appel ; 3 échecs → dernière exception relevée ; délais 2/4/8 s ± jitter.
+- [x] Tests de `map_sdk_error(exc) -> VtoError` avec des exceptions SDK construites à la main (401/403 → `InvalidApiKey`, 429 quota → `QuotaExceeded`, 429 débit → `TransientError`, 404 modèle → `ModelUnavailable`, 5xx/timeout → `TransientError`).
+- [x] Implémenter `GenAIClient` (Protocol), `with_retry`, `map_sdk_error`, `GeminiClient` (images converties via `images.py`, réponse image extraite des `inline_data`, aucune image → `NoImageReturned`, JSON validé par le schéma sinon `InvalidModelOutput`).
+- [x] Commit `add gemini client with retries and error mapping`.
 
 ## Tâche 8 — `generation/image.py` (spec §4.7)
 
