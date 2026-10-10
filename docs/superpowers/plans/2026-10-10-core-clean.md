@@ -15,15 +15,15 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 0 — Squelette du package et outillage
 
-- [ ] `backend/pyproject.toml` : projet `vto`, Python ≥ 3.12, layout `src/`, dépendances (spec §8), extras `dev` (`pytest`, `ruff`) et `legacy` (`selenium`), script `vto = "vto.cli:app"`.
-- [ ] Config `ruff` (line-length 100, règles `E,F,I,UP,B`) et `pytest` (`testpaths`, marqueur `live` exclu par défaut via `addopts = "-m 'not live'"`).
-- [ ] `backend/src/vto/__init__.py` (`__version__ = "0.1.0"`), `backend/src/vto/core/__init__.py`, `backend/src/vto/core/generation/__init__.py`.
-- [ ] `backend/tests/conftest.py` : fixture `data_dir` (monkeypatch `VTO_DATA_DIR`), fixture `make_image(path, size, color)` qui écrit une image PIL.
-- [ ] `backend/tests/test_smoke.py` : `import vto`.
-- [ ] `.github/workflows/ci.yml` : matrice `windows-latest` / `ubuntu-latest`, Python 3.12, `pip install -e backend[dev]`, `ruff check backend`, `pytest backend/tests`.
-- [ ] `.gitignore` : ajouter `*.egg-info/`, `.pytest_cache/`, `.ruff_cache/`.
-- [ ] Vérifier : `pip install -e backend[dev]` dans `.venv`, `pytest` vert, `ruff check` vert.
-- [ ] Commit `scaffold vto package with tests and ci`.
+- [x] `backend/pyproject.toml` : projet `vto`, Python ≥ 3.12, layout `src/`, dépendances (spec §8), extras `dev` (`pytest`, `ruff`) et `legacy` (`selenium`), script `vto = "vto.cli:app"`.
+- [x] Config `ruff` (line-length 100, règles `E,F,I,UP,B`) et `pytest` (`testpaths`, marqueur `live` exclu par défaut via `addopts = "-m 'not live'"`).
+- [x] `backend/src/vto/__init__.py` (`__version__ = "0.1.0"`), `backend/src/vto/core/__init__.py`, `backend/src/vto/core/generation/__init__.py`.
+- [x] `backend/tests/conftest.py` : fixture `data_dir` (monkeypatch `VTO_DATA_DIR`), fixture `make_image(path, size, color)` qui écrit une image PIL.
+- [x] `backend/tests/test_smoke.py` : `import vto`.
+- [x] `.github/workflows/ci.yml` : matrice `windows-latest` / `ubuntu-latest`, Python 3.12, `pip install -e backend[dev]`, `ruff check backend`, `pytest backend/tests`.
+- [x] `.gitignore` : ajouter `*.egg-info/`, `.pytest_cache/`, `.ruff_cache/`.
+- [x] Vérifier : `pip install -e backend[dev]` dans `.venv`, `pytest` vert, `ruff check` vert.
+- [x] Commit `scaffold vto package with tests and ci`.
 
 ## Tâche 1 — `errors.py` et `paths.py` (spec §4.1, §4.9)
 

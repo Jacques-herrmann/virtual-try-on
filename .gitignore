@@ -44,3 +44,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Python tooling
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
