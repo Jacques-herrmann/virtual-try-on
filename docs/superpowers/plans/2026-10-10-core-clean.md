@@ -120,10 +120,10 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 12 — CLI `vto` (spec §5)
 
-- [ ] Tests avec `typer.testing.CliRunner` et `FakeClient` injecté (fonction `get_client` surchargeable dans le module CLI) : `config set-key` écrit la clé ; `add` crée un article avec les bons champs ; `list` affiche id/statut/type/titre ; `run` traite les `DRAFT` ; `regen --scene` ; `show` ; une `VtoError` affiche `user_message` et code de sortie 1, sans trace.
-- [ ] Test `export` : produit `0.jpg`, `1.jpg`… (images générées dans l'ordre des scènes puis photos d'origine) et un `description.json` lisible par `VintedDraftCreator._load_item_data` du prototype (clés `title`, `description`, `category`, `brand`, `size`, `condition`, `color`, `price`, `parcel_size`).
-- [ ] Implémenter `cli.py` (le CLI appelle `setup_logging()` et `ensure_default_scenes()` au démarrage).
-- [ ] Commit `add dev cli`.
+- [x] Tests avec `typer.testing.CliRunner` et `FakeClient` injecté (fonction `get_client` surchargeable dans le module CLI) : `config set-key` écrit la clé ; `add` crée un article avec les bons champs ; `list` affiche id/statut/type/titre ; `run` traite les `DRAFT` ; `regen --scene` ; `show` ; une `VtoError` affiche `user_message` et code de sortie 1, sans trace.
+- [x] Test `export` : produit `0.jpg`, `1.jpg`… (images générées dans l'ordre des scènes puis photos d'origine) et un `description.json` lisible par `VintedDraftCreator._load_item_data` du prototype (clés `title`, `description`, `category`, `brand`, `size`, `condition`, `color`, `price`, `parcel_size`).
+- [x] Implémenter `cli.py` (le CLI appelle `setup_logging()` et `ensure_default_scenes()` au démarrage).
+- [x] Commit `add dev cli`.
 
 ## Tâche 13 — Pack de scènes par défaut et import du prototype (spec §4.6, §6.2)
 

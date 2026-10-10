@@ -76,6 +76,9 @@ def process_article(
 
     full_run = scene_slugs is None
     available = {s.slug: s for s in scenes.list_scenes()}
+    unknown = set(scene_slugs or ()) - available.keys()
+    if unknown:
+        raise errors.VtoError(f"Scène inconnue ou désactivée : {', '.join(sorted(unknown))}.")
     targets = list(available.values()) if full_run else [available[s] for s in scene_slugs]
 
     if full_run:

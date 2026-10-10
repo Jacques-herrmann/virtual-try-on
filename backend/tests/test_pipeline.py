@@ -113,6 +113,13 @@ def test_regenerate_listing_only(two_scenes, make_article):
     assert done.listing.title == "nouveau"
 
 
+def test_unknown_scene_is_rejected(two_scenes, make_article):
+    article = make_article()
+    with pytest.raises(errors.VtoError, match="inconnue"):
+        run(article, FakeClient(), scene_slugs=["plage"])
+    assert storage.load(article.id).status == S.DRAFT
+
+
 def test_build_client_requires_key(data_dir):
     with pytest.raises(errors.MissingApiKey):
         pipeline.build_client(Settings())
