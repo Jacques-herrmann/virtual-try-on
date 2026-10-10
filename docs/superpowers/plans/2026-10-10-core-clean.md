@@ -49,15 +49,15 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 4 — `storage.py` (spec §4.4)
 
-- [ ] Tests :
+- [x] Tests :
   - `create_article` copie les photos dans `photos/` (noms `001.jpg`, `002.png`… pour garder l'ordre), écrit `article.json`, statut `DRAFT` ;
   - `load` / `save` aller-retour ; `load` d'un id inconnu → `ArticleNotFound` ;
   - écriture atomique : `save` passe par un fichier temporaire + `os.replace` (vérifier qu'aucun `.tmp` ne traîne et que l'ancien fichier reste intact si la sérialisation échoue) ;
   - `list_articles` trié par `created_at`, ignore un dossier sans `article.json` ;
   - `set_status` : toutes les transitions autorisées de la spec passent, une transition interdite (ex. `DRAFT → PUBLISHED`) lève `InvalidTransition` ;
   - `delete` supprime le dossier (appel explicite uniquement).
-- [ ] Implémenter (ids `uuid4().hex`).
-- [ ] Commit `add article storage`.
+- [x] Implémenter (ids `uuid4().hex`).
+- [x] Commit `add article storage`.
 
 ## Tâche 5 — `images.py` (spec §4.5)
 
