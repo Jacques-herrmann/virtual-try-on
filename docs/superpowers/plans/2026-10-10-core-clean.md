@@ -61,10 +61,10 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 5 — `images.py` (spec §4.5)
 
-- [ ] Vérifier si la version de Pillow installée lit l'AVIF nativement ; sinon ajouter `pillow-avif-plugin` et l'importer dans `images.py`.
-- [ ] Tests : `load_image` applique l'orientation EXIF (image avec tag Orientation=6 → largeur/hauteur échangées) et renvoie du RGB depuis un PNG RGBA ; `resize_max` ne touche pas une petite image et ramène une 4000×3000 à 1536×1152 ; `is_supported_image` accepte `.JPG`, `.webp`, `.avif`, refuse `.txt` ; `save_jpeg` écrit un JPEG lisible.
-- [ ] Porter le code utile de `utils.py` (`load_image_as_pil`, `resize_if_needed`, `prepare_for_gemini` — le ré-encodage WEBP est conservé seulement s'il reste utile à l'API, sinon supprimé).
-- [ ] Commit `port image utils`.
+- [x] Vérifier si la version de Pillow installée lit l'AVIF nativement ; sinon ajouter `pillow-avif-plugin` et l'importer dans `images.py`.
+- [x] Tests : `load_image` applique l'orientation EXIF (image avec tag Orientation=6 → largeur/hauteur échangées) et renvoie du RGB depuis un PNG RGBA ; `resize_max` ne touche pas une petite image et ramène une 4000×3000 à 1536×1152 ; `is_supported_image` accepte `.JPG`, `.webp`, `.avif`, refuse `.txt` ; `save_jpeg` écrit un JPEG lisible.
+- [x] Porter le code utile de `utils.py` (`load_image_as_pil`, `resize_if_needed`, `prepare_for_gemini` — le ré-encodage WEBP est conservé seulement s'il reste utile à l'API, sinon supprimé).
+- [x] Commit `port image utils`.
 
 ## Tâche 6 — `scenes.py` (spec §4.6)
 

@@ -10,7 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "google-genai",
     "pydantic>=2",
-    "Pillow",
+    "Pillow>=11.3",  # AVIF natif
     "platformdirs",
     "typer",
 ]
