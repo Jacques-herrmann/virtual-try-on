@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
 from vto.api import security
 from vto.api.queue import GenerationQueue
-from vto.api.routes import articles, files, settings, system
+from vto.api.routes import articles, files, scenes, settings, system
 from vto.api.routes import queue as queue_routes
 from vto.core import errors, paths
 from vto.core.pipeline import ClientFactory
@@ -90,7 +90,7 @@ def create_app(
     def health() -> dict:
         return {"ok": True}
 
-    for module in (articles, files, queue_routes, settings, system):
+    for module in (articles, files, queue_routes, scenes, settings, system):
         app.include_router(module.router)
     _add_front(app, static_dir or STATIC_DIR)
     return app
