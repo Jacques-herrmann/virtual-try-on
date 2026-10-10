@@ -27,7 +27,7 @@ Ordre : 1 → 2 → 3 → 4 → 5. Chaque sous-projet suit le cycle brainstormin
 ## Règles d'architecture
 
 - `vto.core` n'importe jamais `cli`, `tools`, `api`, `vinted`, `licensing`, `updates`. Dépendances toujours vers `core`.
-- Aucun secret ni chemin absolu dans le code. Chemins utilisateur uniquement via `vto.core.paths` (racine `%APPDATA%\VirtualTryOn`, surchargeable par `VTO_DATA_DIR`).
+- Aucun secret ni chemin absolu dans le code. Chemins utilisateur uniquement via `vto.core.paths` (racine `%LOCALAPPDATA%\VirtualTryOn`, surchargeable par `VTO_DATA_DIR`).
 - Gemini uniquement via le protocole `GenAIClient` ; les tests utilisent `FakeClient`, jamais le réseau (sauf `pytest -m live`).
 - Messages d'erreur destinés au client final : en français, sans jargon ; détails techniques dans le log.
 - Les données du client (articles, scènes) ne sont jamais supprimées implicitement.

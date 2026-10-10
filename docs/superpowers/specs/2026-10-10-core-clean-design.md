@@ -97,7 +97,7 @@ Les dossiers `vinted/`, `api/`, `licensing/`, `updates/` et `frontend/` seront c
 
 ### 3.3 Données utilisateur
 
-Racine : `%APPDATA%\VirtualTryOn\` sous Windows (`platformdirs.user_data_dir`), surchargeable par la variable d'environnement `VTO_DATA_DIR` (tests, développement).
+Racine : `%LOCALAPPDATA%\VirtualTryOn\` sous Windows (`platformdirs.user_data_dir`), surchargeable par la variable d'environnement `VTO_DATA_DIR` (tests, développement).
 
 ```
 <racine>/
