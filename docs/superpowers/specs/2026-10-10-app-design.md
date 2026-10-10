@@ -113,7 +113,7 @@ Les refus utilisent des `VtoError` avec un message en français.
 
 ### 3.3 `pipeline.py`
 
-- `process_article` accepte un article `QUEUED` : il lit `article.job` (les paramètres explicites `scene_slugs`/`regenerate_listing` gardent la priorité, pour la CLI), l'efface, puis continue comme aujourd'hui.
+- `process_article` accepte un article `QUEUED` : il lit `article.job` (les paramètres explicites `scene_slugs`/`regenerate_listing` gardent la priorité, pour la CLI) et continue comme aujourd'hui. `job` n'est effacé qu'à la fin du traitement (succès, erreur ou annulation) : si l'app est fermée en pleine génération, l'article reste `GENERATING` avec son `job` et `recover_interrupted` le reprend à l'identique (une régénération d'une seule scène ne devient pas une régénération complète).
 - Annulation pendant le traitement : `_finish_cancelled` inchangé (`TO_REVIEW` ou `DRAFT`).
 
 ### 3.4 `scenes.py`
@@ -146,7 +146,7 @@ Les refus utilisent des `VtoError` avec un message en français.
 - Sur `FATAL` (clé manquante/invalide, quota) : la file se met en **pause** (`paused=True`, `reason=user_message`), l'article concerné passe en `ERROR` (comportement actuel du pipeline), les suivants restent `QUEUED`.
 - `resume()` : lève la pause. Un enregistrement de clé valide (`check-key`) appelle `resume()`.
 - `status() -> {running: str | None, pending: list[str], paused: bool, reason: str | None}`.
-- `stop()` : annule l'article en cours et arrête le thread.
+- `stop()` : n'accepte plus de travail ; le thread démon s'arrête avec le processus. L'article en cours n'est pas annulé : il reste `GENERATING` avec son `job` et sera repris au lancement suivant.
 - La fonction de traitement est injectable (`process=pipeline.process_article`) pour des tests déterministes.
 
 ### 4.2 Routes
@@ -166,6 +166,7 @@ Préfixe `/api`, JSON. Erreur : `{"message": "<texte pour le client>"}`.
 | POST | `/articles/{id}/validate` | `TO_REVIEW → VALIDATED` |
 | POST | `/articles/{id}/unvalidate` | `VALIDATED → TO_REVIEW` |
 | DELETE | `/articles/{id}` | suppression explicite ; refusée en `QUEUED`/`GENERATING` |
+| GET | `/health` | `{"ok": true}`, sans cookie, sans donnée (attente du démarrage par `desktop.py`) |
 | GET | `/queue` | `GenerationQueue.status()` |
 | POST | `/queue/resume` | lève la pause |
 | GET | `/settings` | réglages sans la clé : `has_key`, `key_hint` (4 derniers caractères) |
@@ -213,7 +214,7 @@ Script déclaré dans `pyproject.toml` : `vto-app = "vto.desktop:main"`.
 3. uvicorn dans un thread sur `127.0.0.1:<port libre>`, attente qu'il réponde.
 4. `webview.settings["OPEN_EXTERNAL_LINKS_IN_BROWSER"] = True` ; fenêtre « Virtual Try-On », 1280×800, redimensionnable, minimum 1024×700.
 5. Si `api/static/index.html` est absent, `GET /` renvoie une page expliquant de lancer `npm run build`.
-6. Fermeture de la fenêtre : `queue.stop()` (l'article en cours revient à son état d'avant via l'annulation du pipeline ; les articles en attente restent `QUEUED`), arrêt d'uvicorn.
+6. Fermeture de la fenêtre : `queue.stop()`, arrêt d'uvicorn, fin du processus. L'article en cours et les articles en attente sont repris au lancement suivant (§3.2 `recover_interrupted`).
 
 Nouvelles dépendances Python : `fastapi`, `uvicorn`, `python-multipart`, `pywebview` ; en dev : `httpx` (déjà présent via le SDK) pour `TestClient`.
 
