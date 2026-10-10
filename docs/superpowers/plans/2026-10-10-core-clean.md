@@ -27,10 +27,10 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 1 — `errors.py` et `paths.py` (spec §4.1, §4.9)
 
-- [ ] `errors.py` : classe de base `VtoError(Exception)` avec attribut `user_message: str` ; sous-classes `InvalidApiKey`, `QuotaExceeded`, `ModelUnavailable`, `TransientError`, `NoImageReturned`, `InvalidModelOutput`, `NoBackground(scene_name, garment_type)`, `InvalidTransition(from_, to)`, `ArticleNotFound(id)`, `MissingApiKey`. Messages français de la spec §4.9.
-- [ ] Tests `paths` : `VTO_DATA_DIR` respecté ; sans variable → `platformdirs.user_data_dir("VirtualTryOn", appauthor=False)` ; fonctions `data_dir`, `settings_file`, `scenes_dir`, `articles_dir`, `article_dir(id)`, `logs_dir` ; les dossiers sont créés à la demande.
-- [ ] Implémenter `paths.py`.
-- [ ] Commit `add core errors and paths`.
+- [x] `errors.py` : classe de base `VtoError(Exception)` avec attribut `user_message: str` ; sous-classes `InvalidApiKey`, `QuotaExceeded`, `ModelUnavailable`, `TransientError`, `NoImageReturned`, `InvalidModelOutput`, `NoBackground(scene_name, garment_type)`, `InvalidTransition(from_, to)`, `ArticleNotFound(id)`, `MissingApiKey`. Messages français de la spec §4.9.
+- [x] Tests `paths` : `VTO_DATA_DIR` respecté ; sans variable → `platformdirs.user_data_dir("VirtualTryOn", appauthor=False)` ; fonctions `data_dir`, `settings_file`, `scenes_dir`, `articles_dir`, `article_dir(id)`, `logs_dir` ; les dossiers sont créés à la demande.
+- [x] Implémenter `paths.py`.
+- [x] Commit `add core errors and paths`.
 
 ## Tâche 2 — `models.py` (spec §4.3)
 
