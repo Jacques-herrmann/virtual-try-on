@@ -9,7 +9,7 @@ from vto.core import errors
 
 def test_login_sets_strict_http_only_cookie(make_api, fake):
     client = make_api(lambda k: fake, login=False)
-    r = client.get("/", params={"token": API_TOKEN}, follow_redirects=False)
+    r = client.get("/api/session", params={"token": API_TOKEN}, follow_redirects=False)
     assert r.status_code == 303 and r.headers["location"] == "/"
     cookie = r.headers["set-cookie"].lower()
     assert "vto_session=" in cookie and "httponly" in cookie and "samesite=strict" in cookie
@@ -17,7 +17,7 @@ def test_login_sets_strict_http_only_cookie(make_api, fake):
 
 def test_wrong_token_refused(make_api, fake):
     client = make_api(lambda k: fake, login=False)
-    r = client.get("/", params={"token": "faux"}, follow_redirects=False)
+    r = client.get("/api/session", params={"token": "faux"}, follow_redirects=False)
     assert r.status_code == 401
     assert "vto_session" not in r.headers.get("set-cookie", "")
 

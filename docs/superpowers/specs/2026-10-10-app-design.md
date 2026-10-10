@@ -62,11 +62,11 @@ frontend/          Vue 3 + Vite + TypeScript + vue-router + PrimeVue
 ### 2.3 Sécurité de l'API locale
 
 - Le serveur écoute uniquement sur `127.0.0.1`, sur un port libre choisi au lancement.
-- `desktop.py` génère un jeton aléatoire (`secrets.token_urlsafe(32)`) et ouvre la fenêtre sur `http://127.0.0.1:<port>/?token=<jeton>`.
-- `GET /` avec le bon jeton pose un cookie `vto_session` (`HttpOnly; SameSite=Strict; Path=/`) puis redirige vers `/`. Un cookie plutôt qu'un en-tête, car les balises `<img>` ne peuvent pas envoyer d'en-tête.
-- Toutes les routes `/api/*` et `/files/*` exigent ce cookie (sinon 401).
+- `desktop.py` génère un jeton aléatoire (`secrets.token_urlsafe(32)`) et ouvre la fenêtre sur `http://127.0.0.1:<port>/api/session?token=<jeton>`.
+- `GET /api/session` avec le bon jeton (sous `/api` pour passer aussi par le proxy Vite en dev) pose un cookie `vto_session` (`HttpOnly; SameSite=Strict; Path=/`) puis redirige vers `/`. Un cookie plutôt qu'un en-tête, car les balises `<img>` ne peuvent pas envoyer d'en-tête.
+- Toutes les routes `/api/*` (sauf `/api/health` et `/api/session`) et `/files/*` exigent ce cookie (sinon 401).
 - Toute requête dont l'en-tête `Host` diffère de `127.0.0.1:<port>` est refusée (400), pour bloquer le DNS rebinding.
-- Mode dev (`vto-app --dev`) : API seule sur un port fixe (8765), jeton fixe `dev`. Le serveur Vite (proxy vers l'API) sert le front.
+- Mode dev (`vto-app --dev`) : API seule sur un port fixe (8765), jeton fixe `dev`. Le serveur Vite (proxy `/api` et `/files` vers l'API) sert le front ; on ouvre `http://localhost:5173/api/session?token=dev`.
 
 ## 3. Changements dans le cœur
 

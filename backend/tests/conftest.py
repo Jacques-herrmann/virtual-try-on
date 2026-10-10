@@ -95,7 +95,7 @@ def make_api(data_dir):
             queue.start()
         made.append(queue)
         if login:
-            client.get("/", params={"token": API_TOKEN}, follow_redirects=False)
+            client.get("/api/session", params={"token": API_TOKEN}, follow_redirects=False)
         return client
 
     yield _make

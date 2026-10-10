@@ -10,7 +10,10 @@ from fastapi import Request
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 
 COOKIE = "vto_session"
-PUBLIC_API = {"/api/health"}
+# Point d'entrée de la fenêtre : pose le cookie puis redirige vers l'interface. Sous /api pour
+# passer aussi par le proxy du serveur Vite en développement.
+LOGIN_PATH = "/api/session"
+PUBLIC_API = {"/api/health", LOGIN_PATH}
 
 
 def _protected(path: str) -> bool:
@@ -24,8 +27,8 @@ def make_middleware(token: str, port: int):
         if request.headers.get("host") != allowed_host:
             return JSONResponse({"message": "Requête refusée."}, status_code=400)
 
-        given = request.query_params.get("token")
-        if request.url.path == "/" and given is not None:
+        if request.url.path == LOGIN_PATH:
+            given = request.query_params.get("token", "")
             if not secrets.compare_digest(given, token):
                 return JSONResponse({"message": "Session invalide."}, status_code=401)
             response = RedirectResponse("/", status_code=303)
