@@ -103,8 +103,9 @@ def render_prompt(scene: Scene, garment_type: str) -> str:
     return scene.prompt.replace("{garment_type}", garment_type)
 
 
-def ensure_default_scenes(source: Path = DEFAULT_SCENES_SOURCE) -> bool:
+def ensure_default_scenes(source: Path | None = None) -> bool:
     """Copie le pack par défaut si le client n'a encore aucune scène. Renvoie True si copié."""
+    source = source or DEFAULT_SCENES_SOURCE
     target = paths.scenes_dir()
     if any(target.iterdir()) or not source.is_dir():
         return False
