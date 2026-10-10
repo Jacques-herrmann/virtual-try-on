@@ -3,7 +3,14 @@ from datetime import UTC, datetime
 import pytest
 from pydantic import ValidationError
 
-from vto.core.models import Article, ArticleStatus, Listing, SceneResult, UserInput
+from vto.core.models import (
+    Article,
+    ArticleStatus,
+    GenerationJob,
+    Listing,
+    SceneResult,
+    UserInput,
+)
 
 
 def make_article() -> Article:
@@ -51,3 +58,32 @@ def test_listing_rejects_unknown_condition():
 def test_listing_unknown_fields_default_to_none():
     listing = Listing(title="t", description="d")
     assert listing.brand is None and listing.condition is None
+
+
+def test_queued_status_value():
+    assert ArticleStatus.QUEUED == "queued"
+
+
+def test_article_with_job_and_excluded_round_trip():
+    article = make_article()
+    article.job = GenerationJob(
+        scene_slugs=["cintre"],
+        regenerate_listing=True,
+        queued_at=datetime(2026, 10, 10, tzinfo=UTC),
+    )
+    article.scenes[0].excluded = True
+    assert Article.model_validate_json(article.model_dump_json()) == article
+
+
+def test_old_article_json_loads_with_defaults():
+    data = make_article().model_dump(mode="json")
+    del data["job"]
+    del data["scenes"][0]["excluded"]
+    article = Article.model_validate(data)
+    assert article.job is None
+    assert article.scenes[0].excluded is False
+
+
+def test_job_defaults_to_full_run():
+    job = GenerationJob(queued_at=datetime(2026, 10, 10, tzinfo=UTC))
+    assert job.scene_slugs is None and job.regenerate_listing is False

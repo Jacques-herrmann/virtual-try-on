@@ -21,6 +21,7 @@ Audience = Literal["femme", "homme", "enfant"]
 
 class ArticleStatus(StrEnum):
     DRAFT = "draft"
+    QUEUED = "queued"
     GENERATING = "generating"
     TO_REVIEW = "to_review"
     VALIDATED = "validated"
@@ -60,6 +61,15 @@ class SceneResult(BaseModel):
     status: Literal["pending", "ok", "error"] = "pending"
     image: str | None = None
     error: str | None = None
+    excluded: bool = False
+
+
+class GenerationJob(BaseModel):
+    """Demande de génération en attente ; persistée pour reprendre la file après un arrêt."""
+
+    scene_slugs: list[str] | None = None  # None = toutes les scènes actives
+    regenerate_listing: bool = False
+    queued_at: datetime
 
 
 class Article(BaseModel):
@@ -71,3 +81,4 @@ class Article(BaseModel):
     scenes: list[SceneResult] = []
     listing: Listing | None = None
     error: str | None = None
+    job: GenerationJob | None = None
