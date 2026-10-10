@@ -20,7 +20,7 @@ SUPPORTED_FORMATS = ('.png', '.jpg', '.jpeg', '.webp', '.avif')
 
 
 # ─── Authentication ────────────────────────────────────────────────────────
-API_KEY = "***REMOVED***"
+API_KEY = os.environ["GEMINI_API_KEY"]
 client = genai.Client(api_key=API_KEY)
 
 def process_clothing_item(clothing_folder: str):

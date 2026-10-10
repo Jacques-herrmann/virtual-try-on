@@ -35,8 +35,8 @@ SHORT_PAUSE = 1.5
 MEDIUM_PAUSE = 3
 LONG_PAUSE = 5
 
-EMAIL = "jacquesherrmann+belleseconde@gmail.com"
-PASSWORD = "***REMOVED***"
+EMAIL = os.environ["VINTED_EMAIL"]
+PASSWORD = os.environ["VINTED_PASSWORD"]
 
 ANNONCES_ROOT = r'C:\Users\jhn12\Twake\Annonces\batch\output'
 

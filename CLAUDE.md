@@ -44,4 +44,5 @@ ruff check backend
 ## État du dépôt
 
 - Fichiers à la racine (`main.py`, `utils.py`, `image_generation.py`, `description.py`, `folder_managment.py`, `create_post.py`) = prototype, remplacé par le sous-projet 1.
-- ⚠️ L'historique git contient une ancienne clé Gemini et un ancien mot de passe Vinted (à révoquer/changer). Réécriture de l'historique seulement avec accord explicite.
+- Secrets locaux dans `.env` (ignoré par git) : `GEMINI_API_KEY`, `VINTED_EMAIL`, `VINTED_PASSWORD`. Ne jamais les commiter.
+- Historique git nettoyé des secrets le 2026-10-10 (`git filter-repo --replace-text`). Le dépôt GitHub étant public, la clé et le mot de passe y ont été exposés avant le nettoyage.
