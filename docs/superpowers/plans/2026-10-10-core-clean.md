@@ -142,9 +142,9 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 15 — Test live, nettoyage et acceptation (spec §7, §9)
 
-- [ ] `backend/tests/test_live.py` (`@pytest.mark.live`) : image de vêtement de test versionnée (petite, libre de droits), scène `mannequin`, `process_article` réel → image non vide + `Listing` valide. Ignoré si `GEMINI_API_KEY` absente.
-- [ ] **Avec l'utilisateur** (nouvelle clé) : `pytest -m live` vert.
-- [ ] Supprimer `main.py`, `utils.py`, `image_generation.py`, `description.py`, `folder_managment.py`.
+- [x] `backend/tests/test_live.py` (`@pytest.mark.live`) : image de vêtement de test versionnée (petite, libre de droits), scène `mannequin`, `process_article` réel → image non vide + `Listing` valide. Ignoré si `GEMINI_API_KEY` absente.
+- [x] **Avec l'utilisateur** (nouvelle clé) : `pytest -m live` vert.
+- [x] Supprimer `main.py`, `utils.py`, `image_generation.py`, `description.py`, `folder_managment.py`.
 - [ ] Vérifier les critères d'acceptation spec §9 :
   1. `git grep -nE "AIza|PASSWORD *=|C:\\\\Users"` → rien dans l'arbre courant ;
   2. install propre + `pytest` + `ruff` verts, CI verte ;
