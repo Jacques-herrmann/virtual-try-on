@@ -11,6 +11,7 @@ OVERRIDABLE = ("brand", "size", "condition", "color", "price")
 
 LABELS = {
     "garment_type": "Type",
+    "audience": "Public",
     "brand": "Marque",
     "size": "Taille",
     "condition": "État",

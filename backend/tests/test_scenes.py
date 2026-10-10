@@ -33,28 +33,28 @@ def test_scene_fields(data_dir, make_scene):
 def test_pick_background_prefers_type_folder(data_dir, make_scene):
     make_scene("m", bgs=("generic.jpg", "chaussures/shoe.jpg"))
     s = scenes.list_scenes()[0]
-    assert scenes.pick_background(s, "chaussures").name == "shoe.jpg"
-    assert scenes.pick_background(s, "robe").name == "generic.jpg"
+    assert scenes.pick_background(s, ("chaussures", "femme")).name == "shoe.jpg"
+    assert scenes.pick_background(s, ("robe", "femme")).name == "generic.jpg"
 
 
 def test_pick_background_falls_back_when_type_folder_empty(data_dir, make_scene):
     d = make_scene("m", bgs=("generic.jpg",))
     (d / "backgrounds" / "robe").mkdir()
-    assert scenes.pick_background(scenes.list_scenes()[0], "robe").name == "generic.jpg"
+    assert scenes.pick_background(scenes.list_scenes()[0], ("robe",)).name == "generic.jpg"
 
 
 def test_pick_background_only_type_folders(data_dir, make_scene):
     make_scene("m", bgs=("robe/r.jpg",))
     s = scenes.list_scenes()[0]
-    assert scenes.pick_background(s, "robe").name == "r.jpg"
+    assert scenes.pick_background(s, ("robe",)).name == "r.jpg"
     with pytest.raises(NoBackground):
-        scenes.pick_background(s, "haut")
+        scenes.pick_background(s, ("haut", None))
 
 
 def test_pick_background_is_deterministic_with_seed(data_dir, make_scene):
     make_scene("m", bgs=tuple(f"{i}.jpg" for i in range(10)))
     s = scenes.list_scenes()[0]
-    picks = {scenes.pick_background(s, "robe", random.Random(42)) for _ in range(3)}
+    picks = {scenes.pick_background(s, ("robe",), random.Random(42)) for _ in range(3)}
     assert len(picks) == 1
 
 
@@ -73,3 +73,11 @@ def test_ensure_default_scenes(data_dir, tmp_path, make_image):
     (paths.scenes_dir() / "mannequin" / "prompt.md").write_text("modifié", encoding="utf-8")
     assert scenes.ensure_default_scenes(src) is False
     assert (paths.scenes_dir() / "mannequin" / "prompt.md").read_text(encoding="utf-8") == "modifié"
+
+
+def test_pick_background_by_audience(data_dir, make_scene):
+    make_scene("m", bgs=("femme/f.jpg", "homme/h.jpg", "chaussures/c.jpg"))
+    s = scenes.list_scenes()[0]
+    assert scenes.pick_background(s, ("robe", "femme")).name == "f.jpg"
+    assert scenes.pick_background(s, ("haut", "homme")).name == "h.jpg"
+    assert scenes.pick_background(s, ("chaussures", "homme")).name == "c.jpg"

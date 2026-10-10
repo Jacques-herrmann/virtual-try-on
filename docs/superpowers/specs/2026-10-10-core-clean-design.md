@@ -107,7 +107,7 @@ Racine : `%APPDATA%\VirtualTryOn\` sous Windows (`platformdirs.user_data_dir`), 
 │  ├─ prompt.md
 │  └─ backgrounds/
 │     ├─ *.jpg|png|webp|avif
-│     └─ <garment_type>/*.jpg…        (facultatif)
+│     └─ <garment_type>|<audience>/*.jpg…   (facultatif)
 └─ articles/<id>/
    ├─ article.json
    ├─ photos/
@@ -149,8 +149,11 @@ class ArticleStatus(StrEnum):
     PUBLISHED = "published"      # brouillon Vinted créé (sous-projet 3)
     ERROR = "error"              # échec bloquant (aucune image, annonce impossible)
 
+Audience = Literal["femme", "homme", "enfant"]
+
 class UserInput(BaseModel):      # saisi par le client, tout facultatif sauf type
     garment_type: GarmentType
+    audience: Audience | None    # choisit le décor (mannequin femme/homme) et aide la catégorie
     brand: str | None
     size: str | None
     condition: str | None
@@ -214,7 +217,7 @@ Reprend `utils.py` : chargement PIL avec `exif_transpose`, conversion RGB, redim
 - `Scene` : `slug`, `name`, `enabled`, `order`, `prompt` (contenu de `prompt.md`), `backgrounds_dir`.
 - `meta.json` : `{"name": str, "enabled": bool, "order": int}`.
 - `list_scenes(enabled_only=True)` triées par `order`. Un dossier sans `prompt.md` ou sans décor est ignoré et signalé en log.
-- `pick_background(scene, garment_type, rng)` : tire au hasard dans `backgrounds/<garment_type>/` s'il existe et contient des images, sinon dans les images à la racine de `backgrounds/`. Lève `NoBackground` si rien.
+- `pick_background(scene, keys, rng)` avec `keys = (garment_type, audience)` : tire au hasard dans le premier sous-dossier non vide parmi `backgrounds/<garment_type>/` puis `backgrounds/<audience>/`, sinon à la racine de `backgrounds/`. Lève `NoBackground` si rien. Ex. : `chaussures/` prime sur `femme/`.
 - `render_prompt(scene, garment_type)` : remplace `{garment_type}`. Aucune autre variable.
 - `ensure_default_scenes()` : copie `default_scenes/` si `scenes/` est vide.
 
@@ -310,9 +313,10 @@ vto export <id> <dossier>                    # copie images + description.json a
 python -m vto.tools.import_legacy <dossier_batch> [--as-default-pack]
 ```
 
-- `input/backgrounds/<type>/1/*` → `scenes/mannequin/backgrounds/<type>/`
-- `input/backgrounds/<type>/2/*` → `scenes/cintre/backgrounds/<type>/`
-- `input/clothes/<type>_<nom>/` → nouvel article : photos copiées (`base.*` en premier), `.txt` → `notes`, `garment_type` déduit du préfixe (mappé vers `GarmentType`, `autre` si inconnu).
+Préfixes du prototype : `c` = chaussures, `f` = femme, `h` = homme.
+
+- `input/backgrounds/<p>/1/*` → `scenes/mannequin/backgrounds/<dossier>/`, `input/backgrounds/<p>/2/*` → `scenes/cintre/backgrounds/<dossier>/`, avec `<dossier>` = `chaussures`, `femme` ou `homme`.
+- `input/clothes/<p>_<nom>/` → nouvel article : photos copiées (`base.*` en premier), `.txt` → `notes`. `c` → `garment_type="chaussures"` ; `f`/`h` → `audience` femme/homme et `garment_type` déduit de mots-clés du nom (pull, robe, jean…), `autre` sinon.
 - Le rappel de promo du prototype est écrit dans `settings.signature`.
 - `--as-default-pack` : écrit les scènes dans `default_scenes/` du dépôt au lieu des données utilisateur.
 - Le dossier source n'est jamais modifié ni supprimé.

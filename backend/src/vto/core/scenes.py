@@ -3,6 +3,7 @@
 import logging
 import random
 import shutil
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -83,15 +84,19 @@ def list_scenes(enabled_only: bool = True) -> list[Scene]:
     return sorted(found, key=lambda s: (s.order, s.slug))
 
 
-def pick_background(scene: Scene, garment_type: str, rng: random.Random | None = None) -> Path:
-    """Tire un décor dans backgrounds/<type>/ s'il en contient, sinon à la racine."""
+def pick_background(
+    scene: Scene, keys: Sequence[str | None], rng: random.Random | None = None
+) -> Path:
+    """Tire un décor dans le premier sous-dossier non vide parmi `keys`, sinon à la racine.
+
+    Ex. keys = (type, public) : backgrounds/chaussures/, puis backgrounds/femme/, puis racine.
+    """
     rng = rng or random.Random()
-    candidates = _images_in(scene.backgrounds_dir / garment_type) or _images_in(
-        scene.backgrounds_dir
-    )
-    if not candidates:
-        raise NoBackground(scene.name, garment_type)
-    return rng.choice(candidates)
+    for folder in [scene.backgrounds_dir / k for k in keys if k] + [scene.backgrounds_dir]:
+        candidates = _images_in(folder)
+        if candidates:
+            return rng.choice(candidates)
+    raise NoBackground(scene.name, " / ".join(k for k in keys if k))
 
 
 def render_prompt(scene: Scene, garment_type: str) -> str:

@@ -68,6 +68,7 @@ def set_key(key: str) -> None:
 def add(
     photos: Annotated[list[Path], typer.Argument(exists=True, dir_okay=False)],
     garment_type: Annotated[str, typer.Option("--type", help="robe, haut, chaussures…")],
+    audience: Annotated[str | None, typer.Option(help="femme, homme ou enfant")] = None,
     brand: str | None = None,
     size: str | None = None,
     condition: str | None = None,
@@ -78,7 +79,8 @@ def add(
     """Ajoute un article à partir d'une ou plusieurs photos."""
     try:
         user_input = UserInput(
-            garment_type=garment_type, brand=brand, size=size, condition=condition,
+            garment_type=garment_type, audience=audience, brand=brand, size=size,
+            condition=condition,
             color=color, price=price, notes=notes,
         )
     except ValueError as exc:

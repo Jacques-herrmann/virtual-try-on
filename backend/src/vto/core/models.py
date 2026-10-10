@@ -16,6 +16,8 @@ Condition = Literal["Neuf", "Comme neuf", "Très bon état", "Bon état", "Satis
 
 ParcelSize = Literal["Petit", "Moyen", "Grand"]
 
+Audience = Literal["femme", "homme", "enfant"]
+
 
 class ArticleStatus(StrEnum):
     DRAFT = "draft"
@@ -30,6 +32,7 @@ class UserInput(BaseModel):
     """Informations saisies par le client ; seul le type est obligatoire."""
 
     garment_type: GarmentType
+    audience: Audience | None = None
     brand: str | None = None
     size: str | None = None
     condition: Condition | None = None

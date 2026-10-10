@@ -21,7 +21,8 @@ def generate_scene_image(
 ) -> str:
     """Génère l'image et renvoie son chemin relatif au dossier de l'article."""
     garment_type = article.input.garment_type
-    background = resize_max(load_image(scenes.pick_background(scene, garment_type, rng)))
+    keys = (garment_type, article.input.audience)
+    background = resize_max(load_image(scenes.pick_background(scene, keys, rng)))
     article_dir = paths.article_dir(article.id)
     garment = resize_max(load_image(article_dir / article.photos[0]))
 
