@@ -50,8 +50,7 @@ def _replace_result(article: Article, result: SceneResult) -> None:
 
 
 def _finish_cancelled(article: Article) -> Article:
-    has_output = article.listing is not None or any(s.status == "ok" for s in article.scenes)
-    storage.set_status(article, S.TO_REVIEW if has_output else S.DRAFT)
+    storage.set_status(article, S.TO_REVIEW if storage.has_output(article) else S.DRAFT)
     return article
 
 
@@ -67,15 +66,51 @@ def process_article(
 ) -> Article:
     """Génère les images (toutes les scènes actives, ou seulement `scene_slugs`) puis l'annonce.
 
+    Pour un article en file (`QUEUED`), la demande enregistrée dans `article.job` remplace
+    `scene_slugs` et `regenerate_listing` ; elle est effacée une fois le traitement terminé.
+
     Une scène en échec n'arrête pas les autres. Les erreurs de `FATAL` passent l'article
     en erreur et sont propagées pour arrêter le lot.
     """
     article = storage.load(article_id)
-    cancel = cancel or threading.Event()
-    progress = on_progress or (lambda *_: None)
+    try:
+        return _process(
+            article,
+            client=client,
+            settings=settings,
+            scene_slugs=scene_slugs,
+            regenerate_listing=regenerate_listing,
+            cancel=cancel or threading.Event(),
+            progress=on_progress or (lambda *_: None),
+        )
+    finally:
+        if article.job is not None and article.status != S.QUEUED:
+            article.job = None
+            storage.save(article)
+
+
+def _process(
+    article: Article,
+    *,
+    client: GenAIClient,
+    settings: Settings,
+    scene_slugs: Sequence[str] | None,
+    regenerate_listing: bool,
+    cancel: threading.Event,
+    progress: ProgressCallback,
+) -> Article:
+    available = {s.slug: s for s in scenes.list_scenes()}
+    if article.status == S.QUEUED and article.job is not None:
+        scene_slugs = article.job.scene_slugs
+        regenerate_listing = article.job.regenerate_listing
+        if scene_slugs is not None:
+            # Une scène supprimée ou désactivée depuis la mise en file est simplement ignorée.
+            dropped = [s for s in scene_slugs if s not in available]
+            if dropped:
+                log.warning("Scènes ignorées (plus disponibles) : %s", ", ".join(dropped))
+            scene_slugs = [s for s in scene_slugs if s in available]
 
     full_run = scene_slugs is None
-    available = {s.slug: s for s in scenes.list_scenes()}
     unknown = set(scene_slugs or ()) - available.keys()
     if unknown:
         raise errors.VtoError(f"Scène inconnue ou désactivée : {', '.join(sorted(unknown))}.")

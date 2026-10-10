@@ -113,7 +113,7 @@ Les refus utilisent des `VtoError` avec un message en français.
 
 ### 3.3 `pipeline.py`
 
-- `process_article` accepte un article `QUEUED` : il lit `article.job` (les paramètres explicites `scene_slugs`/`regenerate_listing` gardent la priorité, pour la CLI) et continue comme aujourd'hui. `job` n'est effacé qu'à la fin du traitement (succès, erreur ou annulation) : si l'app est fermée en pleine génération, l'article reste `GENERATING` avec son `job` et `recover_interrupted` le reprend à l'identique (une régénération d'une seule scène ne devient pas une régénération complète).
+- `process_article` accepte un article `QUEUED` : `article.job` remplace alors les paramètres `scene_slugs`/`regenerate_listing` (que la CLI continue d'utiliser pour les articles hors file). Une scène de `job` supprimée ou désactivée entre-temps est ignorée (avertissement dans le log) plutôt que de bloquer l'article. `job` n'est effacé qu'à la fin du traitement (succès, erreur ou annulation) : si l'app est fermée en pleine génération, l'article reste `GENERATING` avec son `job` et `recover_interrupted` le reprend à l'identique (une régénération d'une seule scène ne devient pas une régénération complète).
 - Annulation pendant le traitement : `_finish_cancelled` inchangé (`TO_REVIEW` ou `DRAFT`).
 
 ### 3.4 `scenes.py`

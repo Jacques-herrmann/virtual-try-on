@@ -123,3 +123,93 @@ def test_unknown_scene_is_rejected(two_scenes, make_article):
 def test_build_client_requires_key(data_dir):
     with pytest.raises(errors.MissingApiKey):
         pipeline.build_client(Settings())
+
+
+def queued(article, **job):
+    article = storage.load(article.id)
+    storage.enqueue(article, **job)
+    return article
+
+
+def test_queued_full_run_clears_job(two_scenes, make_article):
+    article = queued(make_article())
+    done = run(article, listing_client())
+    assert done.status == S.TO_REVIEW and done.job is None
+    assert storage.load(article.id).job is None
+
+
+def test_queued_job_drives_scenes(two_scenes, make_article):
+    article = make_article()
+    run(article, listing_client())
+    queued(article, scene_slugs=["cintre"])
+    client = FakeClient()
+    done = run(article, client)
+    assert [c.kind for c in client.calls] == ["image"]
+    assert done.status == S.TO_REVIEW
+
+
+def test_queued_job_listing_only(two_scenes, make_article):
+    article = make_article()
+    run(article, listing_client())
+    queued(article, scene_slugs=[], regenerate_listing=True)
+    client = FakeClient(json_responses=deque([Listing(title="nouveau", description="d")]))
+    done = run(article, client)
+    assert [c.kind for c in client.calls] == ["json"]
+    assert done.listing.title == "nouveau"
+
+
+def test_queued_job_drops_deleted_scene(two_scenes, make_article):
+    article = make_article()
+    run(article, listing_client())
+    queued(article, scene_slugs=["plage", "cintre"])
+    client = FakeClient()
+    done = run(article, client)
+    assert [c.kind for c in client.calls] == ["image"]
+    assert done.status == S.TO_REVIEW and done.job is None
+
+
+def test_job_kept_during_processing(two_scenes, make_article):
+    article = queued(make_article())
+    seen = []
+
+    def on_progress(article_id, step, detail):
+        seen.append(storage.load(article_id).job is not None)
+
+    run(article, listing_client(), on_progress=on_progress)
+    assert seen == [True, True, True, True]
+
+
+def test_job_cleared_on_error(two_scenes, make_article):
+    article = queued(make_article())
+    client = FakeClient(json_responses=deque([errors.InvalidModelOutput()]))
+    done = run(article, client)
+    assert done.status == S.ERROR
+    assert storage.load(article.id).job is None
+
+
+def test_job_cleared_on_cancel(two_scenes, make_article):
+    article = queued(make_article())
+    cancel = threading.Event()
+    cancel.set()
+    done = run(article, listing_client(), cancel=cancel)
+    assert done.status == S.DRAFT
+    assert storage.load(article.id).job is None
+
+
+def test_job_cleared_on_fatal_error(two_scenes, make_article):
+    article = queued(make_article())
+    with pytest.raises(errors.InvalidApiKey):
+        run(article, FakeClient(image_responses=deque([errors.InvalidApiKey()])))
+    loaded = storage.load(article.id)
+    assert loaded.status == S.ERROR and loaded.job is None
+
+
+def test_regenerated_scene_is_no_longer_excluded(two_scenes, make_article):
+    article = make_article()
+    run(article, listing_client())
+    article = storage.load(article.id)
+    storage.set_excluded(article, "mannequin", True)
+    storage.set_excluded(article, "cintre", True)
+    queued(article, scene_slugs=["cintre"])
+    done = run(article, FakeClient())
+    assert {s.scene: s.excluded for s in done.scenes} == {"mannequin": True, "cintre": False}
