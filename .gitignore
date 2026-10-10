@@ -49,3 +49,6 @@ venv/
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
+
+# Front compilé
+backend/src/vto/api/static/
