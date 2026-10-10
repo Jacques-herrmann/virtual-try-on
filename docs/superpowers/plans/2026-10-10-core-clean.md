@@ -135,10 +135,10 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 14 — `legacy/create_post.py` (spec §6.1)
 
-- [ ] `git mv create_post.py legacy/create_post.py`.
-- [ ] Remplacer `EMAIL`/`PASSWORD` par `os.environ["VINTED_EMAIL"]` / `os.environ["VINTED_PASSWORD"]` (message clair si absents) et `ANNONCES_ROOT` par `VTO_LEGACY_OUTPUT` ou `sys.argv[1]`. Supprimer `webdriver-manager` (`webdriver.Chrome(options=options)` utilise Selenium Manager). Aucune autre modification.
-- [ ] `legacy/README.md` : 5 lignes sur l'usage transitoire (`vto export` puis `create_post.py`).
-- [ ] Commit `move vinted draft script to legacy and read credentials from env`.
+- [x] `git mv create_post.py legacy/create_post.py`.
+- [x] Remplacer `EMAIL`/`PASSWORD` par `os.environ["VINTED_EMAIL"]` / `os.environ["VINTED_PASSWORD"]` (message clair si absents) et `ANNONCES_ROOT` par `VTO_LEGACY_OUTPUT` ou `sys.argv[1]`. Supprimer `webdriver-manager` (`webdriver.Chrome(options=options)` utilise Selenium Manager). Aucune autre modification.
+- [x] `legacy/README.md` : 5 lignes sur l'usage transitoire (`vto export` puis `create_post.py`).
+- [x] Commit `move vinted draft script to legacy and read credentials from env`.
 
 ## Tâche 15 — Test live, nettoyage et acceptation (spec §7, §9)
 

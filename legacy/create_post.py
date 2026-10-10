@@ -3,10 +3,10 @@ import json
 import glob
 import time
 import logging
+import sys
+from pathlib import Path
 
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -35,10 +35,19 @@ SHORT_PAUSE = 1.5
 MEDIUM_PAUSE = 3
 LONG_PAUSE = 5
 
-EMAIL = os.environ["VINTED_EMAIL"]
-PASSWORD = os.environ["VINTED_PASSWORD"]
+# Identifiants et dossier d'annonces : variables d'environnement (ou .env à la racine du dépôt).
+#   VINTED_EMAIL, VINTED_PASSWORD, VTO_LEGACY_OUTPUT (ou 1er argument de la ligne de commande)
+ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
 
-ANNONCES_ROOT = r'C:\Users\jhn12\Twake\Annonces\batch\output'
+
+def _load_env_file():
+    if not ENV_FILE.is_file():
+        return
+    for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
+        key, sep, value = line.partition("=")
+        if sep and not line.lstrip().startswith("#"):
+            os.environ.setdefault(key.strip(), value.strip())
+
 
 class VintedDraftCreator:
     """Crée des brouillons d'annonces Vinted à partir de dossiers locaux."""
@@ -61,8 +70,8 @@ class VintedDraftCreator:
         if self.headless:
             options.add_argument("--headless=new")
 
-        service = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=options)
+        # Selenium Manager (Selenium >= 4.11) fournit le driver Chrome adapté.
+        self.driver = webdriver.Chrome(options=options)
 
         self.driver.execute_script(
             "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
@@ -525,6 +534,16 @@ class VintedDraftCreator:
             logger.info("Navigateur fermé.")
 
 def main():
+    _load_env_file()
+    email = os.environ.get("VINTED_EMAIL")
+    password = os.environ.get("VINTED_PASSWORD")
+    ANNONCES_ROOT = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("VTO_LEGACY_OUTPUT")
+    if not (email and password and ANNONCES_ROOT):
+        logger.error(
+            "Définis VINTED_EMAIL, VINTED_PASSWORD et VTO_LEGACY_OUTPUT (ou passe le dossier "
+            "d'annonces en argument). Voir legacy/README.md."
+        )
+        return
 
     if os.path.isdir(ANNONCES_ROOT):
         folders = sorted([
@@ -547,7 +566,7 @@ def main():
 
     creator = VintedDraftCreator(headless=False)
     try:
-        creator.process_posts(folders, email=EMAIL, password=PASSWORD)
+        creator.process_posts(folders, email=email, password=password)
     finally:
         creator.close()
 
