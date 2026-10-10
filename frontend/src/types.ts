@@ -13,6 +13,11 @@ export const GARMENT_TYPES = [
 ] as const
 export type GarmentType = (typeof GARMENT_TYPES)[number]
 
+/** « robe » → « Robe » : libellé affiché d'un type de vêtement ou d'un public. */
+export function label(value: string): string {
+  return value ? value[0]!.toUpperCase() + value.slice(1) : value
+}
+
 export const AUDIENCES = ['femme', 'homme', 'enfant'] as const
 export type Audience = (typeof AUDIENCES)[number]
 
