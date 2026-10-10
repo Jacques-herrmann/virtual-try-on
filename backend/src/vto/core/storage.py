@@ -8,16 +8,17 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from vto.core import paths
-from vto.core.errors import ArticleNotFound, InvalidTransition
-from vto.core.models import Article, ArticleStatus, UserInput
+from vto.core.errors import ArticleNotFound, InvalidTransition, VtoError
+from vto.core.models import Article, ArticleStatus, GenerationJob, Listing, UserInput
 
 S = ArticleStatus
 
 TRANSITIONS: dict[ArticleStatus, set[ArticleStatus]] = {
-    S.DRAFT: {S.GENERATING},
-    S.GENERATING: {S.TO_REVIEW, S.ERROR, S.DRAFT},
-    S.TO_REVIEW: {S.GENERATING, S.VALIDATED},
-    S.ERROR: {S.GENERATING},
+    S.DRAFT: {S.QUEUED, S.GENERATING},
+    S.QUEUED: {S.GENERATING, S.DRAFT, S.TO_REVIEW},
+    S.GENERATING: {S.TO_REVIEW, S.ERROR, S.DRAFT, S.QUEUED},
+    S.TO_REVIEW: {S.GENERATING, S.VALIDATED, S.QUEUED},
+    S.ERROR: {S.GENERATING, S.QUEUED},
     S.VALIDATED: {S.TO_REVIEW, S.PUBLISHED},
     S.PUBLISHED: set(),
 }
@@ -75,6 +76,80 @@ def set_status(article: Article, new: ArticleStatus) -> None:
         raise InvalidTransition(article.status.value, new.value)
     article.status = new
     save(article)
+
+
+def has_output(article: Article) -> bool:
+    return article.listing is not None or any(s.status == "ok" for s in article.scenes)
+
+
+def enqueue(
+    article: Article,
+    *,
+    scene_slugs: Sequence[str] | None = None,
+    regenerate_listing: bool = False,
+) -> None:
+    """Place l'article en file ; la demande est persistée pour survivre à un redémarrage."""
+    if S.QUEUED not in TRANSITIONS[article.status]:
+        raise InvalidTransition(article.status.value, S.QUEUED.value)
+    article.job = GenerationJob(
+        scene_slugs=list(scene_slugs) if scene_slugs is not None else None,
+        regenerate_listing=regenerate_listing,
+        queued_at=datetime.now(UTC),
+    )
+    set_status(article, S.QUEUED)
+
+
+def cancel_queued(article: Article) -> None:
+    """Annule une demande pas encore démarrée."""
+    article.job = None
+    set_status(article, S.TO_REVIEW if has_output(article) else S.DRAFT)
+
+
+EDITABLE_INPUT = {S.DRAFT, S.TO_REVIEW, S.ERROR, S.VALIDATED}
+
+
+def update_input(article: Article, user_input: UserInput) -> None:
+    if article.status not in EDITABLE_INPUT:
+        raise VtoError("Impossible de modifier la saisie pendant la génération ou après l'envoi.")
+    article.input = user_input
+    save(article)
+
+
+def _require_review(article: Article) -> None:
+    if article.status != S.TO_REVIEW:
+        raise VtoError("Cette modification n'est possible que pendant la relecture.")
+
+
+def update_listing(article: Article, listing: Listing) -> None:
+    _require_review(article)
+    article.listing = listing
+    save(article)
+
+
+def set_excluded(article: Article, scene_slug: str, excluded: bool) -> None:
+    _require_review(article)
+    for result in article.scenes:
+        if result.scene == scene_slug:
+            result.excluded = excluded
+            save(article)
+            return
+    raise VtoError(f"Aucune image pour la scène « {scene_slug} ».")
+
+
+def recover_interrupted() -> list[Article]:
+    """Remet en file les articles interrompus et renvoie la file, dans l'ordre d'arrivée."""
+    queued = []
+    for article in list_articles():
+        if article.status == S.GENERATING:
+            if article.job is None:
+                article.job = GenerationJob(queued_at=datetime.now(UTC))
+            set_status(article, S.QUEUED)
+        if article.status == S.QUEUED:
+            if article.job is None:
+                article.job = GenerationJob(queued_at=datetime.now(UTC))
+                save(article)
+            queued.append(article)
+    return sorted(queued, key=lambda a: a.job.queued_at)
 
 
 def delete(article_id: str) -> None:
