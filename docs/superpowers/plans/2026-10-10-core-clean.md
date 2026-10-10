@@ -114,9 +114,9 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 11 — Logging
 
-- [ ] `core/logging.py` : `setup_logging()` → `RotatingFileHandler` dans `logs_dir()/vto.log` (1 Mo × 3), niveau INFO, + console optionnelle.
-- [ ] Test : un message loggé apparaît dans le fichier.
-- [ ] Commit `add file logging`.
+- [x] `core/logging.py` : `setup_logging()` → `RotatingFileHandler` dans `logs_dir()/vto.log` (1 Mo × 3), niveau INFO, + console optionnelle.
+- [x] Test : un message loggé apparaît dans le fichier.
+- [x] Commit `add file logging`.
 
 ## Tâche 12 — CLI `vto` (spec §5)
 
