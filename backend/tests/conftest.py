@@ -56,3 +56,49 @@ def make_article(tmp_path, make_image):
         return storage.create_article(UserInput(garment_type=garment_type, **fields), [photo])
 
     return _make
+
+
+API_PORT = 48765
+API_TOKEN = "jeton-de-test"
+
+
+@pytest.fixture
+def fake():
+    from fakes import FakeClient
+
+    return FakeClient()
+
+
+@pytest.fixture
+def make_api(data_dir):
+    """Construit un TestClient ; `login=True` pose le cookie de session."""
+    from fastapi.testclient import TestClient
+
+    from vto.api.app import create_app
+    from vto.api.queue import GenerationQueue
+
+    made = []
+
+    def _make(client_factory, *, static_dir=None, login=True, start_queue=True):
+        queue = GenerationQueue(client_factory)
+        app = create_app(
+            client_factory, token=API_TOKEN, port=API_PORT, queue=queue, static_dir=static_dir
+        )
+        client = TestClient(
+            app, base_url=f"http://127.0.0.1:{API_PORT}", raise_server_exceptions=False
+        )
+        if start_queue:
+            queue.start()
+        made.append(queue)
+        if login:
+            client.get("/", params={"token": API_TOKEN}, follow_redirects=False)
+        return client
+
+    yield _make
+    for queue in made:
+        queue.stop()
+
+
+@pytest.fixture
+def api(make_api, fake):
+    return make_api(lambda key: fake)
