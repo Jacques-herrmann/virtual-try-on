@@ -28,6 +28,8 @@ class FakeClient:
     json_responses: deque = field(default_factory=deque)
     calls: list[Call] = field(default_factory=list)
     default_image: bytes = field(default_factory=png_bytes)
+    check_error: BaseException | None = None
+    checked: list[list[str]] = field(default_factory=list)
 
     def _next(self, queue, default):
         item = queue.popleft() if queue else default
@@ -45,3 +47,8 @@ class FakeClient:
         if item is None:
             raise AssertionError("aucune réponse JSON scriptée")
         return item
+
+    def check_models(self, models):
+        self.checked.append(list(models))
+        if self.check_error is not None:
+            raise self.check_error

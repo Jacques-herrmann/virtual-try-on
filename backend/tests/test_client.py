@@ -153,3 +153,41 @@ def test_sdk_errors_are_mapped_and_chained():
     with pytest.raises(errors.InvalidApiKey) as info:
         client.generate_image("m", "p", [IMG])
     assert isinstance(info.value.__cause__, FakeSdkError)
+
+
+class FakeModels:
+    def __init__(self, errors_by_model=None):
+        self.errors_by_model = errors_by_model or {}
+        self.asked = []
+
+    def get(self, *, model, config=None):
+        self.asked.append(model)
+        if model in self.errors_by_model:
+            raise self.errors_by_model[model]
+        return SimpleNamespace(name=f"models/{model}")
+
+
+def models_client(**errors_by_model):
+    models = FakeModels(errors_by_model)
+    sdk = SimpleNamespace(models=models)
+    return gc.GeminiClient("key", sdk=sdk, sleep=lambda d: None), models
+
+
+def test_check_models_asks_each_model():
+    client, models = models_client()
+    client.check_models(["img", "txt"])
+    assert models.asked == ["img", "txt"]
+
+
+@pytest.mark.parametrize(
+    ("exc", "expected"),
+    [
+        (FakeSdkError(400, "API key not valid. Please pass a valid key."), errors.InvalidApiKey),
+        (FakeSdkError(403, "Your project has been denied access."), errors.ProjectBlocked),
+        (FakeSdkError(404, "model not found"), errors.ModelUnavailable),
+    ],
+)
+def test_check_models_maps_errors(exc, expected):
+    client, _ = models_client(txt=exc)
+    with pytest.raises(expected):
+        client.check_models(["img", "txt"])

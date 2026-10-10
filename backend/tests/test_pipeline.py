@@ -213,3 +213,39 @@ def test_regenerated_scene_is_no_longer_excluded(two_scenes, make_article):
     queued(article, scene_slugs=["cintre"])
     done = run(article, FakeClient())
     assert {s.scene: s.excluded for s in done.scenes} == {"mannequin": True, "cintre": False}
+
+
+def test_verify_api_key_uses_given_key_and_both_models(data_dir, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "env")  # ne doit pas prendre le pas sur la clé testée
+    seen = {}
+    fake = FakeClient()
+
+    def factory(key):
+        seen["key"] = key
+        return fake
+
+    settings = Settings(gemini_api_key="ancienne", image_model="img", text_model="txt")
+    pipeline.verify_api_key("nouvelle", settings, factory)
+    assert seen["key"] == "nouvelle"
+    assert fake.checked == [["img", "txt"]]
+    assert settings.gemini_api_key == "ancienne"  # réglages non modifiés
+
+
+def test_verify_api_key_propagates_errors(data_dir):
+    fake = FakeClient(check_error=errors.InvalidApiKey())
+    with pytest.raises(errors.InvalidApiKey):
+        pipeline.verify_api_key("k", Settings(), lambda k: fake)
+
+
+def test_verify_api_key_rejects_empty_key(data_dir):
+    with pytest.raises(errors.MissingApiKey):
+        pipeline.verify_api_key("  ", Settings(), lambda k: FakeClient())
+
+
+def test_build_client_uses_factory(data_dir):
+    fake = FakeClient()
+    keys = []
+    client = pipeline.build_client(
+        Settings(gemini_api_key="k"), lambda key: keys.append(key) or fake
+    )
+    assert client is fake and keys == ["k"]

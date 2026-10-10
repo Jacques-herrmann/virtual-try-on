@@ -57,7 +57,7 @@ frontend/          Vue 3 + Vite + TypeScript + vue-router + PrimeVue
 
 `desktop` → `api` → `core`. `core` n'importe jamais `api` ni `desktop`.
 
-`create_app(client_factory, queue=None)` reçoit une fabrique `Settings -> GenAIClient` (par défaut `pipeline.build_client`) : les tests injectent `FakeClient`.
+`create_app(client_factory, …)` reçoit une fabrique `clé -> GenAIClient` (`pipeline.ClientFactory`, par défaut `GeminiClient`) : les tests injectent `FakeClient`. La même fabrique sert à la file (via `pipeline.build_client(settings, client_factory)`) et à la vérification de clé.
 
 ### 2.3 Sécurité de l'API locale
 
@@ -132,7 +132,7 @@ Les refus utilisent des `VtoError` avec un message en français.
 
 - `GenAIClient.check_models(models: Sequence[str]) -> None` : appel de métadonnées du SDK (`models.get`) pour chaque modèle, sans génération. Erreurs traduites par `map_sdk_error` (`InvalidApiKey`, `ProjectBlocked`, `ModelUnavailable`, `TransientError`). L'appel SDK exact est confirmé à l'implémentation et couvert par le test `live`.
 - `FakeClient.check_models` : configurable pour lever une erreur donnée.
-- `pipeline.verify_api_key(key, settings, client_factory)` : construit un client avec `key` et vérifie `image_model` et `text_model`.
+- `pipeline.verify_api_key(key, settings, client_factory)` : construit un client avec `key` (pas la clé effective des réglages, que `GEMINI_API_KEY` peut surcharger) et vérifie `image_model` et `text_model`.
 
 ## 4. API
 
@@ -142,7 +142,7 @@ Les refus utilisent des `VtoError` avec un message en français.
 - `start()` : appelle `storage.recover_interrupted()` et remplit la file.
 - `enqueue(article_id, job)` : `storage.enqueue` puis ajout en fin de file.
 - `cancel(article_id)` : si en attente, retrait + `storage.cancel_queued` ; si en cours, déclenche l'`Event` d'annulation passé au pipeline.
-- Traitement : pour chaque article, crée le client via `client_factory(load_settings())` (une nouvelle clé est donc prise en compte immédiatement) puis appelle `process_article`.
+- Traitement : pour chaque article, crée le client via `build_client(load_settings(), client_factory)` (une nouvelle clé est donc prise en compte immédiatement) puis appelle `process_article`.
 - Sur `FATAL` (clé manquante/invalide, quota) : la file se met en **pause** (`paused=True`, `reason=user_message`), l'article concerné passe en `ERROR` (comportement actuel du pipeline), les suivants restent `QUEUED`.
 - `resume()` : lève la pause. Un enregistrement de clé valide (`check-key`) appelle `resume()`.
 - `status() -> {running: str | None, pending: list[str], paused: bool, reason: str | None}`.

@@ -35,6 +35,10 @@ class GenAIClient(Protocol):
         self, model: str, prompt: str, images: Sequence[Image.Image], schema: type[M]
     ) -> M: ...
 
+    def check_models(self, models: Sequence[str]) -> None:
+        """Vérifie la clé et la disponibilité des modèles, sans rien générer."""
+        ...
+
 
 def map_sdk_error(exc: BaseException) -> errors.VtoError:
     """Traduit une erreur du SDK ou du réseau en erreur du cœur (par code HTTP)."""
@@ -100,14 +104,23 @@ class GeminiClient:
         self._sdk = sdk
         self._sleep = sleep
 
-    def _create(self, **kwargs) -> Any:
+    def _sdk_call(self, fn: Callable[..., Any], **kwargs) -> Any:
         try:
-            return self._sdk.interactions.create(timeout=REQUEST_TIMEOUT, **kwargs)
+            return fn(**kwargs)
         except errors.VtoError:
             raise
         except Exception as exc:
             log.warning("Erreur Gemini : %r", exc)
             raise map_sdk_error(exc) from exc
+
+    def _create(self, **kwargs) -> Any:
+        return self._sdk_call(self._sdk.interactions.create, timeout=REQUEST_TIMEOUT, **kwargs)
+
+    def check_models(self, models: Sequence[str]) -> None:
+        for model in models:
+            with_retry(
+                lambda m=model: self._sdk_call(self._sdk.models.get, model=m), sleep=self._sleep
+            )
 
     def generate_image(self, model: str, prompt: str, images: Sequence[Image.Image]) -> bytes:
         def call() -> bytes:

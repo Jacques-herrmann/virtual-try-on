@@ -62,3 +62,8 @@ def test_full_article_with_real_api(live_data_dir, tmp_path):
     assert done.listing.size == "M"
     print("\nImage :", image, f"({w}x{h})")
     print(done.listing.model_dump_json(indent=2))
+
+
+def test_check_models_with_real_key(live_data_dir):
+    settings = config.load_settings()
+    pipeline.verify_api_key(os.environ["GEMINI_API_KEY"], settings, pipeline.GeminiClient)

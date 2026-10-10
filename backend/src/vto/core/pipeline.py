@@ -15,6 +15,8 @@ log = logging.getLogger(__name__)
 
 S = ArticleStatus
 ProgressCallback = Callable[[str, str, str], None]
+# Construit un client à partir d'une clé ; les tests injectent un FakeClient.
+ClientFactory = Callable[[str], GenAIClient]
 
 # Erreurs qui touchent tout le lot : inutile d'enchaîner les échecs.
 FATAL = (errors.MissingApiKey, errors.InvalidApiKey, errors.QuotaExceeded)
@@ -22,11 +24,19 @@ FATAL = (errors.MissingApiKey, errors.InvalidApiKey, errors.QuotaExceeded)
 NO_IMAGE_MESSAGE = "Aucune image n'a pu être générée."
 
 
-def build_client(settings: Settings) -> GenAIClient:
+def build_client(settings: Settings, client_factory: ClientFactory | None = None) -> GenAIClient:
     key = settings.api_key()
     if not key:
         raise errors.MissingApiKey()
-    return GeminiClient(key)
+    return (client_factory or GeminiClient)(key)
+
+
+def verify_api_key(key: str, settings: Settings, client_factory: ClientFactory) -> None:
+    """Vérifie `key` (et non la clé effective des réglages) sur les modèles configurés."""
+    key = key.strip()
+    if not key:
+        raise errors.MissingApiKey()
+    client_factory(key).check_models([settings.image_model, settings.text_model])
 
 
 def _message(exc: Exception) -> str:
