@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import platformdirs
+import pytest
 
 from vto.core import paths
 
@@ -28,3 +29,12 @@ def test_sub_paths_are_under_data_dir(data_dir):
 def test_directories_are_created_on_demand(data_dir):
     for d in (paths.scenes_dir(), paths.articles_dir(), paths.logs_dir()):
         assert d.is_dir()
+
+
+def test_safe_join_inside(tmp_path):
+    assert paths.safe_join(tmp_path, "a/b.jpg") == (tmp_path / "a" / "b.jpg").resolve()
+
+
+@pytest.mark.parametrize("rel", ["../x", "a/../../x", "", ".", "C:/Windows", "/etc/passwd"])
+def test_safe_join_refuses_escape(tmp_path, rel):
+    assert paths.safe_join(tmp_path, rel) is None

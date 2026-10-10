@@ -39,3 +39,14 @@ def article_dir(article_id: str) -> Path:
 
 def logs_dir() -> Path:
     return _ensure(data_dir() / "logs")
+
+
+def safe_join(base: Path, rel: str) -> Path | None:
+    """`base / rel` résolu, ou None si `rel` est vide, absolu ou sort de `base`."""
+    if not rel or Path(rel).is_absolute() or Path(rel).drive or rel.startswith(("/", "\\")):
+        return None
+    root = base.resolve()
+    target = (root / rel).resolve()
+    if target == root or not target.is_relative_to(root):
+        return None
+    return target
