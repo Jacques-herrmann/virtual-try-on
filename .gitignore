@@ -1,0 +1,40 @@
+# Build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+packages/shared/dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Turbo
+.turbo
+
+# Expo
+.expo
+apps/mobile/.expo
+android
+apps/mobile/android
+ios
+apps/mobile/ios
+
+.temp/
+# Supabase CLI (stack locale de test)
+.branches/
