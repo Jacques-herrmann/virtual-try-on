@@ -22,6 +22,7 @@ class FakeSdkError(Exception):
     [
         (FakeSdkError(401, "API key not valid"), errors.InvalidApiKey),
         (FakeSdkError(403, "permission denied"), errors.InvalidApiKey),
+        (FakeSdkError(403, "Your project has been denied access."), errors.ProjectBlocked),
         (FakeSdkError(400, "API key not valid. Please pass a valid key."), errors.InvalidApiKey),
         (FakeSdkError(404, "model not found"), errors.ModelUnavailable),
         (FakeSdkError(429, "Rate limit, retry later"), errors.TransientError),
@@ -121,6 +122,7 @@ def test_generate_image_request_and_response():
     assert [p["type"] for p in kw["input"][1:]] == ["image", "image"]
     assert kw["input"][1]["mime_type"] == "image/jpeg"
     assert kw["response_format"] == {"type": "image", "aspect_ratio": "3:4"}
+    assert kw["timeout"] == gc.REQUEST_TIMEOUT
 
 
 def test_generate_image_without_image_raises():

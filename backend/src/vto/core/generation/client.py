@@ -23,6 +23,8 @@ log = logging.getLogger(__name__)
 M = TypeVar("M", bound=BaseModel)
 
 IMAGE_ASPECT_RATIO = "3:4"
+# Délai max d'une requête (s) : une image peut prendre une minute, au-delà on réessaie.
+REQUEST_TIMEOUT = 180.0
 RETRYABLE = (errors.TransientError, errors.NoImageReturned)
 
 
@@ -40,6 +42,8 @@ def map_sdk_error(exc: BaseException) -> errors.VtoError:
         return errors.TransientError()
     status = getattr(exc, "status_code", None) or getattr(exc, "code", None)
     message = str(getattr(exc, "message", "") or exc).lower()
+    if status == 403 and "denied access" in message:
+        return errors.ProjectBlocked()
     if status in (401, 403) or (status == 400 and "api key" in message):
         return errors.InvalidApiKey()
     if status == 404:
@@ -98,7 +102,7 @@ class GeminiClient:
 
     def _create(self, **kwargs) -> Any:
         try:
-            return self._sdk.interactions.create(**kwargs)
+            return self._sdk.interactions.create(timeout=REQUEST_TIMEOUT, **kwargs)
         except errors.VtoError:
             raise
         except Exception as exc:

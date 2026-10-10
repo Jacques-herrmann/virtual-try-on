@@ -18,6 +18,13 @@ class InvalidApiKey(VtoError):
     user_message = "Ta clé Gemini est invalide. Vérifie-la dans les réglages."
 
 
+class ProjectBlocked(InvalidApiKey):
+    user_message = (
+        "Google a bloqué l'accès du projet lié à ta clé Gemini (souvent après une fuite de "
+        "la clé). Crée une nouvelle clé dans un nouveau projet sur Google AI Studio."
+    )
+
+
 class QuotaExceeded(VtoError):
     user_message = "Quota Gemini atteint. Réessaie plus tard ou vérifie ton forfait Google AI."
 
