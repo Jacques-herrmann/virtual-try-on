@@ -127,11 +127,11 @@ Branche : `feat/core-clean` (créée depuis `spec/core-clean`).
 
 ## Tâche 13 — Pack de scènes par défaut et import du prototype (spec §4.6, §6.2)
 
-- [ ] `default_scenes/mannequin/` et `default_scenes/cintre/` : `meta.json` + `prompt.md` (= `PROMPT_DUMMY` / `PROMPT_HANGER` ; retirer la consigne de ratio en majuscules si la tâche 7 a confirmé le paramètre API ; remplacer les mentions génériques du type par `{garment_type}` uniquement si ça n'altère pas le sens).
-- [ ] Tests `import_legacy` sur une arborescence factice : scènes créées avec sous-dossiers par type ; articles créés avec `base.*` en première photo, `.txt` → `notes`, préfixe → `GarmentType` (table de correspondance, `autre` par défaut) ; signature écrite ; source intacte (hash des fichiers avant/après) ; `--as-default-pack` écrit dans le dossier cible fourni.
-- [ ] Implémenter `vto.tools.import_legacy` (argparse).
-- [ ] **Avec l'utilisateur** : lister les préfixes de type réellement utilisés dans `Twake\Annonces\batch\input\clothes` pour compléter la table de correspondance ; lancer `--as-default-pack` sur le vrai dossier ; décider si les images du pack sont versionnées telles quelles ou compressées (taille du dépôt).
-- [ ] Commit `add default scenes and legacy import`.
+- [x] `default_scenes/mannequin/` et `default_scenes/cintre/` : `meta.json` + `prompt.md` (= `PROMPT_DUMMY` / `PROMPT_HANGER` ; retirer la consigne de ratio en majuscules si la tâche 7 a confirmé le paramètre API ; remplacer les mentions génériques du type par `{garment_type}` uniquement si ça n'altère pas le sens).
+- [x] Tests `import_legacy` sur une arborescence factice : scènes créées avec sous-dossiers par type ; articles créés avec `base.*` en première photo, `.txt` → `notes`, préfixe → `GarmentType` (table de correspondance, `autre` par défaut) ; signature écrite ; source intacte (hash des fichiers avant/après) ; `--as-default-pack` écrit dans le dossier cible fourni.
+- [x] Implémenter `vto.tools.import_legacy` (argparse).
+- [x] **Avec l'utilisateur** : lister les préfixes de type réellement utilisés dans `Twake\Annonces\batch\input\clothes` pour compléter la table de correspondance ; lancer `--as-default-pack` sur le vrai dossier ; décider si les images du pack sont versionnées telles quelles ou compressées (taille du dépôt).
+- [x] Commit `add default scenes and legacy import`.
 
 ## Tâche 14 — `legacy/create_post.py` (spec §6.1)
 
