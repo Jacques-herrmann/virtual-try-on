@@ -38,3 +38,9 @@ apps/mobile/ios
 .temp/
 # Supabase CLI (stack locale de test)
 .branches/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
