@@ -13,17 +13,24 @@ dependencies = [
     "Pillow>=11.3",  # AVIF natif
     "platformdirs",
     "typer",
+    "fastapi",
+    "uvicorn",
+    "python-multipart",  # uploads multipart de FastAPI
+    "pywebview",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff"]
+dev = ["pytest", "ruff", "httpx"]
 legacy = ["selenium>=4.11"]
 
 [project.scripts]
 vto = "vto.cli:app"
+vto-app = "vto.desktop:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/vto"]
+# Le front compilé (api/static) est ignoré par git mais doit être embarqué.
+artifacts = ["src/vto/api/static/**"]
 
 [tool.ruff]
 line-length = 100
