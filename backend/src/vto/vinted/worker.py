@@ -292,15 +292,20 @@ class VintedWorker:
         try:
             self._send(article_ids)
         except errors.VtoError as exc:
-            self._set_batch(message=exc.user_message)
+            self._end_batch(exc.user_message)
         except WindowClosed:
             remaining = self._batch.total - self._batch.done
-            self._set_batch(
-                message=f"La fenêtre Vinted a été fermée. {remaining} article(s) "
-                "n'ont pas été envoyés."
+            self._end_batch(
+                f"La fenêtre Vinted a été fermée. {remaining} article(s) n'ont pas été envoyés."
             )
         finally:
             self._close_context()
+            b = self._batch
+            log.info("Lot Vinted terminé : %s/%s, %s échec(s)", b.done, b.total, b.failed)
+
+    def _end_batch(self, message: str) -> None:
+        log.warning("Lot Vinted interrompu : %s", message)
+        self._set_batch(message=message)
 
     def _send(self, article_ids: list[str]) -> None:
         try:
@@ -353,6 +358,7 @@ class VintedWorker:
         except Exception as exc:
             if _window_closed(exc):
                 closed = exc
+                log.warning("Fenêtre Vinted fermée pendant l'article %s", article_id)
                 message = "La fenêtre Vinted a été fermée pendant l'envoi."
             else:
                 log.exception("Échec imprévu de l'envoi de l'article %s", article_id)
@@ -368,6 +374,10 @@ class VintedWorker:
             sent_at=datetime.now(UTC),
         )
         storage.record_vinted(article, result)
+        log.info(
+            "Article %s envoyé sur Vinted : %s (%s)%s", article_id, report.status, report.mode,
+            f", à compléter : {', '.join(report.missing_fields)}" if report.missing_fields else "",
+        )
         failed = self._batch.failed + (report.status == "error")
         if closed is not None:
             self._set_batch(failed=failed)

@@ -27,6 +27,8 @@ PAGE_ERROR = "Vinted ne répond pas. Réessaie plus tard."
 PHOTOS_ERROR = "Les photos n'ont pas pu être envoyées sur Vinted."
 SAVE_ERROR = "L'annonce n'a pas pu être enregistrée sur Vinted."
 
+MAX_CATEGORY_DEPTH = 8
+
 # Préfixes des onglets de tailles (« FR 38 » se trouve sous l'onglet « FR »).
 SIZE_TABS = ("EU", "UK", "FR", "IT", "US")
 
@@ -211,8 +213,20 @@ class _Filler:
         if not path or not self.catalog.is_leaf(self.listing.category):
             raise MissingField("Catégorie", f"catégorie inconnue : {self.listing.category!r}")
         self.open_list("category_open")
+        self._category_root(path[0])
         for label in path:
             self.click(self.find("category_option", label=label))
+
+    def _category_root(self, root: str) -> None:
+        """Vinted présélectionne une catégorie d'après les photos : la liste s'ouvre alors à
+        son niveau. On remonte jusqu'à voir la racine voulue."""
+        for _ in range(MAX_CATEGORY_DEPTH):
+            try:
+                self.find("category_option", label=root, timeout=self.timing.optional)
+                return
+            except LocatorNotFound:
+                self.click(self.find("category_back", timeout=self.timing.optional))
+        raise LocatorNotFound("category_option")
 
     def brand(self) -> None:
         brand = (self.listing.brand or "").strip()
@@ -323,17 +337,24 @@ class _Filler:
         return self.draft_url() if mode == "draft" else self.page.url
 
     def draft_url(self) -> str:
-        """Lien du brouillon sur le profil (titre de l'annonce), sinon l'adresse courante."""
+        """Lien du brouillon sur le profil (titre de l'annonce), sinon l'adresse courante.
+
+        Les annonces du profil s'affichent après le nom : on les attend un moment.
+        """
         title = normalize(self.listing.title)
-        for alt in self.data.locators["draft_link"]:
-            for link in resolve(self.page, alt).all():
-                if normalize(link.get_attribute("title") or "").startswith(title):
-                    href = link.get_attribute("href") or ""
-                    if href.startswith("/"):
-                        home = self.data.urls.home.rstrip("/")
-                        return f"{home}{href}"
-                    return href
-        return self.page.url
+        deadline = time.monotonic() + self.timing.step / 1000
+        while True:
+            for alt in self.data.locators["draft_link"]:
+                for link in resolve(self.page, alt).all():
+                    if normalize(link.get_attribute("title") or "").startswith(title):
+                        href = link.get_attribute("href") or ""
+                        if href.startswith("/"):
+                            return f"{self.data.urls.home.rstrip('/')}{href}"
+                        return href
+            if time.monotonic() >= deadline:
+                log.warning("Lien du brouillon introuvable sur le profil")
+                return self.page.url
+            self.page.wait_for_timeout(250)
 
 
 def fill_item(

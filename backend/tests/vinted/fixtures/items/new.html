@@ -108,18 +108,39 @@ const TREE = [
   ] },
   { id: 5, label: 'Hommes', children: [] },
 ];
-const category = toggler('catalog-select-dropdown', () => showNodes(TREE));
+// Comme sur vinted.fr : la liste se rouvre au niveau de la catégorie courante, avec un
+// bouton « Revenir en arrière » ; les catégories finales sont des boutons radio.
+let level = TREE;
+const parents = [];
+const category = toggler('catalog-select-dropdown', () => showNodes(level));
+function chooseLeaf(n) {
+  state.category = n.id;
+  category.input.value = n.label;
+  $('#details').classList.remove('hidden');
+  $('#size-field').classList.toggle('hidden', n.id === 157);  // sacs : pas de taille
+}
 function showNodes(nodes) {
-  category.content.innerHTML = nodes
-    .map((n) => `<div id="catalog-${n.id}" role="button" tabindex="0">${n.label}</div>`).join('');
+  level = nodes;
+  const back = parents.length ? '<button type="button" id="catalog-back">Revenir en arrière</button>' : '';
+  category.content.innerHTML = back + nodes.map((n) => n.children && n.children.length
+    ? `<div id="catalog-${n.id}" role="button" tabindex="0">${n.label}</div>`
+    : `<div id="catalog-${n.id}" role="radio" aria-checked="${state.category === n.id}" tabindex="0">${n.label}</div>`,
+  ).join('');
+  $('#catalog-back')?.addEventListener('click', () => showNodes(parents.pop()));
   nodes.forEach((n) => $(`#catalog-${n.id}`).addEventListener('click', () => {
-    if (n.children && n.children.length) return showNodes(n.children);
-    state.category = n.id;
-    category.input.value = n.label;
+    if (n.children && n.children.length) {
+      parents.push(nodes);
+      return showNodes(n.children);
+    }
+    chooseLeaf(n);
     category.close();
-    $('#details').classList.remove('hidden');
-    $('#size-field').classList.toggle('hidden', n.id === 157);  // sacs : pas de taille
   }));
+}
+// ?preselect : Vinted propose déjà une catégorie (Femmes › Vêtements › Robes › Mini).
+if (params.has('preselect')) {
+  parents.push(TREE, TREE[0].children, TREE[0].children[0].children);
+  level = TREE[0].children[0].children[0].children;
+  chooseLeaf(level[0]);
 }
 
 // Marques

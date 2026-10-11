@@ -6,10 +6,14 @@
 <h1 data-testid="profile-username">vendeuse</h1>
 <div id="items"></div>
 <script>
+// Comme sur vinted.fr : les annonces du profil arrivent après le nom du profil, et leur
+// titre est suivi de l'état et du prix.
 const title = new URLSearchParams(location.search).get('title') || '';
-document.querySelector('#items').innerHTML = `
-  <a data-testid="product-item-id-7--overlay-link" href="/items/7/edit" title="Ancien brouillon, 0,00 €">Brouillon</a>
-  <a data-testid="product-item-id-8--overlay-link" href="/items/8/edit" title="${title.replace(/"/g, '&quot;')}, 0,00 €">Brouillon</a>`;
+setTimeout(() => {
+  document.querySelector('#items').innerHTML = `
+    <a data-testid="product-item-id-7--overlay-link" href="/items/7/edit" title="Ancien brouillon, 0,00 €">Brouillon</a>
+    <a data-testid="product-item-id-8--overlay-link" href="/items/8/edit" title="${title.replace(/"/g, '&quot;')}, état: Très bon état, 12,50 €">Brouillon</a>`;
+}, 800);
 </script>
 </body>
 </html>

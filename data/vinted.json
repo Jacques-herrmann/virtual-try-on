@@ -1,6 +1,6 @@
 {
  "format": 1,
- "revision": "2026-10-11.1",
+ "revision": "2026-10-11.2",
  "urls": {
   "home": "https://www.vinted.fr",
   "new_item": "https://www.vinted.fr/items/new"
@@ -69,9 +69,19 @@
     "css": "[data-testid='catalog-select-dropdown-input']"
    }
   ],
+  "category_back": [
+   {
+    "role": "button",
+    "name": "Revenir en arrière"
+   }
+  ],
   "category_option": [
    {
     "role": "button",
+    "name": "{label}"
+   },
+   {
+    "role": "radio",
     "name": "{label}"
    }
   ],

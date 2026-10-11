@@ -29,6 +29,7 @@ REQUIRED_LOCATORS = (
     "description",
     "category_open",
     "category_option",
+    "category_back",
     "brand_open",
     "brand_input",
     "brand_option",

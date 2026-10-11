@@ -177,6 +177,16 @@ def test_missing_category_saves_draft_even_in_publish_mode(page, article, site):
 
 
 @pytestmark_browser
+@pytest.mark.parametrize("category", ["157", "1056"])  # autre branche, catégorie voisine
+def test_category_already_suggested_by_vinted(page, article, site, category):
+    # Vinted présélectionne une catégorie d'après les photos : la liste s'ouvre à son niveau.
+    article.listing.category = category
+    report, saved = fill(page, article, site, query="?preselect")
+    assert "Catégorie" not in report.missing_fields
+    assert saved["category"] == int(category)
+
+
+@pytestmark_browser
 @pytest.mark.parametrize(("brand", "expected"), [("SEZANE", "Sézane"), ("Sézane", "Sézane")])
 def test_brand_ignores_case_and_accents(page, article, site, brand, expected):
     article.listing.brand = brand
