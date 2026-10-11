@@ -154,7 +154,7 @@ def show(article_id: str) -> None:
 
 
 def export_article(article: Article, target: Path) -> None:
-    """Images numérotées (scènes puis photos d'origine) + description.json pour legacy/."""
+    """Images numérotées (scènes puis photos d'origine) + description.json."""
     source = paths.article_dir(article.id)
     target.mkdir(parents=True, exist_ok=True)
     images = [r.image for r in article.scenes if r.status == "ok" and r.image] + article.photos
@@ -173,7 +173,7 @@ def export_article(article: Article, target: Path) -> None:
 @app.command()
 @handle_errors
 def export(article_id: str, target: Path) -> None:
-    """Exporte un article au format attendu par legacy/create_post.py."""
+    """Exporte les images et l'annonce d'un article dans un dossier."""
     article = storage.load(article_id)
     if article.listing is None:
         raise errors.VtoError("Cet article n'a pas encore d'annonce : lance d'abord « vto run ».")

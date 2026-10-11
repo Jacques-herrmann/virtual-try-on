@@ -79,7 +79,7 @@ def test_vto_error_is_shown_without_traceback(data_dir, make_scene, photo, monke
     assert "Traceback" not in result.output
 
 
-def test_export_for_legacy_script(data_dir, make_scene, photo, fake_client, tmp_path):
+def test_export(data_dir, make_scene, photo, fake_client, tmp_path):
     make_scene("mannequin", order=1)
     make_scene("cintre", order=2)
     article_id = invoke("add", photo, "--type", "robe").output.strip()
