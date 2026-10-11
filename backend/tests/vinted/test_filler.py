@@ -204,6 +204,13 @@ def test_popup_after_brand_is_closed(page, article, site):
 
 
 @pytestmark_browser
+def test_brand_list_not_opened_by_first_click(page, article, site):
+    report, saved = fill(page, article, site, query="?brandlate")
+    assert report.missing_fields == []
+    assert saved["brand"] == "Zara"
+
+
+@pytestmark_browser
 def test_brand_without_identical_suggestion(page, article, site):
     article.listing.brand = "Zarra"
     report, saved = fill(page, article, site)

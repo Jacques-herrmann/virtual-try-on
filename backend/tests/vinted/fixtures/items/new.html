@@ -154,6 +154,13 @@ if (params.has('preselect')) {
 const BRANDS = ['Zara', 'Zara Kids', 'Sézane', 'Sézane x La Redoute', 'H&M'];
 const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const brand = toggler('brand-select-dropdown');
+// ?brandlate : le premier clic sur la marque ne fait que donner le focus (relevé du 2026-10-11).
+if (params.has('brandlate')) {
+  brand.input.addEventListener('click', (e) => {
+    e.stopImmediatePropagation();
+    brand.input.focus();
+  }, { capture: true, once: true });
+}
 $('[data-testid=brand-search--input]').addEventListener('input', (e) => {
   const q = norm(e.target.value);
   const found = BRANDS.filter((b) => norm(b).includes(q));

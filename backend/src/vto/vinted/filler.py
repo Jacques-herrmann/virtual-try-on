@@ -254,7 +254,13 @@ class _Filler:
         if not brand:
             raise MissingField("Marque", "vide")
         self.open_list("brand_open")
-        search = self.find("brand_input")
+        try:
+            search = self.find("brand_input", timeout=self.timing.optional)
+        except LocatorNotFound:
+            # Il arrive que le premier clic ne fasse que donner le focus au champ.
+            log.info("Vinted, article %s : liste des marques rouverte", self.article.id)
+            self.open_list("brand_open")
+            search = self.find("brand_input")
         search.fill("")
         search.press_sequentially(brand, delay=60)
         self.page.wait_for_timeout(min(1500, self.timing.step))
