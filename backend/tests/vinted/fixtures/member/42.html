@@ -8,11 +8,14 @@
 <script>
 // Comme sur vinted.fr : les annonces du profil arrivent après le nom du profil, et leur
 // titre est suivi de l'état et du prix.
-const title = new URLSearchParams(location.search).get('title') || '';
+const params = new URLSearchParams(location.search);
+const title = params.get('title') || '';
+// ?published : l'annonce vient d'être mise en ligne (lien sans « /edit »).
+const href = params.has('published') ? '/items/9' : '/items/8/edit';
 setTimeout(() => {
   document.querySelector('#items').innerHTML = `
     <a data-testid="product-item-id-7--overlay-link" href="/items/7/edit" title="Ancien brouillon, 0,00 €">Brouillon</a>
-    <a data-testid="product-item-id-8--overlay-link" href="/items/8/edit" title="${title.replace(/"/g, '&quot;')}, état: Très bon état, 12,50 €">Brouillon</a>`;
+    <a data-testid="product-item-id-8--overlay-link" href="${href}" title="${title.replace(/"/g, '&quot;')}, état: Très bon état, 12,50 €">Brouillon</a>`;
 }, 800);
 </script>
 </body>

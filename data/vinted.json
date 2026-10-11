@@ -1,6 +1,6 @@
 {
  "format": 1,
- "revision": "2026-10-11.3",
+ "revision": "2026-10-11.4",
  "urls": {
   "home": "https://www.vinted.fr",
   "new_item": "https://www.vinted.fr/items/new"
@@ -187,7 +187,7 @@
   ],
   "draft_link": [
    {
-    "css": "a[data-testid^='product-item-id-'][href$='/edit']"
+    "css": "a[data-testid^='product-item-id-'][data-testid$='--overlay-link']"
    }
   ]
  },

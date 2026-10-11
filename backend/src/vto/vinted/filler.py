@@ -386,10 +386,13 @@ class _Filler:
             log.warning("Enregistrement Vinted non confirmé : %s", str(exc).splitlines()[0][:200])
             self.screenshot("enregistrement")
             return None
-        return self.draft_url() if mode == "draft" else self.page.url
+        if mode == "publish" and "/items/" in self.page.url:
+            return self.page.url
+        # Brouillon, ou annonce publiée suivie d'un retour au profil.
+        return self.profile_link(draft=mode == "draft")
 
-    def draft_url(self) -> str:
-        """Lien du brouillon sur le profil (titre de l'annonce), sinon l'adresse courante.
+    def profile_link(self, *, draft: bool) -> str:
+        """Lien de l'annonce sur le profil (titre de l'annonce), sinon l'adresse courante.
 
         Les annonces du profil s'affichent après le nom : on les attend un moment.
         """
@@ -398,13 +401,15 @@ class _Filler:
         while True:
             for alt in self.data.locators["draft_link"]:
                 for link in resolve(self.page, alt).all():
+                    href = link.get_attribute("href") or ""
+                    if href.endswith("/edit") != draft:
+                        continue
                     if normalize(link.get_attribute("title") or "").startswith(title):
-                        href = link.get_attribute("href") or ""
                         if href.startswith("/"):
                             return f"{self.data.urls.home.rstrip('/')}{href}"
                         return href
             if time.monotonic() >= deadline:
-                log.warning("Lien du brouillon introuvable sur le profil")
+                log.warning("Lien de l'annonce introuvable sur le profil")
                 return self.page.url
             self.page.wait_for_timeout(250)
 

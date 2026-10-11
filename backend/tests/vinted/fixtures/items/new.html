@@ -242,9 +242,9 @@ function save(mode) {
     price: $('[data-testid=price-input--input]').value };
   sessionStorage.setItem('saved', JSON.stringify(saved));
   setTimeout(() => {
-    location.href = mode === 'draft'
-      ? `/member/42.html?title=${encodeURIComponent(saved.title)}`
-      : '/items/99.html';
+    const profile = `/member/42.html?title=${encodeURIComponent(saved.title)}`;
+    if (mode === 'draft') location.href = profile;
+    else location.href = params.has('publishprofile') ? `${profile}&published` : '/items/99.html';
   }, 300);
 }
 $('[data-testid=upload-form-save-draft-button]')?.addEventListener('click', () => save('draft'));

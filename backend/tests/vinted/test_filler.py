@@ -175,6 +175,14 @@ def test_complete_publish(page, article, site):
 
 
 @pytestmark_browser
+def test_publish_then_back_to_profile(page, article, site):
+    # Sur vinted.fr, « Ajouter » ramène au profil : le lien de l'annonce y est lu.
+    report, saved = fill(page, article, site, mode="publish", query="?publishprofile")
+    assert (report.status, report.mode) == ("ok", "publish")
+    assert report.url == f"{site}/items/9"
+
+
+@pytestmark_browser
 def test_missing_category_saves_draft_even_in_publish_mode(page, article, site):
     report, saved = fill(page, article, site, mode="publish", query="?nocategory")
     assert report.status == "partial"
