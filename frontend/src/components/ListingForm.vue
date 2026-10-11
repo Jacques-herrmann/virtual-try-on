@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
 import CascadeSelect from 'primevue/cascadeselect'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
 import MultiSelect from 'primevue/multiselect'
 import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 import { cascadeOptions, categoryPath, depth, isLeaf, sameSize, sizesFor } from '@/catalog'
 import { CONDITIONS, type Listing, PARCEL_SIZES, type VintedCatalog } from '@/types'
@@ -16,9 +15,12 @@ const props = defineProps<{
   /** Catalogue Vinted ; null s'il n'est pas (encore) disponible. */
   catalog: VintedCatalog | null
   readonly?: boolean
-  saving?: boolean
+  /** Enregistre l'annonce ; rejette en cas d'échec (l'appelant a déjà prévenu le vendeur). */
+  save: (listing: Listing) => Promise<void>
 }>()
-const emit = defineEmits<{ save: [listing: Listing] }>()
+
+/** Délai après la dernière modification avant l'enregistrement automatique. */
+const AUTOSAVE_MS = 800
 
 function copy(listing: Listing): Listing {
   return { ...listing, color: [...(listing.color ?? [])] }
@@ -68,15 +70,56 @@ const unknownColors = computed(() =>
 const conditions = computed(() => props.catalog?.conditions ?? [...CONDITIONS])
 const parcelSizes = computed(() => props.catalog?.parcel_sizes ?? [...PARCEL_SIZES])
 
-const canSave = computed(
-  () => dirty.value && !!draft.value.title.trim() && !unknownCategory.value,
+// Une annonce sans titre ou avec une catégorie inconnue n'est pas enregistrée.
+const invalidReason = computed(() => {
+  if (!draft.value.title.trim()) return 'le titre est vide'
+  if (unknownCategory.value) return 'choisis une catégorie Vinted'
+  return null
+})
+
+const status = ref<'idle' | 'saving' | 'saved' | 'error'>('idle')
+let timer: ReturnType<typeof setTimeout> | undefined
+let inflight: Promise<void> | null = null
+
+watch(
+  draft,
+  () => {
+    clearTimeout(timer)
+    if (!props.readonly && dirty.value) timer = setTimeout(() => void flush(), AUTOSAVE_MS)
+  },
+  { deep: true },
 )
 
-defineExpose({ dirty })
+/** Enregistre tout de suite les modifications en attente (une seule requête à la fois). */
+async function flush(): Promise<void> {
+  clearTimeout(timer)
+  while (inflight) await inflight
+  if (props.readonly || !dirty.value || invalidReason.value) return
+  status.value = 'saving'
+  inflight = props
+    .save(copy(draft.value))
+    .then(
+      () => {
+        status.value = 'saved'
+      },
+      () => {
+        status.value = 'error'
+      },
+    )
+    .finally(() => {
+      inflight = null
+    })
+  await inflight
+}
+
+// Changement d'article ou d'écran : rien n'est perdu.
+onBeforeUnmount(() => void flush())
+
+defineExpose({ dirty, flush })
 </script>
 
 <template>
-  <form class="form" @submit.prevent="emit('save', draft)">
+  <form class="form" @submit.prevent="flush()">
     <div class="field">
       <label for="title">Titre</label>
       <InputText id="title" v-model="draft.title" :disabled="readonly" fluid />
@@ -193,22 +236,20 @@ defineExpose({ dirty })
         />
       </div>
     </div>
-    <div v-if="!readonly" class="row">
-      <Button
-        type="submit"
-        label="Enregistrer l'annonce"
-        icon="pi pi-save"
-        :disabled="!canSave"
-        :loading="saving"
-      />
-      <Button
-        v-if="dirty"
-        type="button"
-        label="Annuler les modifications"
-        severity="secondary"
-        text
-        @click="draft = copy(listing)"
-      />
+    <div v-if="!readonly" class="autosave">
+      <small v-if="status === 'saving'" class="muted">
+        <i class="pi pi-spin pi-spinner" /> Enregistrement…
+      </small>
+      <small v-else-if="dirty && invalidReason" class="warn">
+        Modifications non enregistrées : {{ invalidReason }}.
+      </small>
+      <small v-else-if="status === 'error'" class="warn">
+        L’annonce n’a pas pu être enregistrée.
+        <a href="#" @click.prevent="flush()">Réessayer</a>
+      </small>
+      <small v-else-if="status === 'saved' && !dirty" class="muted">
+        <i class="pi pi-check" /> Modifications enregistrées
+      </small>
     </div>
   </form>
 </template>
@@ -235,6 +276,10 @@ defineExpose({ dirty })
 label {
   font-size: 0.875rem;
   font-weight: 500;
+}
+
+.autosave {
+  min-height: 1.25rem;
 }
 
 .warn {

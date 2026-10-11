@@ -110,15 +110,26 @@ function saveGallery(gallery: string[] | null) {
   run('gallery', () => api.setGallery(id.value, gallery), 'Ordre des photos enregistré.')
 }
 
-function saveListing(listing: Listing) {
-  run('save', () => api.updateListing(id.value, listing), 'Annonce enregistrée.')
+// Enregistrement automatique depuis le formulaire : pas de message en cas de succès.
+// L'identifiant est fixé à l'affichage : un enregistrement en attente au moment où l'on
+// change d'article vise toujours l'article d'origine.
+function listingSaver(articleId: string) {
+  return async (listing: Listing) => {
+    try {
+      upsert(await api.updateListing(articleId, listing))
+    } catch (e) {
+      notify.error(e)
+      throw e
+    }
+  }
 }
 
-function validate() {
+async function validate() {
+  await listingForm.value?.flush()
   if (listingForm.value?.dirty) {
     confirm.require({
       header: 'Annonce non enregistrée',
-      message: 'Tu as modifié l’annonce sans l’enregistrer. Valider quand même (modifications perdues) ?',
+      message: 'Certaines modifications de l’annonce n’ont pas pu être enregistrées. Valider quand même (modifications perdues) ?',
       accept: () => run('validate', () => api.validate(id.value), 'Article validé.'),
     })
     return
@@ -223,8 +234,7 @@ function validate() {
         :listing="article.listing"
         :catalog="vinted.catalog.value"
         :readonly="!editable"
-        :saving="working === 'save'"
-        @save="saveListing"
+        :save="listingSaver(article.id)"
       />
     </section>
 
