@@ -1,0 +1,4960 @@
+{
+ "format": 1,
+ "revision": "2026-10-11.1",
+ "urls": {
+  "home": "https://www.vinted.fr",
+  "new_item": "https://www.vinted.fr/items/new"
+ },
+ "locators": {
+  "logged_in": [
+   {
+    "css": "[data-testid='user-menu-button']"
+   },
+   {
+    "css": "[data-testid='header-conversations-button']"
+   }
+  ],
+  "logged_out": [
+   {
+    "css": "[data-testid='header--login-button']"
+   }
+  ],
+  "cookie_accept": [
+   {
+    "css": "#onetrust-accept-btn-handler"
+   }
+  ],
+  "popup_close": [
+   {
+    "css": "[data-testid='modal-close-button']"
+   },
+   {
+    "role": "button",
+    "name": "Fermer"
+   }
+  ],
+  "photo_input": [
+   {
+    "css": "[data-testid='add-photos-input']"
+   },
+   {
+    "css": "input[type='file'][name='photos']"
+   }
+  ],
+  "photo_thumb": [
+   {
+    "css": "[data-testid^='image-wrapper-']"
+   }
+  ],
+  "ai_photo": [
+   {
+    "css": "#ai_photo"
+   },
+   {
+    "label": "Marquer les photos comme générées par l'IA"
+   }
+  ],
+  "title": [
+   {
+    "css": "[data-testid='title--input']"
+   }
+  ],
+  "description": [
+   {
+    "css": "[data-testid='description--input']"
+   }
+  ],
+  "category_open": [
+   {
+    "css": "[data-testid='catalog-select-dropdown-input']"
+   }
+  ],
+  "category_option": [
+   {
+    "role": "button",
+    "name": "{label}"
+   }
+  ],
+  "brand_open": [
+   {
+    "css": "[data-testid='brand-select-dropdown-input']"
+   }
+  ],
+  "brand_input": [
+   {
+    "css": "[data-testid='brand-search--input']"
+   }
+  ],
+  "brand_option": [
+   {
+    "role": "radio",
+    "name": "{label}"
+   }
+  ],
+  "size_open": [
+   {
+    "css": "[data-testid^='category-size-'][data-testid$='-input']"
+   }
+  ],
+  "size_tab": [
+   {
+    "role": "button",
+    "name": "{label}"
+   }
+  ],
+  "size_option": [
+   {
+    "role": "checkbox",
+    "name": "{label}"
+   }
+  ],
+  "condition_open": [
+   {
+    "css": "[data-testid^='category-condition-'][data-testid$='-input']"
+   }
+  ],
+  "condition_option": [
+   {
+    "text": "{label}"
+   }
+  ],
+  "color_open": [
+   {
+    "css": "[data-testid='color-select-dropdown-input']"
+   }
+  ],
+  "color_option": [
+   {
+    "role": "checkbox",
+    "name": "{label}"
+   }
+  ],
+  "color_close": [
+   {
+    "css": "[data-testid='color-select-dropdown-input']"
+   }
+  ],
+  "price": [
+   {
+    "css": "[data-testid='price-input--input']"
+   }
+  ],
+  "parcel_option": [
+   {
+    "text": "{label}"
+   }
+  ],
+  "save_draft": [
+   {
+    "css": "[data-testid='upload-form-save-draft-button']"
+   },
+   {
+    "role": "button",
+    "name": "Sauvegarder le brouillon"
+   }
+  ],
+  "publish": [
+   {
+    "css": "[data-testid='upload-form-save-button']"
+   },
+   {
+    "role": "button",
+    "name": "Ajouter"
+   }
+  ],
+  "saved_marker": [
+   {
+    "css": "[data-testid='profile-username']"
+   }
+  ],
+  "draft_link": [
+   {
+    "css": "a[data-testid^='product-item-id-'][href$='/edit']"
+   }
+  ]
+ },
+ "catalog": [
+  {
+   "id": 1904,
+   "label": "Femmes",
+   "children": [
+    {
+     "id": 4,
+     "label": "Vêtements",
+     "children": [
+      {
+       "id": 1037,
+       "label": "Manteaux et vestes",
+       "garment_types": [
+        "veste"
+       ],
+       "children": [
+        {
+         "id": 1773,
+         "label": "Capes et ponchos",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1907,
+         "label": "Manteaux",
+         "children": [
+          {
+           "id": 2525,
+           "label": "Duffle-coats",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1090,
+           "label": "Manteaux en fausse fourrure",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 2526,
+           "label": "Pardessus et manteaux longs",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1087,
+           "label": "Parkas",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1076,
+           "label": "Cabans",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1080,
+           "label": "Imperméables",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1834,
+           "label": "Trenchs",
+           "size_group": "femmes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 2524,
+         "label": "Vestes sans manches",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1908,
+         "label": "Vestes",
+         "children": [
+          {
+           "id": 2527,
+           "label": "Perfectos et blousons de moto",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1078,
+           "label": "Blousons aviateur",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1079,
+           "label": "Vestes en jean",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 2528,
+           "label": "Vestes militaires et utilitaires",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1086,
+           "label": "Vestes polaires",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 2614,
+           "label": "Doudounes",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 2596,
+           "label": "Vestes matelassées",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 2529,
+           "label": "Vestes chemises",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 2530,
+           "label": "Vestes de ski et snowboard",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 2531,
+           "label": "Blousons teddy",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 2532,
+           "label": "Vestes coupe-vent",
+           "size_group": "femmes-vetements"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": 13,
+       "label": "Sweats et sweats à capuche",
+       "garment_types": [
+        "haut"
+       ],
+       "children": [
+        {
+         "id": 196,
+         "label": "Sweats & sweats à capuche",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1917,
+         "label": "Sweats",
+         "children": [
+          {
+           "id": 190,
+           "label": "Pulls col V",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 191,
+           "label": "Pulls col roulé",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 192,
+           "label": "Sweats longs",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 529,
+           "label": "Pulls d'hiver",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 193,
+           "label": "Sweats manche ¾",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1066,
+           "label": "Autres sweats",
+           "size_group": "femmes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 1067,
+         "label": "Kimonos",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 194,
+         "label": "Cardigans",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 195,
+         "label": "Boléros",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1874,
+         "label": "Vestes",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 197,
+         "label": "Autres pull-overs & sweat-shirts",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 8,
+       "label": "Blazers et tailleurs",
+       "garment_types": [
+        "veste"
+       ],
+       "children": [
+        {
+         "id": 532,
+         "label": "Blazers",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1125,
+         "label": "Ensembles tailleur/pantalon",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1126,
+         "label": "Jupes et robes tailleurs",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1128,
+         "label": "Tailleurs pièces séparées",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1129,
+         "label": "Autres ensembles & tailleurs",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 10,
+       "label": "Robes",
+       "garment_types": [
+        "robe"
+       ],
+       "children": [
+        {
+         "id": 178,
+         "label": "Mini",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1056,
+         "label": "Midi",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1055,
+         "label": "Robes longues",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1774,
+         "label": "Pour occasions",
+         "children": [
+          {
+           "id": 1775,
+           "label": "Fêtes et cocktails",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1776,
+           "label": "Robes de mariée",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1777,
+           "label": "Robes de bal de fin d'année",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1778,
+           "label": "Robes de soirée",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1060,
+           "label": "Robes dos nu",
+           "size_group": "femmes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 1065,
+         "label": "Robes d'été",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1779,
+         "label": "Robes d'hiver",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1057,
+         "label": "Robes chics",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1059,
+         "label": "Robes casual",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1061,
+         "label": "Robes sans bretelles",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1058,
+         "label": "Petites robes noires",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 179,
+         "label": "Robes en jean",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 176,
+         "label": "Autres robes",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 5523,
+       "label": "Jupes",
+       "garment_types": [
+        "jupe"
+       ],
+       "size_group": "femmes-vetements"
+      },
+      {
+       "id": 12,
+       "label": "Hauts et t-shirts",
+       "garment_types": [
+        "haut"
+       ],
+       "children": [
+        {
+         "id": 222,
+         "label": "Chemises",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1043,
+         "label": "Blouses",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 14,
+         "label": "Vestes",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 221,
+         "label": "T-shirts",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 534,
+         "label": "Débardeurs",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 227,
+         "label": "Tuniques",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1041,
+         "label": "Tops courts",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 223,
+         "label": "Blouses manches courtes",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 225,
+         "label": "Blouses ¾",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 224,
+         "label": "Blouses manches longues",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1835,
+         "label": "Bodies",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1042,
+         "label": "Tops épaules dénudées",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1045,
+         "label": "Cols roulés",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1837,
+         "label": "Tops peplum",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1044,
+         "label": "Tops dos nu",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 228,
+         "label": "Autres hauts",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 183,
+       "label": "Jeans",
+       "garment_types": [
+        "pantalon"
+       ],
+       "children": [
+        {
+         "id": 1839,
+         "label": "Jeans boyfriend",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1840,
+         "label": "Jeans courts",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1841,
+         "label": "Jeans évasés",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1842,
+         "label": "Jeans taille haute",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1843,
+         "label": "Jeans troués",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1844,
+         "label": "Jeans skinny",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1845,
+         "label": "Jeans droits",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1864,
+         "label": "Autre",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 9,
+       "label": "Pantalons et leggings",
+       "garment_types": [
+        "pantalon"
+       ],
+       "children": [
+        {
+         "id": 1070,
+         "label": "Pantalons courts & chinos",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1071,
+         "label": "Pantalons à jambes larges",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 185,
+         "label": "Pantalons skinny",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 187,
+         "label": "Pantalons ajustés",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1846,
+         "label": "Pantalons droits",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 184,
+         "label": "Pantalons en cuir",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 525,
+         "label": "Leggings",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 526,
+         "label": "Sarouels",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 189,
+         "label": "Autres pantalons",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 15,
+       "label": "Shorts",
+       "garment_types": [
+        "pantalon"
+       ],
+       "children": [
+        {
+         "id": 1838,
+         "label": "Shorts taille basse",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1099,
+         "label": "Shorts taille haute",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 203,
+         "label": "Shorts longueur genou",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 538,
+         "label": "Short en jean",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1101,
+         "label": "Shorts en dentelle",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1100,
+         "label": "Shorts en cuir",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1103,
+         "label": "Shorts cargo",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 204,
+         "label": "Pantacourts",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 205,
+         "label": "Autres shorts",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1035,
+       "label": "Combinaisons et combishorts",
+       "children": [
+        {
+         "id": 1131,
+         "label": "Combinaisons",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1132,
+         "label": "Combi Shorts",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1134,
+         "label": "Autres combinaisons & combishorts",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 28,
+       "label": "Maillots de bain",
+       "children": [
+        {
+         "id": 218,
+         "label": "Une pièce",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 219,
+         "label": "Deux pièces",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1780,
+         "label": "Paréos et sarongs",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 220,
+         "label": "Autres",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 29,
+       "label": "Lingerie et pyjamas",
+       "children": [
+        {
+         "id": 119,
+         "label": "Soutiens-gorge",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 120,
+         "label": "Culottes",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 229,
+         "label": "Ensembles",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1781,
+         "label": "Gaines",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 123,
+         "label": "Pyjamas et tenues de nuit",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1030,
+         "label": "Peignoirs",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1263,
+         "label": "Collants",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1262,
+         "label": "Chaussettes",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1847,
+         "label": "Accessoires de lingerie",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 124,
+         "label": "Autres",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1176,
+       "label": "Maternité",
+       "children": [
+        {
+         "id": 1179,
+         "label": "Tops maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1182,
+         "label": "Robes maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1178,
+         "label": "Jupes maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1177,
+         "label": "Pantalons maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1185,
+         "label": "Shorts maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1181,
+         "label": "Combinaisons & combi shorts maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1184,
+         "label": "Pulls à capuche & pulls maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1183,
+         "label": "Manteaux & vestes maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1186,
+         "label": "Maillots & tenues de plage maternité",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 1614,
+         "label": "Sous-vêtements maternité",
+         "children": [
+          {
+           "id": 1615,
+           "label": "Sous-vêtements maternité",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1616,
+           "label": "Tenues de nuit maternité",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1618,
+           "label": "Soutiens-gorge grossesse & allaitement",
+           "size_group": "femmes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 2084,
+         "label": "Vêtements de sport",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 73,
+       "label": "Vêtements de sport",
+       "children": [
+        {
+         "id": 571,
+         "label": "Vêtements d'extérieur",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 572,
+         "label": "Survêtements",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 573,
+         "label": "Pantalons & leggings",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 578,
+         "label": "Shorts",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 574,
+         "label": "Robes",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 575,
+         "label": "Jupes",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 576,
+         "label": "Hauts & t-shirts",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 3268,
+         "label": "Maillots",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 577,
+         "label": "Sweats et sweats à capuche",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 579,
+         "label": "Accessoires de sports",
+         "children": [
+          {
+           "id": 1441,
+           "label": "Lunettes",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1444,
+           "label": "Gants",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1443,
+           "label": "Chapeaux",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 1440,
+           "label": "Écharpes",
+           "size_group": "femmes-vetements"
+          },
+          {
+           "id": 3049,
+           "label": "Bracelets",
+           "size_group": "femmes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 1439,
+         "label": "Brassières",
+         "size_group": "femmes-vetements"
+        },
+        {
+         "id": 580,
+         "label": "Autres",
+         "size_group": "femmes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1782,
+       "label": "Costumes et tenues particulières",
+       "size_group": "femmes-vetements"
+      },
+      {
+       "id": 18,
+       "label": "Autres",
+       "size_group": "femmes-vetements"
+      },
+      {
+       "id": 5491,
+       "label": "Jupes-shorts",
+       "garment_types": [
+        "jupe"
+       ],
+       "size_group": "femmes-vetements"
+      }
+     ]
+    },
+    {
+     "id": 16,
+     "label": "Chaussures",
+     "garment_types": [
+      "chaussures"
+     ],
+     "children": [
+      {
+       "id": 2955,
+       "label": "Ballerines",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 2954,
+       "label": "Mocassins et chaussures bateau",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 1049,
+       "label": "Bottes",
+       "children": [
+        {
+         "id": 2618,
+         "label": "Bottines",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2619,
+         "label": "Bottes mi-hautes",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 211,
+         "label": "Bottes hautes",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2620,
+         "label": "Cuissardes",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2621,
+         "label": "Bottes de neige",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 213,
+         "label": "Bottes de pluie",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2622,
+         "label": "Bottes de travail",
+         "size_group": "femmes-chaussures"
+        }
+       ]
+      },
+      {
+       "id": 2623,
+       "label": "Mules et sabots",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 2953,
+       "label": "Espadrilles",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 2952,
+       "label": "Claquettes et tongs",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 543,
+       "label": "Chaussures à talons",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 2951,
+       "label": "Chaussures à lacets",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 2950,
+       "label": "Babies et Mary-Jane",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 2949,
+       "label": "Sandales",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 215,
+       "label": "Chaussons et pantoufles",
+       "size_group": "femmes-chaussures"
+      },
+      {
+       "id": 2630,
+       "label": "Chaussures de sport",
+       "children": [
+        {
+         "id": 2639,
+         "label": "Chaussures de basket",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2640,
+         "label": "Chaussures d'escalade",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2641,
+         "label": "Chaussures de cyclisme",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2642,
+         "label": "Chaussures de danse",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2643,
+         "label": "Chaussures de foot",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2644,
+         "label": "Chaussures de golf",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2645,
+         "label": "Chaussures et bottes de randonnée",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2646,
+         "label": "Patins à glace",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2647,
+         "label": "Chaussures de foot en salle",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2648,
+         "label": "Chaussures de fitness",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2649,
+         "label": "Bottes de moto",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2650,
+         "label": "Patins à roulettes et rollers",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2651,
+         "label": "Chaussures de course",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2652,
+         "label": "Chaussures de ski",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2653,
+         "label": "Bottes de snowboard",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2654,
+         "label": "Chaussures aquatiques",
+         "size_group": "femmes-chaussures"
+        },
+        {
+         "id": 2655,
+         "label": "Chaussures de tennis",
+         "size_group": "femmes-chaussures"
+        }
+       ]
+      },
+      {
+       "id": 2632,
+       "label": "Baskets",
+       "size_group": "femmes-chaussures"
+      }
+     ]
+    },
+    {
+     "id": 19,
+     "label": "Sacs",
+     "garment_types": [
+      "sac"
+     ],
+     "children": [
+      {
+       "id": 157,
+       "label": "Sacs à dos"
+      },
+      {
+       "id": 2940,
+       "label": "Sacs de plage"
+      },
+      {
+       "id": 2941,
+       "label": "Mallettes"
+      },
+      {
+       "id": 2942,
+       "label": "Sacs seau"
+      },
+      {
+       "id": 1848,
+       "label": "Sacs banane"
+      },
+      {
+       "id": 159,
+       "label": "Pochettes"
+      },
+      {
+       "id": 2943,
+       "label": "Housses pour vêtements"
+      },
+      {
+       "id": 2944,
+       "label": "Sacs de sport"
+      },
+      {
+       "id": 156,
+       "label": "Sacs à main"
+      },
+      {
+       "id": 2945,
+       "label": "Besaces"
+      },
+      {
+       "id": 1849,
+       "label": "Fourre-tout et sacs marins"
+      },
+      {
+       "id": 1850,
+       "label": "Sacs de voyage"
+      },
+      {
+       "id": 161,
+       "label": "Trousses à maquillage"
+      },
+      {
+       "id": 1784,
+       "label": "Cartables et sacoches"
+      },
+      {
+       "id": 158,
+       "label": "Sacs à bandoulière"
+      },
+      {
+       "id": 552,
+       "label": "Sacs fourre-tout"
+      },
+      {
+       "id": 160,
+       "label": "Porte-monnaie"
+      },
+      {
+       "id": 2939,
+       "label": "Wristlets"
+      }
+     ]
+    },
+    {
+     "id": 1187,
+     "label": "Accessoires",
+     "garment_types": [
+      "accessoire"
+     ],
+     "children": [
+      {
+       "id": 2931,
+       "label": "Bandanas et foulards pour cheveux"
+      },
+      {
+       "id": 20,
+       "label": "Ceintures"
+      },
+      {
+       "id": 90,
+       "label": "Gants"
+      },
+      {
+       "id": 1123,
+       "label": "Accessoires pour cheveux"
+      },
+      {
+       "id": 2932,
+       "label": "Mouchoirs de poche"
+      },
+      {
+       "id": 88,
+       "label": "Chapeaux et casquettes",
+       "children": [
+        {
+         "id": 2933,
+         "label": "Cagoules"
+        },
+        {
+         "id": 2934,
+         "label": "Bonnets"
+        },
+        {
+         "id": 230,
+         "label": "Casquettes"
+        },
+        {
+         "id": 2935,
+         "label": "Cache-oreilles"
+        },
+        {
+         "id": 2936,
+         "label": "Fascinators"
+        },
+        {
+         "id": 231,
+         "label": "Chapeaux"
+        },
+        {
+         "id": 234,
+         "label": "Bandeaux"
+        }
+       ]
+      },
+      {
+       "id": 21,
+       "label": "Bijoux",
+       "children": [
+        {
+         "id": 1785,
+         "label": "Bracelets de cheville"
+        },
+        {
+         "id": 2937,
+         "label": "Bijoux de corps"
+        },
+        {
+         "id": 165,
+         "label": "Bracelets"
+        },
+        {
+         "id": 167,
+         "label": "Broches"
+        },
+        {
+         "id": 2938,
+         "label": "Breloques et pendentifs"
+        },
+        {
+         "id": 163,
+         "label": "Boucles d'oreilles"
+        },
+        {
+         "id": 166,
+         "label": "Ensembles de bijoux"
+        },
+        {
+         "id": 164,
+         "label": "Colliers"
+        },
+        {
+         "id": 553,
+         "label": "Bagues"
+        },
+        {
+         "id": 162,
+         "label": "Autres bijoux"
+        }
+       ]
+      },
+      {
+       "id": 1852,
+       "label": "Porte-clés"
+      },
+      {
+       "id": 89,
+       "label": "Écharpes et châles"
+      },
+      {
+       "id": 26,
+       "label": "Lunettes de soleil"
+      },
+      {
+       "id": 1851,
+       "label": "Parapluies"
+      },
+      {
+       "id": 22,
+       "label": "Montres"
+      },
+      {
+       "id": 1140,
+       "label": "Autres accessoires"
+      }
+     ]
+    },
+    {
+     "id": 146,
+     "label": "Beauté",
+     "children": [
+      {
+       "id": 964,
+       "label": "Maquillage"
+      },
+      {
+       "id": 152,
+       "label": "Parfums"
+      },
+      {
+       "id": 948,
+       "label": "Soins du visage"
+      },
+      {
+       "id": 1906,
+       "label": "Accessoires de beauté",
+       "children": [
+        {
+         "id": 1903,
+         "label": "Accessoires soins capillaires"
+        },
+        {
+         "id": 958,
+         "label": "Accessoires soins corporels"
+        },
+        {
+         "id": 950,
+         "label": "Accessoires soins du visage"
+        },
+        {
+         "id": 967,
+         "label": "Accessoires maquillage"
+        },
+        {
+         "id": 962,
+         "label": "Accessoires soins des ongles"
+        }
+       ]
+      },
+      {
+       "id": 1264,
+       "label": "Soin mains"
+      },
+      {
+       "id": 960,
+       "label": "Manucure"
+      },
+      {
+       "id": 956,
+       "label": "Soins du corps"
+      },
+      {
+       "id": 1902,
+       "label": "Soins cheveux"
+      },
+      {
+       "id": 153,
+       "label": "Autres cosmétiques et accessoires"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "label": "Hommes",
+   "children": [
+    {
+     "id": 2050,
+     "label": "Vêtements",
+     "children": [
+      {
+       "id": 257,
+       "label": "Jeans",
+       "garment_types": [
+        "pantalon"
+       ],
+       "children": [
+        {
+         "id": 1816,
+         "label": "Jeans troués",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 1817,
+         "label": "Jeans skinny",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 1818,
+         "label": "Jeans slim",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 1819,
+         "label": "Jeans coupe droite",
+         "size_group": "hommes-pantalons"
+        }
+       ]
+      },
+      {
+       "id": 1206,
+       "label": "Manteaux et vestes",
+       "garment_types": [
+        "veste"
+       ],
+       "children": [
+        {
+         "id": 2051,
+         "label": "Manteaux",
+         "children": [
+          {
+           "id": 1225,
+           "label": "Duffle-coats",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 2533,
+           "label": "Pardessus et manteaux longs",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1227,
+           "label": "Parkas",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1861,
+           "label": "Cabans",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1859,
+           "label": "Imperméables",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1230,
+           "label": "Trenchs",
+           "size_group": "hommes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 2553,
+         "label": "Vestes sans manches",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 2052,
+         "label": "Vestes",
+         "children": [
+          {
+           "id": 2534,
+           "label": "Perfectos et blousons de moto",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1223,
+           "label": "Blousons aviateur",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1224,
+           "label": "Vestes en jean",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 2535,
+           "label": "Vestes militaires et utilitaires",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1858,
+           "label": "Vestes polaires",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1226,
+           "label": "Vestes Harrington",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 2536,
+           "label": "Doudounes",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 2537,
+           "label": "Vestes matelassées",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 2538,
+           "label": "Vestes chemises",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 2539,
+           "label": "Vestes de ski et snowboard",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 2550,
+           "label": "Blousons teddy",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 2551,
+           "label": "Vestes coupe-vent",
+           "size_group": "hommes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 2552,
+         "label": "Ponchos",
+         "size_group": "hommes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 76,
+       "label": "Hauts et t-shirts",
+       "garment_types": [
+        "haut"
+       ],
+       "children": [
+        {
+         "id": 536,
+         "label": "Chemises",
+         "children": [
+          {
+           "id": 1801,
+           "label": "Chemises à carreaux",
+           "size_group": "hommes-chemises"
+          },
+          {
+           "id": 1802,
+           "label": "Chemises en jean",
+           "size_group": "hommes-chemises"
+          },
+          {
+           "id": 1803,
+           "label": "Chemises unies",
+           "size_group": "hommes-chemises"
+          },
+          {
+           "id": 1804,
+           "label": "Chemises à motifs",
+           "size_group": "hommes-chemises"
+          },
+          {
+           "id": 1805,
+           "label": "Chemises à rayures",
+           "size_group": "hommes-chemises"
+          },
+          {
+           "id": 1865,
+           "label": "Autres chemises",
+           "size_group": "hommes-chemises"
+          }
+         ]
+        },
+        {
+         "id": 77,
+         "label": "T-shirts",
+         "children": [
+          {
+           "id": 1806,
+           "label": "T-shirts unis",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1807,
+           "label": "T-shirts imprimés",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1808,
+           "label": "T-shirts à rayures",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1810,
+           "label": "T-shirts à manches longues",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1868,
+           "label": "Autres T-shirts",
+           "size_group": "hommes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 560,
+         "label": "T-shirts sans manches",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 5492,
+         "label": "Polos",
+         "size_group": "hommes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 32,
+       "label": "Costumes et blazers",
+       "garment_types": [
+        "veste"
+       ],
+       "children": [
+        {
+         "id": 1786,
+         "label": "Blazers",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1787,
+         "label": "Pantalons de costume",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1788,
+         "label": "Gilets de costume",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1789,
+         "label": "Ensembles costume",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1790,
+         "label": "Costumes de mariage",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1866,
+         "label": "Autres",
+         "size_group": "hommes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 79,
+       "label": "Sweats et pulls",
+       "garment_types": [
+        "haut"
+       ],
+       "children": [
+        {
+         "id": 1811,
+         "label": "Sweats",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 267,
+         "label": "Pulls et pulls à capuche",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1812,
+         "label": "Pulls à capuche avec zip",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 266,
+         "label": "Cardigans",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1813,
+         "label": "Pulls ras de cou",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 264,
+         "label": "Sweats à col V",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 265,
+         "label": "Pulls à col roulé",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1814,
+         "label": "Sweats longs",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1815,
+         "label": "Pulls d'hiver",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1825,
+         "label": "Vestes",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 268,
+         "label": "Autres",
+         "size_group": "hommes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 34,
+       "label": "Pantalons",
+       "garment_types": [
+        "pantalon"
+       ],
+       "children": [
+        {
+         "id": 1820,
+         "label": "Chinos",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 1821,
+         "label": "Jogging",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 259,
+         "label": "Pantalons skinny",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 271,
+         "label": "Pantacourts",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 261,
+         "label": "Pantalons de costume",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 260,
+         "label": "Pantalons à jambes larges",
+         "size_group": "hommes-pantalons"
+        },
+        {
+         "id": 263,
+         "label": "Autres pantalons",
+         "size_group": "hommes-pantalons"
+        }
+       ]
+      },
+      {
+       "id": 80,
+       "label": "Shorts",
+       "garment_types": [
+        "pantalon"
+       ],
+       "children": [
+        {
+         "id": 1822,
+         "label": "Shorts cargo",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1823,
+         "label": "Shorts chino",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1824,
+         "label": "Shorts en jean",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 272,
+         "label": "Autres shorts",
+         "size_group": "hommes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 85,
+       "label": "Sous-vêtements et chaussettes",
+       "children": [
+        {
+         "id": 1829,
+         "label": "Sous-vêtements",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1828,
+         "label": "Chaussettes",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1830,
+         "label": "Peignoirs",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 1867,
+         "label": "Autres",
+         "size_group": "hommes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 2910,
+       "label": "Pyjamas",
+       "children": [
+        {
+         "id": 2911,
+         "label": "Pyjamas une-pièce",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 2912,
+         "label": "Bas de pyjama",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 2913,
+         "label": "Ensembles de pyjamas",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 2914,
+         "label": "Hauts de pyjama",
+         "size_group": "hommes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 84,
+       "label": "Maillots de bain",
+       "size_group": "hommes-vetements"
+      },
+      {
+       "id": 30,
+       "label": "Vêtements de sport et accessoires",
+       "children": [
+        {
+         "id": 581,
+         "label": "Vêtements d'extérieur",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 582,
+         "label": "Survêtements",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 583,
+         "label": "Pantalons",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 586,
+         "label": "Shorts",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 584,
+         "label": "Hauts et t-shirts",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 3267,
+         "label": "Maillots",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 585,
+         "label": "Pulls & sweats",
+         "size_group": "hommes-vetements"
+        },
+        {
+         "id": 587,
+         "label": "Accessoires de sports",
+         "children": [
+          {
+           "id": 1471,
+           "label": "Lunettes",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1474,
+           "label": "Gants",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1473,
+           "label": "Chapeaux et casquettes",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 1470,
+           "label": "Écharpes",
+           "size_group": "hommes-vetements"
+          },
+          {
+           "id": 3050,
+           "label": "Bracelets",
+           "size_group": "hommes-vetements"
+          }
+         ]
+        },
+        {
+         "id": 588,
+         "label": "Autres",
+         "size_group": "hommes-vetements"
+        }
+       ]
+      },
+      {
+       "id": 92,
+       "label": "Vêtements spécialisés et costumes",
+       "size_group": "hommes-vetements"
+      },
+      {
+       "id": 83,
+       "label": "Autres",
+       "size_group": "hommes-vetements"
+      }
+     ]
+    },
+    {
+     "id": 1231,
+     "label": "Chaussures",
+     "garment_types": [
+      "chaussures"
+     ],
+     "children": [
+      {
+       "id": 2656,
+       "label": "Mocassins et chaussures bateau",
+       "size_group": "hommes-chaussures"
+      },
+      {
+       "id": 1233,
+       "label": "Bottes",
+       "children": [
+        {
+         "id": 2661,
+         "label": "Bottines Chelsea et sans lacets",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2662,
+         "label": "Bottines à lacets",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2663,
+         "label": "Bottes de neige",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 1795,
+         "label": "Bottes de pluie",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2664,
+         "label": "Bottes de travail",
+         "size_group": "hommes-chaussures"
+        }
+       ]
+      },
+      {
+       "id": 2970,
+       "label": "Mules et sabots",
+       "size_group": "hommes-chaussures"
+      },
+      {
+       "id": 2657,
+       "label": "Espadrilles",
+       "size_group": "hommes-chaussures"
+      },
+      {
+       "id": 2969,
+       "label": "Claquettes et tongs",
+       "size_group": "hommes-chaussures"
+      },
+      {
+       "id": 1238,
+       "label": "Chaussures habillées",
+       "size_group": "hommes-chaussures"
+      },
+      {
+       "id": 2968,
+       "label": "Sandales",
+       "size_group": "hommes-chaussures"
+      },
+      {
+       "id": 2659,
+       "label": "Chaussons et pantoufles",
+       "size_group": "hommes-chaussures"
+      },
+      {
+       "id": 1452,
+       "label": "Chaussures de sport",
+       "children": [
+        {
+         "id": 2672,
+         "label": "Chaussures de basket",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2673,
+         "label": "Chaussures d'escalade",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2674,
+         "label": "Chaussures de cyclisme",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2675,
+         "label": "Chaussures de danse",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2676,
+         "label": "Chaussures de foot",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2677,
+         "label": "Chaussures de golf",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2678,
+         "label": "Chaussures et bottes de randonnée",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2679,
+         "label": "Patins à glace",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2680,
+         "label": "Chaussures de foot en salle",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 1467,
+         "label": "Chaussures de fitness",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2681,
+         "label": "Bottes de moto",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2682,
+         "label": "Patins à roulettes et rollers",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 1453,
+         "label": "Chaussures de course",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2683,
+         "label": "Bottes de ski",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2684,
+         "label": "Bottes de snowboard",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2685,
+         "label": "Chaussures aquatiques",
+         "size_group": "hommes-chaussures"
+        },
+        {
+         "id": 2686,
+         "label": "Chaussures de tennis",
+         "size_group": "hommes-chaussures"
+        }
+       ]
+      },
+      {
+       "id": 1242,
+       "label": "Baskets",
+       "size_group": "hommes-chaussures"
+      }
+     ]
+    },
+    {
+     "id": 82,
+     "label": "Accessoires",
+     "garment_types": [
+      "accessoire"
+     ],
+     "children": [
+      {
+       "id": 94,
+       "label": "Sacs et sacoches",
+       "garment_types": [
+        "sac"
+       ],
+       "children": [
+        {
+         "id": 246,
+         "label": "Sacs à dos"
+        },
+        {
+         "id": 2963,
+         "label": "Mallettes"
+        },
+        {
+         "id": 1799,
+         "label": "Sacs banane"
+        },
+        {
+         "id": 2962,
+         "label": "Housses pour vêtements"
+        },
+        {
+         "id": 2961,
+         "label": "Sacs de sport"
+        },
+        {
+         "id": 1798,
+         "label": "Fourre-tout et sacs marins"
+        },
+        {
+         "id": 1862,
+         "label": "Bagages et valises"
+        },
+        {
+         "id": 1797,
+         "label": "Cartables et sacoches"
+        },
+        {
+         "id": 247,
+         "label": "Sacs à bandoulière"
+        },
+        {
+         "id": 248,
+         "label": "Porte-monnaie"
+        }
+       ]
+      },
+      {
+       "id": 2960,
+       "label": "Bandanas et foulards pour cheveux"
+      },
+      {
+       "id": 96,
+       "label": "Ceintures"
+      },
+      {
+       "id": 2959,
+       "label": "Bretelles"
+      },
+      {
+       "id": 91,
+       "label": "Gants"
+      },
+      {
+       "id": 2958,
+       "label": "Mouchoirs de poche"
+      },
+      {
+       "id": 86,
+       "label": "Chapeaux et casquettes",
+       "children": [
+        {
+         "id": 2965,
+         "label": "Cagoules"
+        },
+        {
+         "id": 2964,
+         "label": "Bonnets"
+        },
+        {
+         "id": 287,
+         "label": "Casquettes"
+        },
+        {
+         "id": 288,
+         "label": "Chapeaux"
+        }
+       ]
+      },
+      {
+       "id": 95,
+       "label": "Bijoux",
+       "children": [
+        {
+         "id": 243,
+         "label": "Bracelets"
+        },
+        {
+         "id": 2967,
+         "label": "Breloques et pendentifs"
+        },
+        {
+         "id": 1800,
+         "label": "Boutons de manchette"
+        },
+        {
+         "id": 2966,
+         "label": "Boucles d'oreilles"
+        },
+        {
+         "id": 241,
+         "label": "Colliers"
+        },
+        {
+         "id": 242,
+         "label": "Bagues"
+        },
+        {
+         "id": 244,
+         "label": "Autre"
+        }
+       ]
+      },
+      {
+       "id": 2957,
+       "label": "Pochettes de costume"
+      },
+      {
+       "id": 87,
+       "label": "Écharpes et châles"
+      },
+      {
+       "id": 98,
+       "label": "Lunettes de soleil"
+      },
+      {
+       "id": 2956,
+       "label": "Cravates et nœuds papillons"
+      },
+      {
+       "id": 97,
+       "label": "Montres"
+      },
+      {
+       "id": 99,
+       "label": "Autres"
+      }
+     ]
+    },
+    {
+     "id": 139,
+     "label": "Soins",
+     "children": [
+      {
+       "id": 143,
+       "label": "Soins visage"
+      },
+      {
+       "id": 2055,
+       "label": "Accessoires",
+       "children": [
+        {
+         "id": 1826,
+         "label": "Accessoires de rasage"
+        },
+        {
+         "id": 1827,
+         "label": "Accessoires de toilette"
+        },
+        {
+         "id": 971,
+         "label": "Autres accessoires beauté"
+        }
+       ]
+      },
+      {
+       "id": 140,
+       "label": "Soins cheveux"
+      },
+      {
+       "id": 141,
+       "label": "Soins du corps"
+      },
+      {
+       "id": 142,
+       "label": "Soins mains et ongles"
+      },
+      {
+       "id": 145,
+       "label": "Parfums"
+      },
+      {
+       "id": 144,
+       "label": "Maquillage"
+      },
+      {
+       "id": 1863,
+       "label": "Coffrets"
+      },
+      {
+       "id": 968,
+       "label": "Autres cosmétiques"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": 1193,
+   "label": "Enfants",
+   "children": [
+    {
+     "id": 1195,
+     "label": "Vêtements pour filles",
+     "children": [
+      {
+       "id": 1243,
+       "label": "Bébé filles",
+       "children": [
+        {
+         "id": 1514,
+         "label": "Combinaisons",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1515,
+         "label": "Bodies",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1516,
+         "label": "Grenouillères",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1517,
+         "label": "Ensembles",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1875,
+         "label": "Autre",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1255,
+       "label": "Chaussures",
+       "garment_types": [
+        "chaussures"
+       ],
+       "children": [
+        {
+         "id": 1525,
+         "label": "Chaussures bébé"
+        },
+        {
+         "id": 1530,
+         "label": "Bottes",
+         "children": [
+          {
+           "id": 2695,
+           "label": "Bottines"
+          },
+          {
+           "id": 2696,
+           "label": "Bottes mi-hautes"
+          },
+          {
+           "id": 2697,
+           "label": "Bottes de neige"
+          },
+          {
+           "id": 2698,
+           "label": "Bottes de pluie"
+          }
+         ]
+        },
+        {
+         "id": 2690,
+         "label": "Mules et sabots"
+        },
+        {
+         "id": 1526,
+         "label": "Chaussures plates",
+         "children": [
+          {
+           "id": 2753,
+           "label": "Ballerines, babies et Mary-Jane"
+          },
+          {
+           "id": 2701,
+           "label": "Espadrilles"
+          },
+          {
+           "id": 2702,
+           "label": "Chaussures à lacets"
+          }
+         ]
+        },
+        {
+         "id": 2691,
+         "label": "Sandales, claquettes et tongs",
+         "children": [
+          {
+           "id": 2704,
+           "label": "Tongs"
+          },
+          {
+           "id": 2705,
+           "label": "Sandales"
+          },
+          {
+           "id": 2707,
+           "label": "Claquettes"
+          }
+         ]
+        },
+        {
+         "id": 1528,
+         "label": "Chaussures habillées"
+        },
+        {
+         "id": 2692,
+         "label": "Chaussures à talons"
+        },
+        {
+         "id": 1534,
+         "label": "Chaussons et pantoufles"
+        },
+        {
+         "id": 2693,
+         "label": "Chaussures de sport",
+         "children": [
+          {
+           "id": 2708,
+           "label": "Chaussures de basket"
+          },
+          {
+           "id": 2709,
+           "label": "Chaussures de danse"
+          },
+          {
+           "id": 2710,
+           "label": "Chaussures de foot"
+          },
+          {
+           "id": 2711,
+           "label": "Chaussures et bottes de randonnée"
+          },
+          {
+           "id": 2712,
+           "label": "Patins à glace"
+          },
+          {
+           "id": 2713,
+           "label": "Patins à roulettes et rollers"
+          },
+          {
+           "id": 2714,
+           "label": "Chaussures de course"
+          },
+          {
+           "id": 2715,
+           "label": "Chaussures de ski"
+          },
+          {
+           "id": 2716,
+           "label": "Bottes de snowboard"
+          },
+          {
+           "id": 2717,
+           "label": "Chaussures aquatiques"
+          }
+         ]
+        },
+        {
+         "id": 1533,
+         "label": "Baskets",
+         "children": [
+          {
+           "id": 2718,
+           "label": "Baskets à scratch"
+          },
+          {
+           "id": 2719,
+           "label": "Baskets à lacets"
+          },
+          {
+           "id": 2720,
+           "label": "Baskets sans lacets"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": 1244,
+       "label": "Vêtements d'extérieur",
+       "garment_types": [
+        "veste"
+       ],
+       "children": [
+        {
+         "id": 1519,
+         "label": "Manteaux",
+         "children": [
+          {
+           "id": 2540,
+           "label": "Duffle-coats",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2541,
+           "label": "Parkas",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2542,
+           "label": "Cabans",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2543,
+           "label": "Trenchs",
+           "size_group": "enfants-vetements"
+          }
+         ]
+        },
+        {
+         "id": 1518,
+         "label": "Vestes sans manches",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1521,
+         "label": "Vestes",
+         "children": [
+          {
+           "id": 2544,
+           "label": "Blazers",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2545,
+           "label": "Blousons aviateur",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2546,
+           "label": "Vestes en jean",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2547,
+           "label": "Vestes polaires",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2548,
+           "label": "Doudounes",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2549,
+           "label": "Vestes coupe-vent",
+           "size_group": "enfants-vetements"
+          }
+         ]
+        },
+        {
+         "id": 2554,
+         "label": "Vêtements de pluie",
+         "children": [
+          {
+           "id": 2556,
+           "label": "Ponchos",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2557,
+           "label": "Combinaisons de pluie",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2555,
+           "label": "Pantalons de pluie",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2558,
+           "label": "Imperméables",
+           "size_group": "enfants-vetements"
+          }
+         ]
+        },
+        {
+         "id": 2559,
+         "label": "Vêtements de ski",
+         "children": [
+          {
+           "id": 2560,
+           "label": "Manteaux et vestes de ski",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2565,
+           "label": "Combinaisons de ski",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2582,
+           "label": "Pantalons de ski",
+           "size_group": "enfants-vetements"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": 1246,
+       "label": "Pulls & sweats",
+       "garment_types": [
+        "haut"
+       ],
+       "children": [
+        {
+         "id": 1542,
+         "label": "Pulls",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1543,
+         "label": "Pulls col V",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1544,
+         "label": "Pulls à col roulé",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1548,
+         "label": "Gilets zippés",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1549,
+         "label": "Boléros",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1551,
+         "label": "Gilets",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1550,
+         "label": "Pulls à capuche & sweatshirts",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1877,
+         "label": "Autre",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1245,
+       "label": "Chemises et t-shirts",
+       "garment_types": [
+        "haut"
+       ],
+       "children": [
+        {
+         "id": 1535,
+         "label": "T-shirts",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1536,
+         "label": "Polos",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1537,
+         "label": "Chemises",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1538,
+         "label": "Chemises manches courtes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1539,
+         "label": "Chemises manches longues",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1540,
+         "label": "Chemises sans manches",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1541,
+         "label": "Tuniques",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1878,
+         "label": "Autre",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1247,
+       "label": "Robes",
+       "garment_types": [
+        "robe"
+       ],
+       "children": [
+        {
+         "id": 1554,
+         "label": "Robes courtes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1553,
+         "label": "Robes longues",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1248,
+       "label": "Jupes",
+       "garment_types": [
+        "jupe"
+       ],
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1249,
+       "label": "Pantalons et shorts",
+       "garment_types": [
+        "pantalon"
+       ],
+       "children": [
+        {
+         "id": 1559,
+         "label": "Jeans",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1560,
+         "label": "Jeans slim",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1562,
+         "label": "Pantalons pattes d'éléphant",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1565,
+         "label": "Leggings",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1568,
+         "label": "Salopettes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 2079,
+         "label": "Sarouels",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1250,
+         "label": "Shorts et pantacourts",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1880,
+         "label": "Autres",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1258,
+       "label": "Sacs et sacs à dos",
+       "garment_types": [
+        "sac"
+       ]
+      },
+      {
+       "id": 1574,
+       "label": "Accessoires",
+       "garment_types": [
+        "accessoire"
+       ],
+       "children": [
+        {
+         "id": 1581,
+         "label": "Ceintures"
+        },
+        {
+         "id": 1578,
+         "label": "Gants"
+        },
+        {
+         "id": 1582,
+         "label": "Accessoires pour cheveux"
+        },
+        {
+         "id": 1577,
+         "label": "Chapeaux et casquettes"
+        },
+        {
+         "id": 1586,
+         "label": "Bijoux"
+        },
+        {
+         "id": 1580,
+         "label": "Écharpes et châles"
+        },
+        {
+         "id": 1584,
+         "label": "Porte-monnaie"
+        },
+        {
+         "id": 1881,
+         "label": "Autres accessoires"
+        }
+       ]
+      },
+      {
+       "id": 1251,
+       "label": "Équipements de natation",
+       "children": [
+        {
+         "id": 1590,
+         "label": "Maillot de bain 1 pièce",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1592,
+         "label": "Maillot de bain 2 pièces",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1593,
+         "label": "Peignoirs",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1252,
+       "label": "Sous-vêtements",
+       "children": [
+        {
+         "id": 1600,
+         "label": "Chaussettes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1601,
+         "label": "Collants",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1602,
+         "label": "Culottes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1872,
+         "label": "Autre",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1594,
+       "label": "Pyjamas et chemises de nuit",
+       "children": [
+        {
+         "id": 1596,
+         "label": "Pyjamas une pièce",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1597,
+         "label": "Pyjamas deux pièces",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1598,
+         "label": "Chemises de nuit",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1253,
+       "label": "Vêtements de sport",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1510,
+       "label": "Lots de vêtements",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1604,
+       "label": "Jumeaux et plus",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1606,
+       "label": "Déguisements",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 2080,
+       "label": "Tenues de soirée",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1254,
+       "label": "Autres",
+       "size_group": "enfants-vetements"
+      }
+     ]
+    },
+    {
+     "id": 1194,
+     "label": "Vêtements pour garçons",
+     "children": [
+      {
+       "id": 1196,
+       "label": "Bébé garçons",
+       "children": [
+        {
+         "id": 1642,
+         "label": "Combinaisons",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1643,
+         "label": "Bodies",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1644,
+         "label": "Grenouillères",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1645,
+         "label": "Ensembles",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1883,
+         "label": "Autre",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1256,
+       "label": "Chaussures",
+       "garment_types": [
+        "chaussures"
+       ],
+       "children": [
+        {
+         "id": 1653,
+         "label": "Chaussures bébé"
+        },
+        {
+         "id": 2721,
+         "label": "Mocassins et chaussures bateau"
+        },
+        {
+         "id": 1657,
+         "label": "Bottes",
+         "children": [
+          {
+           "id": 2726,
+           "label": "Bottines"
+          },
+          {
+           "id": 2727,
+           "label": "Bottes mi-hautes"
+          },
+          {
+           "id": 2728,
+           "label": "Bottes de neige"
+          },
+          {
+           "id": 2729,
+           "label": "Bottes de pluie"
+          }
+         ]
+        },
+        {
+         "id": 2722,
+         "label": "Espadrilles"
+        },
+        {
+         "id": 2723,
+         "label": "Sandales, claquettes et tongs",
+         "children": [
+          {
+           "id": 2730,
+           "label": "Mules et sabots"
+          },
+          {
+           "id": 2732,
+           "label": "Tongs"
+          },
+          {
+           "id": 2733,
+           "label": "Sandales"
+          },
+          {
+           "id": 2734,
+           "label": "Claquettes"
+          }
+         ]
+        },
+        {
+         "id": 1655,
+         "label": "Chaussures habillées"
+        },
+        {
+         "id": 1661,
+         "label": "Chaussons et pantoufles"
+        },
+        {
+         "id": 2724,
+         "label": "Chaussures de sport",
+         "children": [
+          {
+           "id": 2735,
+           "label": "Chaussures de basket"
+          },
+          {
+           "id": 2737,
+           "label": "Chaussures de danse"
+          },
+          {
+           "id": 2738,
+           "label": "Chaussures de foot"
+          },
+          {
+           "id": 2742,
+           "label": "Chaussures et bottes de randonnée"
+          },
+          {
+           "id": 2743,
+           "label": "Patins à glace"
+          },
+          {
+           "id": 2744,
+           "label": "Patins à roulettes et rollers"
+          },
+          {
+           "id": 2745,
+           "label": "Chaussures de course"
+          },
+          {
+           "id": 2746,
+           "label": "Chaussures de ski"
+          },
+          {
+           "id": 2748,
+           "label": "Bottes de snowboard"
+          },
+          {
+           "id": 2749,
+           "label": "Chaussures aquatiques"
+          }
+         ]
+        },
+        {
+         "id": 1660,
+         "label": "Baskets",
+         "children": [
+          {
+           "id": 2750,
+           "label": "Baskets à scratch"
+          },
+          {
+           "id": 2751,
+           "label": "Baskets à lacets"
+          },
+          {
+           "id": 2752,
+           "label": "Baskets sans lacets"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": 1197,
+       "label": "Vêtements d'extérieur",
+       "garment_types": [
+        "veste"
+       ],
+       "children": [
+        {
+         "id": 1647,
+         "label": "Manteaux",
+         "children": [
+          {
+           "id": 2561,
+           "label": "Duffle-coats",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2562,
+           "label": "Parkas",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2563,
+           "label": "Cabans",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2564,
+           "label": "Trenchs",
+           "size_group": "enfants-vetements"
+          }
+         ]
+        },
+        {
+         "id": 1646,
+         "label": "Vestes sans manches",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1649,
+         "label": "Vestes",
+         "children": [
+          {
+           "id": 2571,
+           "label": "Blazers",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2573,
+           "label": "Blousons aviateur",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2574,
+           "label": "Vestes en jean",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2575,
+           "label": "Vestes polaires",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2576,
+           "label": "Doudounes",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2577,
+           "label": "Vestes coupe-vent",
+           "size_group": "enfants-vetements"
+          }
+         ]
+        },
+        {
+         "id": 2583,
+         "label": "Vêtements de pluie",
+         "children": [
+          {
+           "id": 2604,
+           "label": "Ponchos",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2609,
+           "label": "Combinaisons de pluie",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2602,
+           "label": "Pantalons de pluie",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2606,
+           "label": "Imperméables",
+           "size_group": "enfants-vetements"
+          }
+         ]
+        },
+        {
+         "id": 2590,
+         "label": "Vêtements de ski",
+         "children": [
+          {
+           "id": 2610,
+           "label": "Manteaux et vestes de ski",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2613,
+           "label": "Combinaisons de ski",
+           "size_group": "enfants-vetements"
+          },
+          {
+           "id": 2612,
+           "label": "Pantalons de ski",
+           "size_group": "enfants-vetements"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "id": 1199,
+       "label": "Pulls & sweats",
+       "garment_types": [
+        "haut"
+       ],
+       "children": [
+        {
+         "id": 1668,
+         "label": "Pulls",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1669,
+         "label": "Pulls col V",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1670,
+         "label": "Pulls à col roulé",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1671,
+         "label": "Gilets zippés",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1672,
+         "label": "Pulls à capuche et sweatshirts",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1673,
+         "label": "Gilets",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1887,
+         "label": "Autre",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1198,
+       "label": "Chemises et t-shirts",
+       "garment_types": [
+        "haut"
+       ],
+       "children": [
+        {
+         "id": 1662,
+         "label": "T-shirts",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1663,
+         "label": "Polos",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1664,
+         "label": "Chemises",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1665,
+         "label": "Chemises manches courtes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1666,
+         "label": "Chemises manches longues",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1667,
+         "label": "Chemises sans manches",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1886,
+         "label": "Autre",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1200,
+       "label": "Pantalons et shorts",
+       "garment_types": [
+        "pantalon"
+       ],
+       "children": [
+        {
+         "id": 1696,
+         "label": "Jeans",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1697,
+         "label": "Jeans slim",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1698,
+         "label": "Pantalons pattes d'éléphant",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1701,
+         "label": "Leggings",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1702,
+         "label": "Salopettes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1201,
+         "label": "Shorts et pantacourts",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 2082,
+         "label": "Sarouels",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1870,
+         "label": "Autres",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1257,
+       "label": "Sacs et sacs à dos",
+       "garment_types": [
+        "sac"
+       ]
+      },
+      {
+       "id": 1714,
+       "label": "Accessoires",
+       "garment_types": [
+        "accessoire"
+       ],
+       "children": [
+        {
+         "id": 1743,
+         "label": "Ceintures"
+        },
+        {
+         "id": 1740,
+         "label": "Gants"
+        },
+        {
+         "id": 1749,
+         "label": "Chapeaux et casquettes"
+        },
+        {
+         "id": 1741,
+         "label": "Écharpes et châles"
+        },
+        {
+         "id": 1746,
+         "label": "Nœuds papillon et cravattes"
+        },
+        {
+         "id": 1745,
+         "label": "Porte-monnaie"
+        },
+        {
+         "id": 1748,
+         "label": "Autres accessoires"
+        }
+       ]
+      },
+      {
+       "id": 1202,
+       "label": "Équipements de natation",
+       "children": [
+        {
+         "id": 1750,
+         "label": "Maillots de bain",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1751,
+         "label": "Peignoirs",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1203,
+       "label": "Sous-vêtements",
+       "children": [
+        {
+         "id": 1757,
+         "label": "Chaussettes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1758,
+         "label": "Collants",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1759,
+         "label": "Culottes",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1871,
+         "label": "Autre",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1752,
+       "label": "Pyjamas",
+       "children": [
+        {
+         "id": 1754,
+         "label": "Pyjamas une pièce",
+         "size_group": "enfants-vetements"
+        },
+        {
+         "id": 1755,
+         "label": "Pyjamas deux pièces",
+         "size_group": "enfants-vetements"
+        }
+       ]
+      },
+      {
+       "id": 1204,
+       "label": "Vêtements de sport",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1760,
+       "label": "Lots de vêtements",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1761,
+       "label": "Jumeaux et plus",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1762,
+       "label": "Déguisements",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 2083,
+       "label": "Tenues de soirée",
+       "size_group": "enfants-vetements"
+      },
+      {
+       "id": 1205,
+       "label": "Autres",
+       "size_group": "enfants-vetements"
+      }
+     ]
+    },
+    {
+     "id": 1499,
+     "label": "Jeux et jouets",
+     "children": [
+      {
+       "id": 1730,
+       "label": "Figurines et accessoires",
+       "children": [
+        {
+         "id": 3312,
+         "label": "Figurines"
+        },
+        {
+         "id": 3311,
+         "label": "Accessoires"
+        },
+        {
+         "id": 3313,
+         "label": "Sets de jeux"
+        }
+       ]
+      },
+      {
+       "id": 3314,
+       "label": "Loisirs créatifs",
+       "children": [
+        {
+         "id": 3315,
+         "label": "Tabliers et blouses"
+        },
+        {
+         "id": 3316,
+         "label": "Perles et fabrication de bijoux"
+        },
+        {
+         "id": 3317,
+         "label": "Argile et pâte à modeler"
+        },
+        {
+         "id": 3319,
+         "label": "Kits créatifs"
+        },
+        {
+         "id": 3320,
+         "label": "Peinture et dessin"
+        },
+        {
+         "id": 3321,
+         "label": "Tableaux et ardoises"
+        },
+        {
+         "id": 3322,
+         "label": "Pochoirs et tampons"
+        },
+        {
+         "id": 3323,
+         "label": "Gommettes et accessoires de papeterie"
+        }
+       ]
+      },
+      {
+       "id": 3344,
+       "label": "Activités et jouets pour bébé",
+       "children": [
+        {
+         "id": 3347,
+         "label": "Centres d'activités et trotteurs"
+        },
+        {
+         "id": 3348,
+         "label": "Tapis d'éveil et d'activités"
+        },
+        {
+         "id": 3345,
+         "label": "Jouets de bain"
+        },
+        {
+         "id": 3346,
+         "label": "Bouncers, jumpers & swings"
+        },
+        {
+         "id": 3349,
+         "label": "Planches d'activités"
+        },
+        {
+         "id": 3350,
+         "label": "Push & pull toys"
+        },
+        {
+         "id": 3351,
+         "label": "Hochets"
+        },
+        {
+         "id": 3352,
+         "label": "Sorting & stacking toys"
+        },
+        {
+         "id": 3353,
+         "label": "Jouets de dentition"
+        }
+       ]
+      },
+      {
+       "id": 1767,
+       "label": "Jeux de construction"
+      },
+      {
+       "id": 1731,
+       "label": "Poupées, poupons et accessoires",
+       "children": [
+        {
+         "id": 3327,
+         "label": "Poupées et poupons"
+        },
+        {
+         "id": 3324,
+         "label": "Accessoires pour poupée et poupon"
+        },
+        {
+         "id": 3325,
+         "label": "Meubles et accessoires pour maison de poupée"
+        },
+        {
+         "id": 3326,
+         "label": "Maisons de poupées"
+        },
+        {
+         "id": 3328,
+         "label": "Kits de jeu pour poupée et poupon"
+        }
+       ]
+      },
+      {
+       "id": 3329,
+       "label": "Déguisements et jeux de rôle",
+       "children": [
+        {
+         "id": 3330,
+         "label": "Déguisements"
+        },
+        {
+         "id": 3331,
+         "label": "Tentes et tunnels de jeux"
+        },
+        {
+         "id": 3332,
+         "label": "Toy food, cookware, & dishes"
+        },
+        {
+         "id": 3333,
+         "label": "Boîtes à bijoux pour enfant"
+        },
+        {
+         "id": 3334,
+         "label": "Cuisines pour enfant"
+        },
+        {
+         "id": 3335,
+         "label": "Matériel de bricolage pour enfant"
+        }
+       ]
+      },
+      {
+       "id": 1763,
+       "label": "Jeux éducatifs",
+       "children": [
+        {
+         "id": 3354,
+         "label": "Cartes flash"
+        },
+        {
+         "id": 3355,
+         "label": "Kaléidoscopes et prismes"
+        },
+        {
+         "id": 3356,
+         "label": "Jeux de lecture et d'écriture"
+        },
+        {
+         "id": 3357,
+         "label": "Jeux scientifiques et STEM"
+        },
+        {
+         "id": 3358,
+         "label": "Autres jeux éducatifs"
+        }
+       ]
+      },
+      {
+       "id": 1725,
+       "label": "Jeux et jouets électroniques",
+       "children": [
+        {
+         "id": 3364,
+         "label": "Musiques et histoires"
+        },
+        {
+         "id": 3360,
+         "label": "Peluches interactives"
+        },
+        {
+         "id": 3361,
+         "label": "Équipements de karaoké pour enfants"
+        },
+        {
+         "id": 3363,
+         "label": "Boîtes à musique et histoires"
+        },
+        {
+         "id": 3362,
+         "label": "Jouets télécommandés"
+        },
+        {
+         "id": 3359,
+         "label": "Appareils photo pour enfant"
+        },
+        {
+         "id": 3365,
+         "label": "Talkies-walkies"
+        },
+        {
+         "id": 3366,
+         "label": "Autres jeux et jouets électroniques"
+        }
+       ]
+      },
+      {
+       "id": 1766,
+       "label": "Jeux/jouets musicaux et instruments"
+      },
+      {
+       "id": 3336,
+       "label": "Jeux de cirque, fidgets et gadgets",
+       "children": [
+        {
+         "id": 3337,
+         "label": "Fidgets"
+        },
+        {
+         "id": 3339,
+         "label": "Kits de jonglage"
+        },
+        {
+         "id": 3340,
+         "label": "Coffrets et accessoires de magie"
+        },
+        {
+         "id": 3338,
+         "label": "Farces et attrapes"
+        },
+        {
+         "id": 3341,
+         "label": "Slime & putty"
+        },
+        {
+         "id": 3342,
+         "label": "Yoyos"
+        },
+        {
+         "id": 3343,
+         "label": "Autres jeux fantaisie et gadgets"
+        }
+       ]
+      },
+      {
+       "id": 1771,
+       "label": "Jeux de sport et de plein air",
+       "children": [
+        {
+         "id": 3367,
+         "label": "Piscines à balles et accessoires"
+        },
+        {
+         "id": 3368,
+         "label": "Jeux d'eau et de plage"
+        },
+        {
+         "id": 3369,
+         "label": "Machines et flacons à bulles"
+        },
+        {
+         "id": 3370,
+         "label": "Pistolets à projectiles en mousse et accessoires"
+        },
+        {
+         "id": 3371,
+         "label": "Autres jeux de plein air"
+        },
+        {
+         "id": 3372,
+         "label": "Cerfs-volants et fusées"
+        },
+        {
+         "id": 3373,
+         "label": "Jeux de sable et d'eau"
+        },
+        {
+         "id": 3374,
+         "label": "Jeux de sport"
+        }
+       ]
+      },
+      {
+       "id": 1764,
+       "label": "Peluches"
+      },
+      {
+       "id": 3375,
+       "label": "Voitures, trains et autres véhicules",
+       "children": [
+        {
+         "id": 3471,
+         "label": "Avions"
+        },
+        {
+         "id": 3468,
+         "label": "Voitures"
+        },
+        {
+         "id": 3470,
+         "label": "Trains"
+        },
+        {
+         "id": 3469,
+         "label": "Camions"
+        },
+        {
+         "id": 3472,
+         "label": "Circuits et garages"
+        },
+        {
+         "id": 3473,
+         "label": "Autres véhicules"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": 1496,
+     "label": "Poussettes, porte-bébé et sièges auto",
+     "children": [
+      {
+       "id": 3461,
+       "label": "Porte-bébé et écharpes",
+       "children": [
+        {
+         "id": 3462,
+         "label": "Slings et écharpes"
+        },
+        {
+         "id": 3463,
+         "label": "Porte-bébé souples"
+        },
+        {
+         "id": 3464,
+         "label": "Porte-bébé de hanche"
+        },
+        {
+         "id": 3465,
+         "label": "Backpack carriers"
+        }
+       ]
+      },
+      {
+       "id": 1612,
+       "label": "Poussettes et landaus"
+      },
+      {
+       "id": 1511,
+       "label": "Accessoires de poussette",
+       "children": [
+        {
+         "id": 3376,
+         "label": "Nacelles, cosys et adaptateurs"
+        },
+        {
+         "id": 3377,
+         "label": "Planches à roulettes et sièges supplémentaires"
+        },
+        {
+         "id": 3378,
+         "label": "Habillages pluie, capotes et ombrelles"
+        },
+        {
+         "id": 3379,
+         "label": "Porte-gobelet et plateaux"
+        },
+        {
+         "id": 3380,
+         "label": "Chancelières pour poussette"
+        },
+        {
+         "id": 3381,
+         "label": "Organisateurs et filets"
+        },
+        {
+         "id": 3382,
+         "label": "Pièces détachées"
+        }
+       ]
+      },
+      {
+       "id": 3383,
+       "label": "Sièges auto"
+      },
+      {
+       "id": 3384,
+       "label": "Rehausseurs"
+      },
+      {
+       "id": 3385,
+       "label": "Accessoires pour siège auto",
+       "children": [
+        {
+         "id": 3386,
+         "label": "Miroirs de voiture"
+        },
+        {
+         "id": 3387,
+         "label": "Car sun shades & screens"
+        },
+        {
+         "id": 3388,
+         "label": "Réducteurs pour siège auto"
+        },
+        {
+         "id": 3389,
+         "label": "Car seat bases"
+        },
+        {
+         "id": 3390,
+         "label": "Housses pour siège auto"
+        },
+        {
+         "id": 3391,
+         "label": "Car seat footmuffs"
+        },
+        {
+         "id": 3392,
+         "label": "Autres accessoires pour voiture"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": 1498,
+     "label": "Meubles et décoration",
+     "children": [
+      {
+       "id": 1567,
+       "label": "Matelas pour lits bébé et enfant",
+       "children": [
+        {
+         "id": 1569,
+         "label": "Matelas pour lit à barreaux"
+        },
+        {
+         "id": 1570,
+         "label": "Matelas pour berceau"
+        },
+        {
+         "id": 1571,
+         "label": "Matelas pour lit enfant"
+        }
+       ]
+      },
+      {
+       "id": 1572,
+       "label": "Tapis de sol et dalles en mousse"
+      },
+      {
+       "id": 1573,
+       "label": "Parcs"
+      },
+      {
+       "id": 3275,
+       "label": "Réducteurs de lit"
+      },
+      {
+       "id": 3276,
+       "label": "Décoration et souvenirs",
+       "children": [
+        {
+         "id": 3277,
+         "label": "Albums photo"
+        },
+        {
+         "id": 3278,
+         "label": "Toises"
+        },
+        {
+         "id": 3279,
+         "label": "Mobiles"
+        },
+        {
+         "id": 3280,
+         "label": "Cartes étapes et accessoires photo"
+        },
+        {
+         "id": 3281,
+         "label": "Tirelires"
+        },
+        {
+         "id": 3282,
+         "label": "Cadres photo"
+        },
+        {
+         "id": 3283,
+         "label": "Décorations murales"
+        }
+       ]
+      },
+      {
+       "id": 3284,
+       "label": "Chambre de bébé",
+       "children": [
+        {
+         "id": 3285,
+         "label": "Cododos"
+        },
+        {
+         "id": 3286,
+         "label": "Tables à langer"
+        },
+        {
+         "id": 3287,
+         "label": "Lits à barreaux"
+        },
+        {
+         "id": 3288,
+         "label": "Berceaux"
+        },
+        {
+         "id": 3289,
+         "label": "Lits enfant"
+        }
+       ]
+      },
+      {
+       "id": 3290,
+       "label": "Tapis"
+      },
+      {
+       "id": 3291,
+       "label": "Chaises et fauteuils"
+      },
+      {
+       "id": 3292,
+       "label": "Modules de motricité"
+      },
+      {
+       "id": 3293,
+       "label": "Étagères"
+      },
+      {
+       "id": 3294,
+       "label": "Tables et bureaux"
+      },
+      {
+       "id": 3295,
+       "label": "Armoires"
+      }
+     ]
+    },
+    {
+     "id": 3393,
+     "label": "Bain et change",
+     "children": [
+      {
+       "id": 3394,
+       "label": "Sacs à langer"
+      },
+      {
+       "id": 3412,
+       "label": "Bain",
+       "children": [
+        {
+         "id": 3413,
+         "label": "Bath tubs & seats"
+        },
+        {
+         "id": 3414,
+         "label": "Accessoires de bain"
+        },
+        {
+         "id": 3415,
+         "label": "Serviettes de bain"
+        },
+        {
+         "id": 3416,
+         "label": "Washcloths"
+        }
+       ]
+      },
+      {
+       "id": 3395,
+       "label": "Changing mats & covers",
+       "children": [
+        {
+         "id": 3396,
+         "label": "Matelas à langer"
+        },
+        {
+         "id": 3397,
+         "label": "Housses de matelas à langer"
+        },
+        {
+         "id": 3398,
+         "label": "Matelas à langer nomades"
+        }
+       ]
+      },
+      {
+       "id": 3399,
+       "label": "Couches",
+       "children": [
+        {
+         "id": 3400,
+         "label": "Couches lavables"
+        },
+        {
+         "id": 3401,
+         "label": "Couches de bain"
+        },
+        {
+         "id": 3402,
+         "label": "Couches jetables"
+        }
+       ]
+      },
+      {
+       "id": 3403,
+       "label": "Poubelles et rangements pour couches",
+       "children": [
+        {
+         "id": 3404,
+         "label": "Poubelles à couches"
+        },
+        {
+         "id": 3405,
+         "label": "Accessoires pour poubelles à couches"
+        },
+        {
+         "id": 3406,
+         "label": "Rangements pour couches"
+        },
+        {
+         "id": 3407,
+         "label": "Chauffe-lingettes et rangements pour lingettes"
+        }
+       ]
+      },
+      {
+       "id": 3417,
+       "label": "Pots et réducteurs"
+      },
+      {
+       "id": 3408,
+       "label": "Hygiène et soin",
+       "children": [
+        {
+         "id": 3409,
+         "label": "Accessoires de soin"
+        },
+        {
+         "id": 3410,
+         "label": "Shampoings, savons et soins pour la peau"
+        },
+        {
+         "id": 3411,
+         "label": "Baby wipes"
+        }
+       ]
+      },
+      {
+       "id": 3418,
+       "label": "Marchepieds"
+      }
+     ]
+    },
+    {
+     "id": 3427,
+     "label": "Sécurité bébé et enfant",
+     "children": [
+      {
+       "id": 3428,
+       "label": "Barrières de sécurité"
+      },
+      {
+       "id": 3429,
+       "label": "Accessoires de sécurité"
+      },
+      {
+       "id": 3430,
+       "label": "Protections auditives"
+      },
+      {
+       "id": 3431,
+       "label": "Laisses et harnais"
+      }
+     ]
+    },
+    {
+     "id": 3419,
+     "label": "Santé et grossesse",
+     "children": [
+      {
+       "id": 3420,
+       "label": "Humidificateurs"
+      },
+      {
+       "id": 3421,
+       "label": "Mouche-bébé"
+      },
+      {
+       "id": 3423,
+       "label": "Soins du post-partum"
+      },
+      {
+       "id": 3424,
+       "label": "Coussins de grossesse"
+      },
+      {
+       "id": 3425,
+       "label": "Pregnancy support belts"
+      },
+      {
+       "id": 3426,
+       "label": "Balances"
+      },
+      {
+       "id": 3422,
+       "label": "Thermomètres"
+      }
+     ]
+    },
+    {
+     "id": 3432,
+     "label": "Allaitement et alimentation",
+     "children": [
+      {
+       "id": 3433,
+       "label": "Mixeurs et robots cuiseurs pour bébé"
+      },
+      {
+       "id": 3434,
+       "label": "Bavoirs"
+      },
+      {
+       "id": 3435,
+       "label": "Alimentation au biberon",
+       "children": [
+        {
+         "id": 3436,
+         "label": "Biberons"
+        },
+        {
+         "id": 3437,
+         "label": "Tétines"
+        },
+        {
+         "id": 3438,
+         "label": "Séchoirs à linge"
+        },
+        {
+         "id": 3439,
+         "label": "Goupillons"
+        },
+        {
+         "id": 3440,
+         "label": "Chauffe-biberon"
+        },
+        {
+         "id": 3441,
+         "label": "Préparateurs de biberons"
+        },
+        {
+         "id": 3442,
+         "label": "Boîtes doseuses"
+        }
+       ]
+      },
+      {
+       "id": 3453,
+       "label": "Allaitement",
+       "children": [
+        {
+         "id": 3454,
+         "label": "Tire-lait"
+        },
+        {
+         "id": 3455,
+         "label": "Accessoires pour tire-lait"
+        },
+        {
+         "id": 3456,
+         "label": "Couvertures d'allaitement"
+        },
+        {
+         "id": 3457,
+         "label": "Coussinets d'allaitement et protège-mamelon"
+        }
+       ]
+      },
+      {
+       "id": 3444,
+       "label": "Repas de bébé",
+       "children": [
+        {
+         "id": 3445,
+         "label": "Couverts"
+        },
+        {
+         "id": 3446,
+         "label": "Assiettes et bols"
+        },
+        {
+         "id": 3447,
+         "label": "Coffrets repas"
+        },
+        {
+         "id": 3448,
+         "label": "Tasses d'apprentissage"
+        },
+        {
+         "id": 3449,
+         "label": "Gourdes"
+        }
+       ]
+      },
+      {
+       "id": 3452,
+       "label": "Coussins et couvertures d'allaitement"
+      },
+      {
+       "id": 3458,
+       "label": "Sucettes"
+      },
+      {
+       "id": 3459,
+       "label": "Accessoires pour sucettes"
+      },
+      {
+       "id": 3450,
+       "label": "Chaises hautes"
+      },
+      {
+       "id": 3451,
+       "label": "Accessoires pour chaise haute"
+      },
+      {
+       "id": 3443,
+       "label": "Langes"
+      },
+      {
+       "id": 3460,
+       "label": "Stérilisateurs"
+      }
+     ]
+    },
+    {
+     "id": 3296,
+     "label": "Sommeil et literie",
+     "children": [
+      {
+       "id": 3303,
+       "label": "Babyphones"
+      },
+      {
+       "id": 3304,
+       "label": "Barrières de lit"
+      },
+      {
+       "id": 3297,
+       "label": "Linge de lit, couvertures et plaids",
+       "children": [
+        {
+         "id": 3298,
+         "label": "Couvertures et plaids"
+        },
+        {
+         "id": 3299,
+         "label": "Draps-housses et alèses"
+        },
+        {
+         "id": 3300,
+         "label": "Oreillers"
+        },
+        {
+         "id": 3301,
+         "label": "Draps"
+        }
+       ]
+      },
+      {
+       "id": 3305,
+       "label": "Stores occultants"
+      },
+      {
+       "id": 3302,
+       "label": "Coussins chauffants et bouillottes"
+      },
+      {
+       "id": 3306,
+       "label": "Veilleuses"
+      },
+      {
+       "id": 3307,
+       "label": "Gigoteuses et turbulettes"
+      },
+      {
+       "id": 3308,
+       "label": "Sacs de couchage"
+      },
+      {
+       "id": 3309,
+       "label": "Couvertures d'emmaillotage"
+      },
+      {
+       "id": 3310,
+       "label": "Générateurs de bruits blancs"
+      }
+     ]
+    },
+    {
+     "id": 1501,
+     "label": "Fournitures scolaires",
+     "children": [
+      {
+       "id": 3269,
+       "label": "Boîtes et sacs à repas"
+      },
+      {
+       "id": 1508,
+       "label": "Cartables"
+      },
+      {
+       "id": 1509,
+       "label": "Fournitures scolaires"
+      }
+     ]
+    },
+    {
+     "id": 1502,
+     "label": "Autres articles pour bébé et enfant"
+    }
+   ]
+  }
+ ],
+ "size_groups": {
+  "femmes-vetements": [
+   "XXXS",
+   "XXS",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "XXXL",
+   "4XL",
+   "5XL",
+   "6XL",
+   "7XL",
+   "8XL",
+   "9XL",
+   "Autre",
+   "Taille unique",
+   "EU 30",
+   "EU 32",
+   "EU 34",
+   "EU 36",
+   "EU 38",
+   "EU 40",
+   "EU 42",
+   "EU 44",
+   "EU 46",
+   "EU 48",
+   "EU 50",
+   "EU 52",
+   "EU 54",
+   "EU 56",
+   "EU 58",
+   "UK 2",
+   "UK 4",
+   "UK 6",
+   "UK 8",
+   "UK 10",
+   "UK 12",
+   "UK 14",
+   "UK 16",
+   "UK 18",
+   "UK 20",
+   "UK 22",
+   "UK 24",
+   "UK 26",
+   "UK 28",
+   "UK 30",
+   "FR 30",
+   "FR 32",
+   "FR 34",
+   "FR 36",
+   "FR 38",
+   "FR 40",
+   "FR 42",
+   "FR 44",
+   "FR 46",
+   "FR 48",
+   "FR 50",
+   "FR 52",
+   "FR 54",
+   "FR 56",
+   "FR 58",
+   "FR 60",
+   "IT 34",
+   "IT 36",
+   "IT 38",
+   "IT 40",
+   "IT 42",
+   "IT 44",
+   "IT 46",
+   "IT 48",
+   "IT 50",
+   "IT 52",
+   "IT 54",
+   "IT 56",
+   "IT 58",
+   "IT 60",
+   "IT 62",
+   "US 00",
+   "US 0",
+   "US 2",
+   "US 4",
+   "US 6",
+   "US 8",
+   "US 10",
+   "US 12",
+   "US 14",
+   "US 16",
+   "US 18",
+   "US 20",
+   "US 22",
+   "US 24",
+   "US 26"
+  ],
+  "femmes-chaussures": [
+   "34",
+   "34.5",
+   "35",
+   "35.5",
+   "36",
+   "36.5",
+   "37",
+   "37.5",
+   "38",
+   "38.5",
+   "39",
+   "39.5",
+   "40",
+   "40.5",
+   "41",
+   "41.5",
+   "42",
+   "42.5",
+   "43",
+   "43.5",
+   "44",
+   "44.5",
+   "45",
+   "45.5",
+   "46",
+   "Taille unique",
+   "Autre"
+  ],
+  "hommes-vetements": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "XXXL",
+   "4XL",
+   "5XL",
+   "6XL",
+   "7XL",
+   "8XL",
+   "Taille unique"
+  ],
+  "hommes-pantalons": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "XXXL",
+   "4XL",
+   "5XL",
+   "6XL",
+   "7XL",
+   "8XL",
+   "Taille unique",
+   "W23 | FR 32",
+   "W24 | FR 34",
+   "W25 | FR 34",
+   "W26 | FR 36",
+   "W27 | FR 36",
+   "W28 | FR 38",
+   "W29 | FR 38",
+   "W30 | FR 40",
+   "W31 | FR 40",
+   "W32 | FR 42",
+   "W33 | FR 42",
+   "W34 | FR 44",
+   "W35 | FR 44",
+   "W36 | FR 46",
+   "W38 | FR 48",
+   "W40 | FR 50",
+   "W42 | FR 52",
+   "W44 | FR 54",
+   "W46 | FR 56",
+   "W48 | FR 58",
+   "W50 | FR 60",
+   "W52 | FR 62",
+   "W54 | FR 64"
+  ],
+  "hommes-chemises": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "XXXL",
+   "4XL",
+   "5XL",
+   "6XL",
+   "7XL",
+   "8XL",
+   "Taille unique",
+   "35 cm",
+   "36 cm",
+   "37 cm",
+   "38 cm",
+   "39 cm",
+   "40 cm",
+   "41 cm",
+   "42 cm",
+   "43 cm",
+   "44 cm",
+   "45 cm",
+   "46 cm",
+   "47 cm",
+   "48 cm",
+   "49 cm",
+   "50 cm",
+   "51 cm",
+   "52 cm"
+  ],
+  "hommes-chaussures": [
+   "38",
+   "38,5",
+   "39",
+   "39,5",
+   "40",
+   "40,5",
+   "41",
+   "41,5",
+   "42",
+   "42,5",
+   "43",
+   "43,5",
+   "44",
+   "44,5",
+   "45",
+   "45,5",
+   "46",
+   "46,5",
+   "47",
+   "47,5",
+   "48",
+   "48,5",
+   "49",
+   "50",
+   "51",
+   "52",
+   "Taille unique",
+   "Autre"
+  ],
+  "enfants-vetements": [
+   "Prématuré, jusqu'à 44cm",
+   "Naissance / 44 cm",
+   "Jusqu'à 1 mois / 50 cm",
+   "1-3 mois / 56 cm",
+   "3-6 mois / 62 cm",
+   "6-9 mois / 68 cm",
+   "9-12 mois / 74 cm",
+   "12-18 mois / 80 cm",
+   "18-24 mois / 86 cm",
+   "24-36 mois / 92 cm",
+   "3 ans / 98 cm",
+   "4 ans / 104 cm",
+   "5 ans / 110 cm",
+   "6 ans / 116 cm",
+   "7 ans / 122 cm",
+   "8 ans / 128 cm",
+   "9 ans / 134 cm",
+   "10 ans / 140 cm",
+   "11 ans / 146 cm",
+   "12 ans / 152 cm",
+   "13 ans / 158 cm",
+   "14 ans / 164 cm",
+   "15 ans / 170 cm",
+   "16 ans / 176 cm",
+   "Taille unique",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ]
+ },
+ "conditions": {
+  "Neuf": "Neuf avec étiquette",
+  "Comme neuf": "Neuf sans étiquette",
+  "Très bon état": "Très bon état",
+  "Bon état": "Bon état",
+  "Satisfaisant": "Satisfaisant"
+ },
+ "colors": [
+  "Noir",
+  "Gris",
+  "Blanc",
+  "Crème",
+  "Beige",
+  "Abricot",
+  "Orange",
+  "Corail",
+  "Rouge",
+  "Bordeaux",
+  "Fuchsia",
+  "Rose",
+  "Violet",
+  "Lila",
+  "Bleu clair",
+  "Bleu",
+  "Marine",
+  "Turquoise",
+  "Menthe",
+  "Vert",
+  "Vert foncé",
+  "Kaki",
+  "Marron",
+  "Moutarde",
+  "Jaune",
+  "Argenté",
+  "Doré",
+  "Multicolore",
+  "Transparence"
+ ],
+ "parcel_sizes": {
+  "Petit": "Petit",
+  "Moyen": "Moyen",
+  "Grand": "Grand"
+ },
+ "audiences": {
+  "femme": 1904,
+  "homme": 5,
+  "enfant": 1193
+ }
+}
