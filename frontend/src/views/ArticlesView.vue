@@ -12,9 +12,11 @@ import ArticleProgress from '@/components/ArticleProgress.vue'
 import ArticleReview from '@/components/ArticleReview.vue'
 import QueueBanner from '@/components/QueueBanner.vue'
 import StatusTag from '@/components/StatusTag.vue'
+import VintedBatchPanel from '@/components/VintedBatchPanel.vue'
 import { useNotify } from '@/composables/notify'
 import { panelFor, useArticles } from '@/stores/articles'
 import { useScenes } from '@/stores/scenes'
+import { useVinted } from '@/stores/vinted'
 import { label, type UserInput } from '@/types'
 
 const route = useRoute()
@@ -23,6 +25,7 @@ const confirm = useConfirm()
 const notify = useNotify()
 const { articles, load, upsert, remove, stopPolling } = useArticles()
 const scenes = useScenes()
+const vinted = useVinted()
 
 const creating = ref(false)
 const formKey = ref(0) // change pour vider le formulaire après une création
@@ -36,7 +39,7 @@ const panel = computed(() => panelFor(selected.value))
 
 onMounted(async () => {
   try {
-    await Promise.all([load(), scenes.load()])
+    await Promise.all([load(), scenes.load(), vinted.load()])
   } catch (e) {
     notify.error(e)
   }
@@ -90,6 +93,14 @@ async function generateDraft() {
   }
 }
 
+async function sendToVinted(ids: string[]) {
+  try {
+    await vinted.send(ids)
+  } catch (e) {
+    notify.error(e)
+  }
+}
+
 function deleteSelected() {
   const article = selected.value
   if (!article) return
@@ -115,11 +126,14 @@ function deleteSelected() {
   <div class="split">
     <aside class="left">
       <QueueBanner />
+      <VintedBatchPanel :articles="articles" />
       <ArticleList
         :articles="articles"
         :selected-id="selectedId"
+        :sending="!!vinted.status.value?.batch.running"
         @select="select"
         @create="newArticle"
+        @send="sendToVinted"
       />
     </aside>
 
@@ -136,7 +150,7 @@ function deleteSelected() {
       <template v-else-if="selected">
         <header class="row header">
           <h1 class="title">{{ selected.listing?.title ?? label(selected.input.garment_type) }}</h1>
-          <StatusTag :status="selected.status" />
+          <StatusTag :status="selected.status" :article="selected" />
           <span class="spacer" />
           <Button
             v-if="panel !== 'progress'"

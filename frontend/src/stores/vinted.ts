@@ -2,7 +2,7 @@ import { ref } from 'vue'
 
 import { api } from '@/api'
 import { createPoller, useArticles } from '@/stores/articles'
-import type { VintedCatalog, VintedStatus } from '@/types'
+import type { Article, VintedCatalog, VintedStatus } from '@/types'
 
 export const VINTED_POLL_INTERVAL = 2000
 
@@ -17,6 +17,50 @@ export function shouldRefreshArticles(
   next: VintedStatus,
 ): boolean {
   return next.batch.running || !!previous?.batch.running
+}
+
+export interface Badge {
+  label: string
+  severity: 'success' | 'info' | 'warn' | 'danger'
+  icon?: string
+  /** Détail affiché au survol. */
+  detail?: string
+}
+
+/** Badge Vinted d'un article (remplace celui du statut), ou null s'il n'a pas été envoyé. */
+export function vintedBadge(article: Article): Badge | null {
+  const result = article.vinted
+  if (!result) return null
+  switch (result.status) {
+    case 'error':
+      return {
+        label: 'Échec de l’envoi',
+        severity: 'danger',
+        icon: 'pi pi-exclamation-triangle',
+        detail: result.error ?? undefined,
+      }
+    case 'partial':
+      return {
+        label: 'À compléter sur Vinted',
+        severity: 'warn',
+        detail: `À compléter : ${result.missing_fields.join(', ')}`,
+      }
+    case 'ok':
+      return result.mode === 'publish'
+        ? { label: 'Publié sur Vinted', severity: 'success', icon: 'pi pi-check-circle' }
+        : { label: 'Brouillon Vinted', severity: 'info' }
+  }
+}
+
+/** Seuls les articles validés partent sur Vinted (y compris après un échec). */
+export function sendable(article: Article): boolean {
+  return article.status === 'validated'
+}
+
+/** Sélection débarrassée des articles qui ne sont plus envoyables. */
+export function pruneSelection(selected: string[], articles: Article[]): string[] {
+  const ok = new Set(articles.filter(sendable).map((a) => a.id))
+  return selected.filter((id) => ok.has(id))
 }
 
 // --- État partagé ------------------------------------------------------------------------

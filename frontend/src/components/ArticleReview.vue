@@ -81,6 +81,31 @@ function regenerateListing() {
   })
 }
 
+const sent = computed(() => props.article.vinted)
+const batchRunning = computed(() => !!vinted.status.value?.batch.running)
+
+async function sendToVinted() {
+  working.value = 'send'
+  try {
+    await vinted.send([id.value])
+  } catch (e) {
+    notify.error(e)
+  } finally {
+    working.value = null
+  }
+}
+
+async function openOnVinted() {
+  working.value = 'open'
+  try {
+    await vinted.open(id.value)
+  } catch (e) {
+    notify.error(e)
+  } finally {
+    working.value = null
+  }
+}
+
 function saveGallery(gallery: string[] | null) {
   run('gallery', () => api.setGallery(id.value, gallery), 'Ordre des photos enregistré.')
 }
@@ -203,25 +228,56 @@ function validate() {
       />
     </section>
 
-    <div v-if="mode !== 'error'" class="footer row">
+    <div v-if="mode === 'review'" class="footer row">
       <Button
-        v-if="mode === 'review'"
         label="Valider l'article"
         icon="pi pi-check"
         :loading="working === 'validate'"
         @click="validate"
       />
-      <Button
-        v-if="mode === 'validated'"
-        label="Repasser en relecture"
-        icon="pi pi-undo"
-        severity="secondary"
-        :loading="working === 'unvalidate'"
-        @click="run('unvalidate', () => api.unvalidate(id))"
-      />
-      <span v-if="mode === 'validated'" class="muted">
-        Prêt pour Vinted (l'envoi arrive dans une prochaine version).
-      </span>
+    </div>
+
+    <div v-else-if="mode === 'validated'" class="footer stack">
+      <template v-if="article.status === 'published' && sent">
+        <Message v-if="sent.status === 'partial'" severity="warn" :closable="false">
+          Brouillon enregistré sur Vinted. À compléter sur Vinted :
+          {{ sent.missing_fields.join(', ') }}.
+        </Message>
+        <Message v-else severity="success" :closable="false">
+          {{ sent.mode === 'publish' ? 'Annonce publiée sur Vinted.' : 'Brouillon enregistré sur Vinted.' }}
+        </Message>
+        <div v-if="sent.url" class="row">
+          <Button
+            label="Ouvrir sur Vinted"
+            icon="pi pi-external-link"
+            :loading="working === 'open'"
+            :disabled="batchRunning"
+            @click="openOnVinted"
+          />
+        </div>
+      </template>
+      <template v-else>
+        <Message v-if="sent?.status === 'error'" severity="error" :closable="false">
+          Échec de l'envoi sur Vinted : {{ sent.error }}
+        </Message>
+        <div class="row">
+          <Button
+            :label="sent?.status === 'error' ? 'Réessayer' : 'Envoyer sur Vinted'"
+            :icon="sent?.status === 'error' ? 'pi pi-refresh' : 'pi pi-send'"
+            :loading="working === 'send'"
+            :disabled="batchRunning"
+            @click="sendToVinted"
+          />
+          <Button
+            label="Repasser en relecture"
+            icon="pi pi-undo"
+            severity="secondary"
+            :loading="working === 'unvalidate'"
+            :disabled="batchRunning"
+            @click="run('unvalidate', () => api.unvalidate(id))"
+          />
+        </div>
+      </template>
     </div>
   </div>
 </template>

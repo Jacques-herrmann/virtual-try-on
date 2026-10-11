@@ -2,9 +2,11 @@
 import Tag from 'primevue/tag'
 import { computed } from 'vue'
 
-import type { ArticleStatus } from '@/types'
+import { vintedBadge } from '@/stores/vinted'
+import type { Article, ArticleStatus } from '@/types'
 
-const props = defineProps<{ status: ArticleStatus }>()
+/** Avec `article`, le résultat de l'envoi sur Vinted remplace le statut s'il existe. */
+const props = defineProps<{ status: ArticleStatus; article?: Article }>()
 
 const LOOK: Record<ArticleStatus, { label: string; severity: string; icon?: string }> = {
   draft: { label: 'Brouillon', severity: 'secondary' },
@@ -16,9 +18,17 @@ const LOOK: Record<ArticleStatus, { label: string; severity: string; icon?: stri
   error: { label: 'Erreur', severity: 'danger' },
 }
 
-const look = computed(() => LOOK[props.status])
+const look = computed(
+  () => (props.article && vintedBadge(props.article)) || { ...LOOK[props.status], detail: undefined },
+)
 </script>
 
 <template>
-  <Tag :value="look.label" :severity="look.severity" :icon="look.icon" rounded />
+  <Tag
+    :value="look.label"
+    :severity="look.severity"
+    :icon="look.icon"
+    :title="look.detail"
+    rounded
+  />
 </template>
