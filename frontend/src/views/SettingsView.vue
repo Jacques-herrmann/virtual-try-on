@@ -2,16 +2,20 @@
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Panel from 'primevue/panel'
+import SelectButton from 'primevue/selectbutton'
 import Textarea from 'primevue/textarea'
 import { useConfirm } from 'primevue/useconfirm'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import { api } from '@/api'
 import KeyForm from '@/components/KeyForm.vue'
 import { useNotify } from '@/composables/notify'
 import { useSettings } from '@/stores/settings'
+import { useVinted } from '@/stores/vinted'
+import type { VintedMode, VintedStatus } from '@/types'
 
 const { settings, load, set } = useSettings()
+const vinted = useVinted()
 const notify = useNotify()
 const confirm = useConfirm()
 
@@ -21,6 +25,36 @@ const listingPrompt = ref('')
 const imageModel = ref('')
 const textModel = ref('')
 const saving = ref(false)
+const vintedWorking = ref(false)
+
+const MODES: { label: string; value: VintedMode }[] = [
+  { label: 'Enregistrer en brouillon', value: 'draft' },
+  { label: 'Publier directement', value: 'publish' },
+]
+
+const SOURCES: Record<NonNullable<VintedStatus['data_source']>, string> = {
+  remote: 'à jour',
+  cache: 'copie enregistrée sur cet ordinateur',
+  bundled: 'version livrée avec l’application',
+}
+
+const isBusyVinted = computed(
+  () => !!vinted.status.value?.connecting || !!vinted.status.value?.batch.running,
+)
+
+const connection = computed(() => {
+  const status = vinted.status.value
+  if (status?.connecting) return 'Connecte-toi dans la fenêtre Vinted qui vient de s’ouvrir…'
+  if (status?.connected === true) return 'Ton compte Vinted est connecté.'
+  if (status?.connected === false) return 'Ton compte Vinted n’est pas connecté.'
+  return 'Connexion pas encore vérifiée.'
+})
+
+const dataInfo = computed(() => {
+  const status = vinted.status.value
+  if (!status?.data_revision || !status.data_source) return 'Données Vinted indisponibles.'
+  return `Données Vinted : révision ${status.data_revision} (${SOURCES[status.data_source]}).`
+})
 
 function fill() {
   if (!settings.value) return
@@ -32,12 +66,34 @@ function fill() {
 
 onMounted(async () => {
   try {
-    await load()
+    await Promise.all([load(), vinted.load()])
     fill()
   } catch (e) {
     notify.error(e)
   }
 })
+
+async function vintedAction(action: () => Promise<void>) {
+  vintedWorking.value = true
+  try {
+    await action()
+  } catch (e) {
+    notify.error(e)
+  } finally {
+    vintedWorking.value = false
+  }
+}
+
+function disconnectVinted() {
+  confirm.require({
+    header: 'Déconnecter ton compte Vinted ?',
+    message:
+      'La fenêtre Vinted de l’application oubliera ta connexion. Il faudra te reconnecter avant le prochain envoi.',
+    acceptProps: { label: 'Déconnecter', severity: 'danger' },
+    rejectProps: { label: 'Annuler', severity: 'secondary', text: true },
+    accept: () => vintedAction(vinted.disconnect),
+  })
+}
 
 async function save(changes: Parameters<typeof api.updateSettings>[0]) {
   saving.value = true
@@ -114,6 +170,49 @@ function keySaved() {
             @click="resetPrompt"
           />
         </div>
+      </div>
+    </Panel>
+
+    <Panel header="Vinted">
+      <div class="stack">
+        <div class="row">
+          <i v-if="vinted.status.value?.connecting" class="pi pi-spin pi-spinner" />
+          <span>{{ connection }}</span>
+        </div>
+        <p class="muted">
+          L’application ouvre sa propre fenêtre Vinted. Tu t’y connectes une seule fois ; ton
+          mot de passe n’est jamais enregistré par l’application.
+        </p>
+        <div class="row">
+          <Button
+            label="Connecter mon compte"
+            icon="pi pi-sign-in"
+            :loading="vintedWorking || !!vinted.status.value?.connecting"
+            :disabled="!!vinted.status.value?.batch.running"
+            @click="vintedAction(vinted.connect)"
+          />
+          <Button
+            label="Déconnecter"
+            icon="pi pi-sign-out"
+            severity="secondary"
+            text
+            :disabled="vintedWorking || isBusyVinted"
+            @click="disconnectVinted"
+          />
+        </div>
+        <label for="vinted-mode">Après le remplissage de l’annonce</label>
+        <SelectButton
+          id="vinted-mode"
+          :model-value="settings?.vinted_mode"
+          :options="MODES"
+          option-label="label"
+          option-value="value"
+          :allow-empty="false"
+          :disabled="saving"
+          @update:model-value="(mode: VintedMode) => save({ vinted_mode: mode })"
+        />
+        <small class="muted">Une annonce incomplète est toujours enregistrée en brouillon.</small>
+        <small class="muted">{{ dataInfo }}</small>
       </div>
     </Panel>
 

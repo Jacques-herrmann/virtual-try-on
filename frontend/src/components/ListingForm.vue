@@ -2,6 +2,7 @@
 import Button from 'primevue/button'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
+import MultiSelect from 'primevue/multiselect'
 import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
 import { computed, ref, watch } from 'vue'
@@ -68,7 +69,14 @@ defineExpose({ dirty })
       </div>
       <div class="field">
         <label for="lcolor">Couleur</label>
-        <InputText id="lcolor" v-model="draft.color" :disabled="readonly" fluid />
+        <MultiSelect
+          v-model="draft.color"
+          input-id="lcolor"
+          :options="draft.color"
+          :selection-limit="2"
+          :disabled="readonly"
+          fluid
+        />
       </div>
       <div class="field">
         <label for="lprice">Prix</label>

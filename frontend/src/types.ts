@@ -56,13 +56,24 @@ export interface UserInput {
 export interface Listing {
   title: string
   description: string
+  /** Identifiant de catégorie Vinted, ex. « 1779 ». */
   category?: string | null
   brand?: string | null
   size?: string | null
   condition?: Condition | null
-  color?: string | null
+  /** 0 à 2 couleurs Vinted. */
+  color: string[]
   price?: number | null
   parcel_size?: ParcelSize | null
+}
+
+export interface VintedResult {
+  mode: 'draft' | 'publish'
+  status: 'ok' | 'partial' | 'error'
+  missing_fields: string[]
+  url: string | null
+  error: string | null
+  sent_at: string
 }
 
 export interface SceneResult {
@@ -89,6 +100,11 @@ export interface Article {
   listing: Listing | null
   error: string | null
   job: GenerationJob | null
+  /** Ordre choisi des photos pour Vinted (null = ordre par défaut). */
+  gallery: string[] | null
+  /** Photos qui partiront réellement sur Vinted, dans l'ordre. */
+  effective_gallery: string[]
+  vinted: VintedResult | null
 }
 
 export interface QueueStatus {
@@ -105,6 +121,43 @@ export interface SettingsView {
   listing_prompt: string
   image_model: string
   text_model: string
+  vinted_mode: VintedMode
+}
+
+export type VintedMode = 'draft' | 'publish'
+
+export interface VintedBatch {
+  running: boolean
+  paused_reason: 'login_required' | null
+  current: string | null
+  done: number
+  total: number
+  failed: number
+  message: string | null
+}
+
+export interface VintedStatus {
+  connected: boolean | null
+  connecting: boolean
+  data_revision: string | null
+  data_source: 'remote' | 'cache' | 'bundled' | null
+  batch: VintedBatch
+}
+
+export interface CategoryNode {
+  id: number
+  label: string
+  children: CategoryNode[]
+  size_group?: string
+}
+
+export interface VintedCatalog {
+  revision: string
+  catalog: CategoryNode[]
+  size_groups: Record<string, string[]>
+  colors: string[]
+  conditions: Condition[]
+  parcel_sizes: ParcelSize[]
 }
 
 export interface SceneInfo {

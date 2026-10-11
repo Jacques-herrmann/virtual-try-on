@@ -1,22 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import type { Article, ArticleStatus } from '@/types'
+import { makeArticle as article } from '@/testing'
 
 import { createPoller, isBusy, matches, panelFor } from './articles'
-
-function article(status: ArticleStatus): Article {
-  return {
-    id: status,
-    created_at: '2026-10-10T10:00:00Z',
-    status,
-    input: { garment_type: 'robe' },
-    photos: ['photos/001.jpg'],
-    scenes: [],
-    listing: null,
-    error: null,
-    job: null,
-  }
-}
 
 describe('panelFor', () => {
   it.each([

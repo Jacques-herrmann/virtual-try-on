@@ -11,6 +11,8 @@ import type {
   SceneInfo,
   SettingsView,
   UserInput,
+  VintedCatalog,
+  VintedStatus,
 } from './types'
 
 export class ApiError extends Error {
@@ -81,6 +83,8 @@ export const api = {
     request<Article>('PATCH', `/api/articles/${enc(id)}/input`, input),
   updateListing: (id: string, listing: Listing) =>
     request<Article>('PATCH', `/api/articles/${enc(id)}/listing`, listing),
+  setGallery: (id: string, gallery: string[] | null) =>
+    request<Article>('PATCH', `/api/articles/${enc(id)}/gallery`, { gallery }),
   setExcluded: (id: string, scene: string, excluded: boolean) =>
     request<Article>('PATCH', `/api/articles/${enc(id)}/scenes/${enc(scene)}`, { excluded }),
   generate: (id: string, what?: { scenes?: string[]; listing?: boolean }) =>
@@ -93,6 +97,17 @@ export const api = {
   // File de génération
   queue: () => request<QueueStatus>('GET', '/api/queue'),
   resumeQueue: () => request<QueueStatus>('POST', '/api/queue/resume'),
+
+  // Vinted
+  vintedStatus: () => request<VintedStatus>('GET', '/api/vinted/status'),
+  vintedConnect: () => request<VintedStatus>('POST', '/api/vinted/connect'),
+  vintedDisconnect: () => request<VintedStatus>('POST', '/api/vinted/disconnect'),
+  vintedStop: () => request<VintedStatus>('POST', '/api/vinted/stop'),
+  vintedSend: (articleIds: string[]) =>
+    request<VintedStatus>('POST', '/api/vinted/send', { article_ids: articleIds }),
+  vintedOpen: (articleId: string) =>
+    request<VintedStatus>('POST', '/api/vinted/open', { article_id: articleId }),
+  vintedCatalog: () => request<VintedCatalog>('GET', '/api/vinted/catalog'),
 
   // Réglages
   settings: () => request<SettingsView>('GET', '/api/settings'),
