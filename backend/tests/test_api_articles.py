@@ -26,7 +26,7 @@ def scened(data_dir, make_scene):
 
 def create(api, n_photos=1, **fields):
     files = [("photos", (f"p{i}.jpg", jpeg(), "image/jpeg")) for i in range(n_photos)]
-    data = {"garment_type": "robe", **fields}
+    data = {"garment_type": "robe", "audience": "femme", **fields}
     return api.post("/api/articles", data=data, files=files)
 
 
@@ -62,6 +62,23 @@ def test_create_requires_photo(api, scened):
     assert r.json()["message"]
 
 
+def test_create_requires_audience(api, scened):
+    r = api.post(
+        "/api/articles",
+        data={"garment_type": "robe"},
+        files=[("photos", ("p.jpg", jpeg(), "image/jpeg"))],
+    )
+    assert r.status_code == 400
+    assert "Femme, Homme ou Enfant" in r.json()["message"]
+
+
+def test_update_input_requires_audience(api, fake, scened):
+    art = reviewed(api, fake)
+    r = api.patch(f"/api/articles/{art['id']}/input", json={"garment_type": "robe"})
+    assert r.status_code == 400
+    assert "Femme, Homme ou Enfant" in r.json()["message"]
+
+
 def test_create_rejects_unknown_type(api, scened):
     r = create(api, garment_type="chapeau")
     assert r.status_code == 422
@@ -70,7 +87,7 @@ def test_create_rejects_unknown_type(api, scened):
 def test_create_rejects_bad_extension(api, scened):
     r = api.post(
         "/api/articles",
-        data={"garment_type": "robe"},
+        data={"garment_type": "robe", "audience": "femme"},
         files=[("photos", ("virus.exe", b"MZ", "application/octet-stream"))],
     )
     assert r.status_code == 400
@@ -80,7 +97,7 @@ def test_create_rejects_bad_extension(api, scened):
 def test_create_rejects_fake_image(api, scened):
     r = api.post(
         "/api/articles",
-        data={"garment_type": "robe"},
+        data={"garment_type": "robe", "audience": "femme"},
         files=[("photos", ("photo.jpg", b"pas une image", "image/jpeg"))],
     )
     assert r.status_code == 400
@@ -121,7 +138,7 @@ def test_review_edits_and_validation(api, fake, scened):
     r = api.patch(f"{url}/scenes/cintre", json={"excluded": True})
     assert [s["excluded"] for s in r.json()["scenes"]] == [False, True]
 
-    r = api.patch(f"{url}/input", json={"garment_type": "robe", "size": "M"})
+    r = api.patch(f"{url}/input", json={"garment_type": "robe", "audience": "femme", "size": "M"})
     assert r.json()["input"]["size"] == "M"
 
     assert api.post(f"{url}/validate").json()["status"] == "validated"

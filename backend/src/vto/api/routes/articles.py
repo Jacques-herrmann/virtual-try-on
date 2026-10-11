@@ -19,6 +19,9 @@ from vto.core.models import (
 
 router = APIRouter(prefix="/api/articles")
 
+# Le public choisit les décors des scènes et la branche du catalogue Vinted.
+MISSING_AUDIENCE = "Choisis pour qui est le vêtement : Femme, Homme ou Enfant."
+
 S = ArticleStatus
 
 
@@ -66,6 +69,8 @@ def create_article(
     notes: Annotated[str | None, Form()] = None,
     photos: Annotated[list[UploadFile] | None, File()] = None,
 ) -> ArticleView:
+    if audience is None:
+        raise VtoError(MISSING_AUDIENCE)
     if not photos:
         raise VtoError("Ajoute au moins une photo du vêtement.")
     data = UserInput(
@@ -90,6 +95,8 @@ def get_article(article_id: str) -> ArticleView:
 
 @router.patch("/{article_id}/input")
 def update_input(article_id: str, user_input: UserInput) -> ArticleView:
+    if user_input.audience is None:
+        raise VtoError(MISSING_AUDIENCE)
     article = storage.load(article_id)
     storage.update_input(article, user_input)
     return view(article)

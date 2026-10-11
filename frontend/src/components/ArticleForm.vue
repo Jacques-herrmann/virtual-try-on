@@ -29,8 +29,12 @@ const photos = ref<File[]>([])
 const typeOptions = GARMENT_TYPES.map((t) => ({ value: t, label: label(t) }))
 const audienceOptions = AUDIENCES.map((a) => ({ value: a, label: label(a) }))
 
+// Le public choisit les décors des scènes et la branche du catalogue Vinted.
 const canSubmit = computed(
-  () => !!input.garment_type && (props.mode === 'edit' || photos.value.length > 0),
+  () =>
+    !!input.garment_type &&
+    !!input.audience &&
+    (props.mode === 'edit' || photos.value.length > 0),
 )
 
 function clean(value: string | null | undefined) {
@@ -76,7 +80,7 @@ function submit() {
         />
       </div>
       <div class="field">
-        <label>Pour</label>
+        <label>Pour *</label>
         <SelectButton
           v-model="input.audience"
           :options="audienceOptions"
@@ -143,7 +147,10 @@ function submit() {
         @click="emit('cancel')"
       />
       <small v-if="mode === 'create' && !canSubmit" class="muted">
-        Ajoute au moins une photo et choisis le type.
+        Ajoute au moins une photo, choisis le type et pour qui est le vêtement.
+      </small>
+      <small v-else-if="mode === 'edit' && !canSubmit" class="muted">
+        Choisis le type et pour qui est le vêtement.
       </small>
     </div>
   </form>
