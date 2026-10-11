@@ -91,6 +91,7 @@ class _Filler:
         self.timing = timing
         self.listing = article.listing
         self.missing: list[str] = []
+        self._cdp = None
 
     # --- Outils ---------------------------------------------------------------------------
 
@@ -129,6 +130,26 @@ class _Filler:
         except Exception:
             log.debug("Capture impossible", exc_info=True)
 
+    def restore_window(self) -> None:
+        """Une fenêtre réduite n'est plus dessinée : clics et défilements y restent bloqués.
+        Si le vendeur l'a réduite pendant l'envoi, on la remet à l'écran."""
+        try:
+            if self._cdp is None:
+                self._cdp = self.page.context.new_cdp_session(self.page)
+            window = self._cdp.send("Browser.getWindowForTarget")
+            if window["bounds"].get("windowState") != "minimized":
+                return
+            self._cdp.send(
+                "Browser.setWindowBounds",
+                {"windowId": window["windowId"], "bounds": {"windowState": "normal"}},
+            )
+            self.page.bring_to_front()
+            log.info("Vinted, article %s : fenêtre réduite remise à l'écran", self.article.id)
+        except Exception as exc:
+            if "has been closed" in str(exc):
+                raise
+            log.debug("État de la fenêtre illisible", exc_info=True)
+
     def close_popups(self) -> bool:
         """Ferme une fenêtre qui recouvre le formulaire (« Preuves d'authenticité » s'ouvre
         après le choix de certaines marques) ; on ne cherche le bouton que dans la fenêtre."""
@@ -149,6 +170,7 @@ class _Filler:
     def step(self, label: str, action) -> None:
         """Exécute une étape ; tout échec rend le champ « à compléter »."""
         try:
+            self.restore_window()
             self.close_popups()
             action()
         except MissingField as exc:
@@ -188,6 +210,7 @@ class _Filler:
         return True
 
     def photos(self) -> bool:
+        self.restore_window()
         gallery = storage.effective_gallery(self.article)
         if not gallery:
             log.warning("Article %s : aucune photo à envoyer", self.article.id)
@@ -342,6 +365,7 @@ class _Filler:
         start_url = self.page.url
         button = "publish" if mode == "publish" else "save_draft"
         try:
+            self.restore_window()
             self.close_popups()
             self.click(self.find(button))
             deadline = time.monotonic() + self.timing.save / 1000

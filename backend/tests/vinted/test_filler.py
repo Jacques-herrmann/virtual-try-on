@@ -77,21 +77,28 @@ def site():
 
 
 @pytest.fixture(scope="module")
-def browser():
-    from playwright.sync_api import Error, sync_playwright
+def pw():
+    from playwright.sync_api import sync_playwright
 
-    with sync_playwright() as pw:
-        launched = None
-        for options in ({"channel": "chrome"}, {}):
-            try:
-                launched = pw.chromium.launch(headless=True, **options)
-                break
-            except Error:
-                continue
-        if launched is None:
-            pytest.skip("aucun navigateur pour Playwright")
-        yield launched
-        launched.close()
+    with sync_playwright() as playwright:
+        yield playwright
+
+
+@pytest.fixture(scope="module")
+def browser(pw):
+    from playwright.sync_api import Error
+
+    launched = None
+    for options in ({"channel": "chrome"}, {}):
+        try:
+            launched = pw.chromium.launch(headless=True, **options)
+            break
+        except Error:
+            continue
+    if launched is None:
+        pytest.skip("aucun navigateur pour Playwright")
+    yield launched
+    launched.close()
 
 
 @pytest.fixture
@@ -201,6 +208,32 @@ def test_popup_after_brand_is_closed(page, article, site):
     report, saved = fill(page, article, site, query="?authenticity")
     assert report.missing_fields == []
     assert saved["size"] == "M" and saved["colors"] == ["Noir", "Bleu"]
+
+
+@pytestmark_browser
+def test_minimized_window_is_restored(pw, article, site):
+    # Une fenêtre réduite n'est plus dessinée : sans la remettre à l'écran, tout bloque.
+    # Chrome est lancé comme par l'app (sans les options ajoutées par Playwright).
+    from vto.vinted import browser as vinted_browser
+
+    try:
+        session = vinted_browser.open_context(pw)
+    except Exception:
+        pytest.skip("Chrome indisponible")
+    try:
+        page = session.pages[0] if session.pages else session.new_page()
+        page.goto(f"{site}/items/new.html")
+        cdp = page.context.new_cdp_session(page)
+        window = cdp.send("Browser.getWindowForTarget")
+        cdp.send(
+            "Browser.setWindowBounds",
+            {"windowId": window["windowId"], "bounds": {"windowState": "minimized"}},
+        )
+        report, saved = fill(page, article, site)
+    finally:
+        session.close()
+    assert (report.status, report.missing_fields) == ("ok", [])
+    assert saved["ai"] is True and saved["category"] == 178
 
 
 @pytestmark_browser
