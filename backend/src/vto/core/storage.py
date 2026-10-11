@@ -9,7 +9,14 @@ from pathlib import Path
 
 from vto.core import paths
 from vto.core.errors import ArticleNotFound, InvalidTransition, VtoError
-from vto.core.models import Article, ArticleStatus, GenerationJob, Listing, UserInput
+from vto.core.models import (
+    Article,
+    ArticleStatus,
+    GenerationJob,
+    Listing,
+    UserInput,
+    VintedResult,
+)
 
 S = ArticleStatus
 
@@ -134,6 +141,55 @@ def set_excluded(article: Article, scene_slug: str, excluded: bool) -> None:
             save(article)
             return
     raise VtoError(f"Aucune image pour la scène « {scene_slug} ».")
+
+
+MAX_GALLERY = 20
+
+
+def default_gallery(article: Article) -> list[str]:
+    """Images des scènes réussies non exclues, dans l'ordre des scènes."""
+    return [r.image for r in article.scenes if r.status == "ok" and r.image and not r.excluded]
+
+
+def _usable_images(article: Article) -> list[str]:
+    return default_gallery(article) + article.photos
+
+
+def effective_gallery(article: Article) -> list[str]:
+    """Images à envoyer sur Vinted : la galerie choisie, sans les images devenues inutilisables."""
+    usable = set(_usable_images(article))
+    article_dir = paths.article_dir(article.id)
+    chosen = default_gallery(article) if article.gallery is None else article.gallery
+    return [p for p in chosen if p in usable and (article_dir / p).is_file()][:MAX_GALLERY]
+
+
+def set_gallery(article: Article, gallery: Sequence[str] | None) -> None:
+    """Ordre des photos pour Vinted ; `None` revient à l'ordre par défaut."""
+    if article.status not in (S.TO_REVIEW, S.VALIDATED):
+        raise VtoError("Les photos ne peuvent être réordonnées qu'avant l'envoi sur Vinted.")
+    if gallery is not None:
+        if not gallery:
+            raise VtoError("Choisis au moins une photo à envoyer sur Vinted.")
+        if len(gallery) > MAX_GALLERY:
+            raise VtoError(f"Vinted accepte au plus {MAX_GALLERY} photos par annonce.")
+        if len(set(gallery)) != len(gallery):
+            raise VtoError("Une même photo apparaît deux fois.")
+        if not set(gallery) <= set(_usable_images(article)):
+            raise VtoError("Certaines photos ne font pas partie de cet article.")
+        gallery = list(gallery)
+    article.gallery = gallery
+    save(article)
+
+
+def record_vinted(article: Article, result: VintedResult) -> None:
+    """Enregistre un envoi : réussi ou partiel → PUBLISHED ; en échec, reste VALIDATED."""
+    if article.status != S.VALIDATED:
+        raise InvalidTransition(article.status.value, S.PUBLISHED.value)
+    article.vinted = result
+    if result.status == "error":
+        save(article)
+    else:
+        set_status(article, S.PUBLISHED)
 
 
 def recover_interrupted() -> list[Article]:

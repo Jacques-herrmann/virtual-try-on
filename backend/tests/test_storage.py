@@ -6,7 +6,7 @@ import pytest
 from vto.core import paths, storage
 from vto.core.errors import ArticleNotFound, InvalidTransition, VtoError
 from vto.core.models import ArticleStatus as S
-from vto.core.models import GenerationJob, Listing, SceneResult, UserInput
+from vto.core.models import GenerationJob, Listing, SceneResult, UserInput, VintedResult
 
 
 @pytest.fixture
@@ -224,3 +224,141 @@ def test_recover_interrupted(data_dir, photos):
     assert storage.load(review.id).status == S.TO_REVIEW
     times = [a.job.queued_at for a in recovered]
     assert times == sorted(times)
+
+
+# --- Galerie et envoi Vinted ---
+
+
+@pytest.fixture
+def reviewed(data_dir, make_article, make_image):
+    """Article en relecture : mannequin ok, cintre exclu, plage en erreur, pied ok."""
+    article = make_article()
+    d = paths.article_dir(article.id)
+    for slug in ("mannequin", "cintre", "pied"):
+        make_image(d / "generated" / f"{slug}.jpg")
+    article.scenes = [
+        SceneResult(scene="mannequin", status="ok", image="generated/mannequin.jpg"),
+        SceneResult(scene="cintre", status="ok", image="generated/cintre.jpg", excluded=True),
+        SceneResult(scene="plage", status="error", error="x"),
+        SceneResult(scene="pied", status="ok", image="generated/pied.jpg"),
+    ]
+    article.status = S.TO_REVIEW
+    storage.save(article)
+    return article
+
+
+def test_default_gallery_is_ok_scenes_without_originals(reviewed):
+    assert storage.default_gallery(reviewed) == ["generated/mannequin.jpg", "generated/pied.jpg"]
+
+
+def test_effective_gallery_defaults_when_unset(reviewed):
+    assert storage.effective_gallery(reviewed) == storage.default_gallery(reviewed)
+
+
+def test_effective_gallery_follows_custom_order(reviewed):
+    order = ["photos/001.jpg", "generated/pied.jpg", "generated/mannequin.jpg"]
+    storage.set_gallery(reviewed, order)
+    assert storage.load(reviewed.id).gallery == order
+    assert storage.effective_gallery(reviewed)[0] == "photos/001.jpg"
+
+
+def test_effective_gallery_skips_images_no_longer_usable(reviewed):
+    storage.set_gallery(reviewed, ["generated/pied.jpg", "generated/mannequin.jpg"])
+    reviewed.scenes[0].excluded = True  # mannequin exclu après coup
+    reviewed.scenes[3] = SceneResult(scene="pied", status="error", error="x")  # régénération ratée
+    assert storage.effective_gallery(reviewed) == []
+
+
+def test_effective_gallery_skips_missing_files(reviewed):
+    storage.set_gallery(reviewed, ["generated/pied.jpg", "photos/001.jpg"])
+    (paths.article_dir(reviewed.id) / "generated" / "pied.jpg").unlink()
+    assert storage.effective_gallery(reviewed) == ["photos/001.jpg"]
+
+
+def test_regenerated_scene_keeps_its_place(reviewed):
+    storage.set_gallery(reviewed, ["generated/pied.jpg", "generated/mannequin.jpg"])
+    reviewed.scenes[3] = SceneResult(scene="pied", status="ok", image="generated/pied.jpg")
+    assert storage.effective_gallery(reviewed) == ["generated/pied.jpg", "generated/mannequin.jpg"]
+
+
+def test_set_gallery_allowed_when_validated(reviewed):
+    storage.set_status(reviewed, S.VALIDATED)
+    storage.set_gallery(reviewed, ["generated/pied.jpg"])
+    assert storage.load(reviewed.id).gallery == ["generated/pied.jpg"]
+
+
+def test_set_gallery_none_restores_default(reviewed):
+    storage.set_gallery(reviewed, ["generated/pied.jpg"])
+    storage.set_gallery(reviewed, None)
+    assert storage.load(reviewed.id).gallery is None
+
+
+@pytest.mark.parametrize(
+    "gallery",
+    [
+        [],
+        ["generated/pied.jpg", "generated/pied.jpg"],
+        ["../autre/photos/001.jpg"],
+        ["generated/plage.jpg"],  # scène en erreur
+        ["generated/cintre.jpg"],  # scène exclue
+        ["photos/999.jpg"],
+        ["article.json"],
+    ],
+)
+def test_set_gallery_rejects_invalid(reviewed, gallery):
+    with pytest.raises(VtoError) as exc:
+        storage.set_gallery(reviewed, gallery)
+    assert exc.value.user_message != VtoError.user_message
+    assert storage.load(reviewed.id).gallery is None
+
+
+def test_set_gallery_rejects_more_than_20(reviewed, make_image):
+    d = paths.article_dir(reviewed.id)
+    photos = [f"photos/{i:03d}.jpg" for i in range(2, 22)]
+    for rel in photos:
+        make_image(d / rel)
+    reviewed.photos += photos
+    with pytest.raises(VtoError, match="20"):
+        storage.set_gallery(reviewed, ["generated/pied.jpg", *photos])
+
+
+@pytest.mark.parametrize("status", [S.DRAFT, S.QUEUED, S.GENERATING, S.ERROR, S.PUBLISHED])
+def test_set_gallery_refused_outside_review(reviewed, status):
+    reviewed.status = status
+    with pytest.raises(VtoError):
+        storage.set_gallery(reviewed, ["generated/pied.jpg"])
+
+
+def vinted_result(status, mode="draft"):
+    return VintedResult(mode=mode, status=status, sent_at=datetime.now(UTC))
+
+
+@pytest.mark.parametrize("status", ["ok", "partial"])
+def test_record_vinted_success_publishes(reviewed, status):
+    storage.set_status(reviewed, S.VALIDATED)
+    storage.record_vinted(reviewed, vinted_result(status))
+    saved = storage.load(reviewed.id)
+    assert saved.status == S.PUBLISHED
+    assert saved.vinted.status == status
+
+
+def test_record_vinted_error_stays_validated(reviewed):
+    storage.set_status(reviewed, S.VALIDATED)
+    storage.record_vinted(reviewed, vinted_result("error"))
+    saved = storage.load(reviewed.id)
+    assert saved.status == S.VALIDATED
+    assert saved.vinted.status == "error"
+
+
+def test_record_vinted_requires_validated(reviewed):
+    with pytest.raises(InvalidTransition):
+        storage.record_vinted(reviewed, vinted_result("ok"))
+    assert storage.load(reviewed.id).vinted is None
+
+
+def test_nothing_leaves_published(reviewed):
+    storage.set_status(reviewed, S.VALIDATED)
+    storage.record_vinted(reviewed, vinted_result("partial"))
+    for target in S:
+        with pytest.raises(InvalidTransition):
+            storage.set_status(reviewed, target)

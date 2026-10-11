@@ -8,7 +8,7 @@ Outil pour vendeurs Vinted : à partir d'une photo de vêtement, génère des ph
 |---|---|---|---|
 | 1 | **Cœur propre** — package `vto`, config, stockage, scènes, génération, pipeline, CLI de dev, import du proto, tests + CI | 🟡 implémenté — reste l'essai bout en bout sur données réelles + PR | `docs/superpowers/specs/2026-10-10-core-clean-design.md`, `docs/superpowers/plans/2026-10-10-core-clean.md` |
 | 2 | **App** — API FastAPI + UI Vue/Vite dans une fenêtre `pywebview` ; saisie article par article, écran de relecture | 🟡 implémenté (branche `feat/app`) — reste l'acceptation sur données réelles + PR | `docs/superpowers/specs/2026-10-10-app-design.md`, `docs/superpowers/plans/2026-10-10-app.md` |
-| 3 | **Vinted** — profil Chrome persistant (aucun mot de passe stocké), sélecteurs dans un JSON distant, remplissage complet du formulaire | 🟡 en cours sur `main` — tâches 0–1 faites | `docs/superpowers/specs/2026-10-10-vinted-design.md`, `docs/superpowers/plans/2026-10-10-vinted.md` |
+| 3 | **Vinted** — profil Chrome persistant (aucun mot de passe stocké), sélecteurs dans un JSON distant, remplissage complet du formulaire | 🟡 en cours sur `main` — tâches 0–2 faites | `docs/superpowers/specs/2026-10-10-vinted-design.md`, `docs/superpowers/plans/2026-10-10-vinted.md` |
 | 4 | **Distribution** — PyInstaller, installeur Inno Setup, mise à jour en un clic, signature de code (plus tard) | ⚪ à spécifier | — |
 | 5 | **Licence** — achat unique + 12 mois de MAJ, abonnement MAJ optionnel ; plateforme *merchant of record* ; Worker qui vérifie la licence avant de servir MAJ et sélecteurs | ⚪ à spécifier | — |
 
