@@ -2,13 +2,15 @@
 import Button from 'primevue/button'
 import Message from 'primevue/message'
 import { useConfirm } from 'primevue/useconfirm'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import { api, articleFile } from '@/api'
+import GalleryEditor from '@/components/GalleryEditor.vue'
 import ListingForm from '@/components/ListingForm.vue'
 import { useNotify } from '@/composables/notify'
 import { useArticles } from '@/stores/articles'
 import { useScenes } from '@/stores/scenes'
+import { useVinted } from '@/stores/vinted'
 import type { Article, Listing } from '@/types'
 
 /** `review` : tout est modifiable ; `validated` : lecture seule ; `error` : réessayer. */
@@ -16,6 +18,7 @@ const props = defineProps<{ article: Article; mode: 'review' | 'validated' | 'er
 
 const { upsert, imageVersions } = useArticles()
 const { nameOf } = useScenes()
+const vinted = useVinted()
 const notify = useNotify()
 const confirm = useConfirm()
 
@@ -23,6 +26,18 @@ const working = ref<string | null>(null)
 const listingForm = ref<InstanceType<typeof ListingForm> | null>(null)
 
 const editable = computed(() => props.mode === 'review')
+// L'ordre des photos reste modifiable jusqu'à l'envoi sur Vinted.
+const galleryEditable = computed(
+  () => props.mode === 'review' || props.article.status === 'validated',
+)
+
+onMounted(async () => {
+  try {
+    await vinted.loadCatalog()
+  } catch {
+    // catalogue indisponible : le formulaire le signale et reste utilisable
+  }
+})
 const version = computed(() => imageVersions.value[props.article.id])
 const keptImages = computed(
   () => props.article.scenes.filter((s) => s.status === 'ok' && !s.excluded).length,
@@ -64,6 +79,10 @@ function regenerateListing() {
     message: 'Le texte actuel de l’annonce sera remplacé.',
     accept: () => run('listing', () => api.generate(id.value, { listing: true })),
   })
+}
+
+function saveGallery(gallery: string[] | null) {
+  run('gallery', () => api.setGallery(id.value, gallery), 'Ordre des photos enregistré.')
 }
 
 function saveListing(listing: Listing) {
@@ -146,8 +165,18 @@ function validate() {
         </figure>
       </div>
       <small v-if="editable && keptImages === 0" class="warn">
-        Aucune image retenue : seule la photo d'origine partira sur Vinted.
+        Aucune image retenue : ajoute une photo d'origine à l'annonce ci-dessous.
       </small>
+    </section>
+
+    <section v-if="galleryEditable" class="stack">
+      <h3>Photos de l'annonce Vinted</h3>
+      <GalleryEditor
+        :article="article"
+        :version="version"
+        :saving="working === 'gallery'"
+        @save="saveGallery"
+      />
     </section>
 
     <section v-if="article.listing" class="stack">
@@ -167,6 +196,7 @@ function validate() {
         :key="article.id"
         ref="listingForm"
         :listing="article.listing"
+        :catalog="vinted.catalog.value"
         :readonly="!editable"
         :saving="working === 'save'"
         @save="saveListing"
