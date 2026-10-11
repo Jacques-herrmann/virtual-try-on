@@ -9,7 +9,7 @@ from vto.core.config import Settings
 from vto.core.generation.client import GeminiClient, GenAIClient
 from vto.core.generation.image import generate_scene_image
 from vto.core.generation.listing import generate_listing
-from vto.core.models import Article, ArticleStatus, SceneResult
+from vto.core.models import Article, ArticleStatus, ListingChoices, SceneResult
 
 log = logging.getLogger(__name__)
 
@@ -17,6 +17,8 @@ S = ArticleStatus
 ProgressCallback = Callable[[str, str, str], None]
 # Construit un client à partir d'une clé ; les tests injectent un FakeClient.
 ClientFactory = Callable[[str], GenAIClient]
+# Valeurs Vinted proposées pour l'annonce d'un article ; fourni par l'appelant (l'API).
+ChoicesProvider = Callable[[Article], ListingChoices]
 
 # Erreurs qui touchent tout le lot : inutile d'enchaîner les échecs.
 FATAL = (errors.MissingApiKey, errors.InvalidApiKey, errors.QuotaExceeded)
@@ -73,6 +75,7 @@ def process_article(
     regenerate_listing: bool = False,
     cancel: threading.Event | None = None,
     on_progress: ProgressCallback | None = None,
+    choices_for: ChoicesProvider | None = None,
 ) -> Article:
     """Génère les images (toutes les scènes actives, ou seulement `scene_slugs`) puis l'annonce.
 
@@ -92,6 +95,7 @@ def process_article(
             regenerate_listing=regenerate_listing,
             cancel=cancel or threading.Event(),
             progress=on_progress or (lambda *_: None),
+            choices_for=choices_for,
         )
     finally:
         if article.job is not None and article.status != S.QUEUED:
@@ -108,6 +112,7 @@ def _process(
     regenerate_listing: bool,
     cancel: threading.Event,
     progress: ProgressCallback,
+    choices_for: ChoicesProvider | None,
 ) -> Article:
     available = {s.slug: s for s in scenes.list_scenes()}
     if article.status == S.QUEUED and article.job is not None:
@@ -155,7 +160,8 @@ def _process(
         if cancel.is_set():
             return _finish_cancelled(article)
         try:
-            article.listing = generate_listing(client, settings, article)
+            choices = choices_for(article) if choices_for is not None else None
+            article.listing = generate_listing(client, settings, article, choices)
         except FATAL as exc:
             _fail(article, exc)
             raise

@@ -2,13 +2,14 @@ from collections import deque
 
 import pytest
 from PIL import Image
+from pydantic import ValidationError
 
 from fakes import FakeClient
 from vto.core import paths
 from vto.core.config import Settings
 from vto.core.errors import InvalidModelOutput
 from vto.core.generation.listing import generate_listing
-from vto.core.models import Listing, SceneResult
+from vto.core.models import Listing, ListingChoices, SceneResult
 
 MODEL_LISTING = Listing(
     title="Robe bleue", description="Jolie robe.", brand="H&M", size="S",
@@ -59,9 +60,73 @@ def test_user_fields_override_model(data_dir, make_article):
     assert listing.size == "S"  # non saisi : valeur du modèle conservée
 
 
-def test_user_color_becomes_a_one_item_list(data_dir, make_article):
-    listing = generate_listing(client_returning(), Settings(), make_article("robe", color="Rouge"))
-    assert listing.color == ["Rouge"]
+def test_user_color_is_a_hint_not_an_override(data_dir, make_article):
+    client = client_returning()
+    listing = generate_listing(client, Settings(), make_article("robe", color="bleu marine"))
+    assert listing.color == ["Bleu"]  # proposition du modèle
+    assert "Couleur : bleu marine" in client.calls[0].prompt
+
+
+CHOICES = ListingChoices(
+    categories={"1779": "Femmes › Vêtements › Robes", "1780": "Femmes › Vêtements › Jupes"},
+    colors=["Noir", "Bleu", "Rouge"],
+)
+
+
+def schema_property(schema, name):
+    props = schema.model_json_schema()["properties"]
+    prop = props[name]
+    return next((p for p in prop.get("anyOf", []) if p.get("type") != "null"), prop)
+
+
+def test_choices_constrain_category_and_colors(data_dir, make_article):
+    client = client_returning(MODEL_LISTING.model_copy(update={"category": "1779"}))
+    listing = generate_listing(client, Settings(), make_article(), CHOICES)
+    schema = client.calls[0].schema
+    assert schema_property(schema, "category")["enum"] == ["1779", "1780"]
+    color = schema_property(schema, "color")
+    assert color["items"]["enum"] == ["Noir", "Bleu", "Rouge"]
+    assert color["maxItems"] == 2
+    assert type(listing) is Listing
+    assert (listing.category, listing.color) == ("1779", ["Bleu"])
+
+
+def test_single_choice_is_still_an_enum(data_dir, make_article):
+    client = client_returning(MODEL_LISTING.model_copy(update={"category": "1779"}))
+    choices = ListingChoices(categories={"1779": "Femmes › Robes"}, colors=["Bleu"])
+    generate_listing(client, Settings(), make_article(), choices)
+    schema = client.calls[0].schema
+    assert schema_property(schema, "category")["enum"] == ["1779"]
+    assert schema_property(schema, "color")["items"]["enum"] == ["Bleu"]
+
+
+def test_choices_are_listed_in_prompt(data_dir, make_article):
+    client = client_returning()
+    generate_listing(client, Settings(), make_article(), CHOICES)
+    prompt = client.calls[0].prompt
+    assert "1779 : Femmes › Vêtements › Robes" in prompt
+    assert "Noir, Bleu, Rouge" in prompt
+
+
+def test_model_output_outside_choices_is_rejected(data_dir, make_article):
+    client = client_returning(MODEL_LISTING.model_copy(update={"category": "9999"}))
+    with pytest.raises(ValidationError):
+        generate_listing(client, Settings(), make_article(), CHOICES)
+
+
+def test_without_choices_schema_is_listing(data_dir, make_article):
+    client = client_returning()
+    generate_listing(client, Settings(), make_article())
+    assert client.calls[0].schema is Listing
+    assert "Catégories possibles" not in client.calls[0].prompt
+
+
+def test_empty_choices_leave_fields_empty(data_dir, make_article):
+    client = client_returning(MODEL_LISTING.model_copy(update={"color": []}))
+    listing = generate_listing(
+        client, Settings(), make_article(), ListingChoices(categories={}, colors=[])
+    )
+    assert listing.category is None and listing.color == []
 
 
 def test_signature_appended(data_dir, make_article):

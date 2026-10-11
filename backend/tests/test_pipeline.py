@@ -7,7 +7,7 @@ from fakes import FakeClient
 from vto.core import errors, pipeline, storage
 from vto.core.config import Settings
 from vto.core.models import ArticleStatus as S
-from vto.core.models import Listing
+from vto.core.models import Listing, ListingChoices
 
 LISTING = Listing(title="t", description="d")
 
@@ -35,6 +35,26 @@ def test_nominal(two_scenes, make_article):
     assert done.listing == LISTING
     assert progress == ["scene", "scene", "listing", "done"]
     assert storage.load(article.id) == done
+
+
+def test_choices_for_is_called_for_the_listing(two_scenes, make_article):
+    article = make_article()
+    seen = []
+
+    def choices_for(a):
+        seen.append(a.id)
+        return ListingChoices(categories={"1779": "Femmes › Robes"}, colors=["Noir"])
+
+    client = listing_client()
+    run(article, client, choices_for=choices_for)
+    assert seen == [article.id]
+    assert client.calls[-1].schema is not Listing
+
+
+def test_without_choices_for_schema_is_listing(two_scenes, make_article):
+    client = listing_client()
+    run(make_article(), client)
+    assert client.calls[-1].schema is Listing
 
 
 def test_one_scene_failing_keeps_the_other(two_scenes, make_article):

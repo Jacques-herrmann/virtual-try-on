@@ -18,6 +18,7 @@ class Call:
     model: str
     prompt: str
     n_images: int
+    schema: type | None = None
 
 
 @dataclass
@@ -42,11 +43,12 @@ class FakeClient:
         return self._next(self.image_responses, self.default_image)
 
     def generate_json(self, model, prompt, images, schema):
-        self.calls.append(Call("json", model, prompt, len(images)))
+        self.calls.append(Call("json", model, prompt, len(images), schema))
         item = self._next(self.json_responses, None)
         if item is None:
             raise AssertionError("aucune réponse JSON scriptée")
-        return item
+        # Comme le vrai client : une instance du schéma demandé, validée par lui.
+        return schema.model_validate(item.model_dump())
 
     def check_models(self, models):
         self.checked.append(list(models))

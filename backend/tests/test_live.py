@@ -9,7 +9,8 @@ import pytest
 from PIL import Image, ImageDraw
 
 from vto.core import config, paths, pipeline, scenes, storage
-from vto.core.models import ArticleStatus, UserInput
+from vto.core.generation.listing import generate_listing
+from vto.core.models import ArticleStatus, ListingChoices, UserInput
 
 pytestmark = [
     pytest.mark.live,
@@ -67,3 +68,21 @@ def test_full_article_with_real_api(live_data_dir, tmp_path):
 def test_check_models_with_real_key(live_data_dir):
     settings = config.load_settings()
     pipeline.verify_api_key(os.environ["GEMINI_API_KEY"], settings, pipeline.GeminiClient)
+
+
+def test_listing_with_vinted_choices(live_data_dir, tmp_path):
+    """Schéma contraint : ~300 catégories (ordre de grandeur d'un vrai filtrage) et couleurs."""
+    categories = {str(2000 + i): f"Femmes › Vêtements › Rayon {i}" for i in range(300)}
+    categories["1806"] = "Femmes › Vêtements › Hauts et t-shirts › T-shirts"
+    choices = ListingChoices(categories=categories, colors=["Noir", "Blanc", "Rouge", "Bleu"])
+    article = storage.create_article(
+        UserInput(garment_type="haut", audience="femme", color="rouge vif"),
+        [draw_tshirt(tmp_path / "tshirt.png")],
+    )
+    settings = config.load_settings()
+    listing = generate_listing(pipeline.build_client(settings), settings, article, choices)
+
+    assert listing.category in categories
+    assert listing.color and set(listing.color) <= set(choices.colors)
+    assert "Rouge" in listing.color
+    print("\n", listing.model_dump_json(indent=2))
