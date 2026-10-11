@@ -39,7 +39,7 @@ def generate_listing(client: GenAIClient, settings: Settings, article: Article) 
     for field in OVERRIDABLE:
         value = getattr(article.input, field)
         if value is not None:
-            setattr(listing, field, value)
+            setattr(listing, field, [value] if field == "color" else value)
     if settings.signature.strip():
         listing.description = f"{listing.description.rstrip()}\n\n{settings.signature.strip()}"
     return listing

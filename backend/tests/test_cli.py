@@ -92,6 +92,7 @@ def test_export_for_legacy_script(data_dir, make_scene, photo, fake_client, tmp_
     expected_keys = {"title", "description", "category", "brand", "size", "condition",
                      "color", "price", "parcel_size"}
     assert expected_keys <= data.keys()
+    assert isinstance(data["color"], list)
 
 
 def test_export_requires_listing(data_dir, photo, tmp_path):

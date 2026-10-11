@@ -3,6 +3,7 @@
 import logging
 import os
 from importlib.resources import files
+from typing import Literal
 
 from pydantic import BaseModel, Field, ValidationError
 
@@ -25,6 +26,7 @@ class Settings(BaseModel):
     text_model: str = DEFAULT_TEXT_MODEL
     listing_prompt: str = Field(default_factory=default_listing_prompt)
     signature: str = ""
+    vinted_mode: Literal["draft", "publish"] = "draft"
 
     def api_key(self) -> str | None:
         """Clé effective : GEMINI_API_KEY (développement, CI) prioritaire sur le fichier."""

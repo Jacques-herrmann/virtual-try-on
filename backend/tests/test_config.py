@@ -36,3 +36,22 @@ def test_corrupted_file_falls_back_to_defaults(data_dir, caplog):
     paths.settings_file().write_text("{pas du json", encoding="utf-8")
     assert config.load_settings() == config.Settings()
     assert "settings.json" in caplog.text
+
+
+def test_vinted_mode_defaults_to_draft(data_dir):
+    assert config.load_settings().vinted_mode == "draft"
+
+
+def test_old_settings_file_loads_without_loss(data_dir):
+    old = {"gemini_api_key": "k", "signature": "Merci !", "listing_prompt": "P"}
+    paths.settings_file().write_text(json.dumps(old), encoding="utf-8")
+    s = config.load_settings()
+    assert (s.gemini_api_key, s.signature, s.listing_prompt) == ("k", "Merci !", "P")
+    assert s.vinted_mode == "draft"
+
+
+def test_vinted_mode_round_trip(data_dir):
+    s = config.load_settings()
+    s.vinted_mode = "publish"
+    config.save_settings(s)
+    assert config.load_settings().vinted_mode == "publish"

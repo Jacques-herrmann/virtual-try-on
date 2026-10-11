@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 
 GarmentType = Literal[
     "haut", "robe", "jupe", "pantalon", "veste", "chaussures", "sac", "accessoire", "autre"
@@ -47,13 +47,47 @@ class Listing(BaseModel):
 
     title: str
     description: str
-    category: str | None = None
+    category: str | None = None  # identifiant de catégorie Vinted, ex. "1779"
     brand: str | None = None
     size: str | None = None
     condition: Condition | None = None
-    color: str | None = None
+    color: list[str] = Field(default=[], max_length=2)  # couleurs Vinted
     price: float | None = None
     parcel_size: ParcelSize | None = None
+
+    @field_validator("category", mode="before")
+    @classmethod
+    def _category_is_vinted_id(cls, value):
+        # Avant le sous-projet 3, la catégorie était un texte libre : on l'oublie.
+        if isinstance(value, str) and not value.isdigit():
+            return None
+        return value
+
+    @field_validator("color", mode="before")
+    @classmethod
+    def _color_from_text(cls, value):
+        # Ancien format : une couleur en texte libre.
+        if value is None:
+            return []
+        if isinstance(value, str):
+            return [value] if value.strip() else []
+        return value
+
+
+class ListingChoices(BaseModel):
+    """Valeurs Vinted proposées à Gemini pour l'annonce d'un article."""
+
+    categories: dict[str, str]  # id → chemin lisible
+    colors: list[str]
+
+
+class VintedResult(BaseModel):
+    mode: Literal["draft", "publish"]  # action réellement effectuée
+    status: Literal["ok", "partial", "error"]
+    missing_fields: list[str] = []  # libellés français : « Marque », « Taille »…
+    url: str | None = None
+    error: str | None = None  # message client, en français
+    sent_at: datetime
 
 
 class SceneResult(BaseModel):
@@ -82,3 +116,7 @@ class Article(BaseModel):
     listing: Listing | None = None
     error: str | None = None
     job: GenerationJob | None = None
+    # Images à envoyer sur Vinted, dans l'ordre (relatives au dossier de l'article).
+    # None = images des scènes réussies non exclues, dans l'ordre des scènes.
+    gallery: list[str] | None = None
+    vinted: VintedResult | None = None

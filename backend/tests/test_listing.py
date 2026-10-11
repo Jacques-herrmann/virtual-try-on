@@ -12,7 +12,7 @@ from vto.core.models import Listing, SceneResult
 
 MODEL_LISTING = Listing(
     title="Robe bleue", description="Jolie robe.", brand="H&M", size="S",
-    condition="Bon état", color="Bleu", price=8.0,
+    condition="Bon état", color=["Bleu"], price=8.0,
 )
 
 
@@ -57,6 +57,11 @@ def test_user_fields_override_model(data_dir, make_article):
     listing = generate_listing(client_returning(), Settings(), article)
     assert (listing.brand, listing.price, listing.condition) == ("Zara", 12.0, "Très bon état")
     assert listing.size == "S"  # non saisi : valeur du modèle conservée
+
+
+def test_user_color_becomes_a_one_item_list(data_dir, make_article):
+    listing = generate_listing(client_returning(), Settings(), make_article("robe", color="Rouge"))
+    assert listing.color == ["Rouge"]
 
 
 def test_signature_appended(data_dir, make_article):
