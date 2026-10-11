@@ -41,6 +41,18 @@ def logs_dir() -> Path:
     return _ensure(data_dir() / "logs")
 
 
+def browser_profile_dir() -> Path:
+    return _ensure(data_dir() / "browser-profile")
+
+
+def cache_dir() -> Path:
+    return _ensure(data_dir() / "cache")
+
+
+def vinted_log_dir() -> Path:
+    return _ensure(logs_dir() / "vinted")
+
+
 def safe_join(base: Path, rel: str) -> Path | None:
     """`base / rel` résolu, ou None si `rel` est vide, absolu ou sort de `base`."""
     if not rel or Path(rel).is_absolute() or Path(rel).drive or rel.startswith(("/", "\\")):

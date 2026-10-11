@@ -17,20 +17,22 @@ dependencies = [
     "uvicorn",
     "python-multipart",  # uploads multipart de FastAPI
     "pywebview",
+    "playwright>=1.63",  # pilote Chrome/Edge installé, aucun navigateur téléchargé
+    "httpx>=0.28",  # téléchargement de vinted.json
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff", "httpx2"]  # httpx2 : client de TestClient
-legacy = ["selenium>=4.11"]
 
 [project.scripts]
 vto = "vto.cli:app"
 vto-app = "vto.desktop:main"
+vto-vinted-catalog = "vto.tools.vinted_catalog:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/vto"]
 # Le front compilé (api/static) est ignoré par git mais doit être embarqué.
-artifacts = ["src/vto/api/static/**"]
+artifacts = ["src/vto/api/static/**", "src/vto/vinted/data/*.json"]
 
 [tool.ruff]
 line-length = 100
@@ -44,5 +46,9 @@ known-first-party = ["vto", "fakes", "conftest"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["live: appelle la vraie API Gemini (nécessite GEMINI_API_KEY)"]
-addopts = "-m 'not live'"
+markers = [
+    "live: appelle la vraie API Gemini (nécessite GEMINI_API_KEY)",
+    "browser: pilote un vrai navigateur",
+    "live_vinted: crée un brouillon sur vinted.fr",
+]
+addopts = "-m 'not live and not live_vinted'"

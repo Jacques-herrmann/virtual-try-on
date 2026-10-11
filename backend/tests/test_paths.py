@@ -38,3 +38,14 @@ def test_safe_join_inside(tmp_path):
 @pytest.mark.parametrize("rel", ["../x", "a/../../x", "", ".", "C:/Windows", "/etc/passwd"])
 def test_safe_join_refuses_escape(tmp_path, rel):
     assert paths.safe_join(tmp_path, rel) is None
+
+
+def test_vinted_paths_are_under_data_dir(data_dir):
+    assert paths.browser_profile_dir() == data_dir / "browser-profile"
+    assert paths.cache_dir() == data_dir / "cache"
+    assert paths.vinted_log_dir() == data_dir / "logs" / "vinted"
+
+
+def test_vinted_directories_are_created_on_demand(data_dir):
+    for d in (paths.browser_profile_dir(), paths.cache_dir(), paths.vinted_log_dir()):
+        assert d.is_dir()
