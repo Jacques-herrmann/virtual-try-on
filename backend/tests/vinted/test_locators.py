@@ -63,7 +63,7 @@ def test_resolve_forms(alt, call):
     assert page.calls == [call]
 
 
-TRICKY = "Robe \"d'été\" {taille} \ ${x}"
+TRICKY = r"Robe \"d'été\" {taille} \ ${x}"
 
 
 @pytest.mark.parametrize(
