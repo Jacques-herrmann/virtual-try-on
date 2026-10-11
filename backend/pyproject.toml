@@ -42,7 +42,7 @@ target-version = "py312"
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["vto", "fakes", "conftest"]
+known-first-party = ["vto", "fakes", "conftest", "samples"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
