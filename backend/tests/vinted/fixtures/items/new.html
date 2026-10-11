@@ -12,10 +12,17 @@
   .hidden { display: none; }
   [role=button], [role=radio], [role=checkbox] { cursor: pointer; padding: 4px; }
   [aria-checked=true] { background: #cfe; }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 20; }
   .visually-hidden { position: absolute; opacity: 0; width: 1px; height: 1px; }
 </style>
 </head>
 <body>
+<div id="authenticity" class="overlay hidden">
+  <div role="dialog" aria-modal="true" data-testid="authenticity-modal">
+    Preuves d'authenticité
+    <button type="button" aria-label="Fermer" data-testid="authenticity-modal--header-close-button"></button>
+  </div>
+</div>
 <header><a data-testid="user-menu-button" href="#">Moi</a></header>
 <main>
   <div data-testid="media-upload">
@@ -158,8 +165,20 @@ $('[data-testid=brand-search--input]').addEventListener('input', (e) => {
       state.brand = el.getAttribute('aria-label');
       brand.input.value = state.brand;
       brand.close();
+      if (params.has('authenticity')) setTimeout(() => $('#authenticity').classList.remove('hidden'), 100);
     }));
 });
+
+// ?authenticity : Vinted ouvre « Preuves d'authenticité » après certaines marques ;
+// tant qu'elle est ouverte, le reste du formulaire ne réagit pas.
+$('[data-testid=authenticity-modal--header-close-button]').addEventListener('click', () =>
+  $('#authenticity').classList.add('hidden'));
+document.addEventListener('click', (e) => {
+  if (!$('#authenticity').classList.contains('hidden') && !$('#authenticity').contains(e.target)) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+}, true);
 
 // Tailles (onglets)
 const SIZES = { 'S/M/L': ['XS', 'S', 'M', 'L'], FR: ['FR 36', 'FR 38', 'FR 40'] };

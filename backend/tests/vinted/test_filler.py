@@ -196,6 +196,14 @@ def test_brand_ignores_case_and_accents(page, article, site, brand, expected):
 
 
 @pytestmark_browser
+def test_popup_after_brand_is_closed(page, article, site):
+    # « Preuves d'authenticité » s'ouvre après le choix de certaines marques et bloque le reste.
+    report, saved = fill(page, article, site, query="?authenticity")
+    assert report.missing_fields == []
+    assert saved["size"] == "M" and saved["colors"] == ["Noir", "Bleu"]
+
+
+@pytestmark_browser
 def test_brand_without_identical_suggestion(page, article, site):
     article.listing.brand = "Zarra"
     report, saved = fill(page, article, site)

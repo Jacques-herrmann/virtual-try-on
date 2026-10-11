@@ -110,9 +110,12 @@ class _Filler:
         try:
             locator.click(timeout=self.timing.step)
         except Exception:
-            # En-tête collant ou animation par-dessus : le clic est envoyé à l'élément.
-            log.debug("Clic intercepté, envoi direct", exc_info=True)
-            locator.dispatch_event("click")
+            log.debug("Clic intercepté", exc_info=True)
+            if self.close_popups():
+                locator.click(timeout=self.timing.step)
+            else:
+                # En-tête collant ou animation par-dessus : le clic est envoyé à l'élément.
+                locator.dispatch_event("click")
         self.pause()
 
     def open_list(self, name: str) -> None:
@@ -126,9 +129,27 @@ class _Filler:
         except Exception:
             log.debug("Capture impossible", exc_info=True)
 
+    def close_popups(self) -> bool:
+        """Ferme une fenêtre qui recouvre le formulaire (« Preuves d'authenticité » s'ouvre
+        après le choix de certaines marques) ; on ne cherche le bouton que dans la fenêtre."""
+        dialogs = self.page.locator("[aria-modal='true']")
+        if not dialogs.count():
+            return False
+        try:
+            button = first_visible(
+                dialogs, "popup_close", self.data.locators["popup_close"], timeout=0
+            )
+        except LocatorNotFound:
+            return False
+        log.info("Vinted, article %s : fenêtre fermée", self.article.id)
+        button.click(timeout=self.timing.step)
+        self.pause()
+        return True
+
     def step(self, label: str, action) -> None:
         """Exécute une étape ; tout échec rend le champ « à compléter »."""
         try:
+            self.close_popups()
             action()
         except MissingField as exc:
             self.mark_missing(exc.label, str(exc))
@@ -315,6 +336,7 @@ class _Filler:
         start_url = self.page.url
         button = "publish" if mode == "publish" else "save_draft"
         try:
+            self.close_popups()
             self.click(self.find(button))
             deadline = time.monotonic() + self.timing.save / 1000
             while True:

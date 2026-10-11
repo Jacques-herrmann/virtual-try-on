@@ -1,6 +1,6 @@
 {
  "format": 1,
- "revision": "2026-10-11.2",
+ "revision": "2026-10-11.3",
  "urls": {
   "home": "https://www.vinted.fr",
   "new_item": "https://www.vinted.fr/items/new"
@@ -27,6 +27,9 @@
   "popup_close": [
    {
     "css": "[data-testid='modal-close-button']"
+   },
+   {
+    "css": "[data-testid='authenticity-modal--header-close-button']"
    },
    {
     "role": "button",
