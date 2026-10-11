@@ -92,6 +92,7 @@ class VintedWorker:
         self._connected: bool | None = None
         self._connecting = False
         self._loaded: remote.LoadedData | None = None
+        self._loaded_event = threading.Event()
         self._batch = Batch()
         self._thread: threading.Thread | None = None
         self._playwright = None
@@ -154,6 +155,10 @@ class VintedWorker:
     def loaded(self) -> remote.LoadedData | None:
         return self._loaded
 
+    def wait_loaded(self, timeout: float | None = None) -> bool:
+        """Attend le premier chargement des données Vinted (lancé par `start`)."""
+        return self._loaded_event.wait(timeout)
+
     def status(self) -> dict:
         with self._lock:
             b = self._batch
@@ -212,9 +217,12 @@ class VintedWorker:
                 setattr(self._batch, key, value)
 
     def _do_load(self) -> remote.LoadedData:
-        loaded = self._load_data()
-        self._set(_loaded=loaded)
-        return loaded
+        try:
+            loaded = self._load_data()
+            self._set(_loaded=loaded)
+            return loaded
+        finally:
+            self._loaded_event.set()
 
     def _page(self):
         if self._context is None:

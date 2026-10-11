@@ -20,6 +20,8 @@ class GenerationQueue:
     ):
         self._client_factory = client_factory
         self._process = process
+        # Choix Vinted pour l'annonce ; posé par `create_app` (None = annonce libre).
+        self.choices_for: pipeline.ChoicesProvider | None = None
         self._pending: deque[str] = deque()
         self._cond = threading.Condition()
         self._current: str | None = None
@@ -129,7 +131,10 @@ class GenerationQueue:
                         self._pending.appendleft(article_id)
                         self._pause(exc)
                     continue
-                self._process(article_id, client=client, settings=settings, cancel=cancel)
+                extra = {"choices_for": self.choices_for} if self.choices_for else {}
+                self._process(
+                    article_id, client=client, settings=settings, cancel=cancel, **extra
+                )
             except pipeline.FATAL as exc:
                 log.warning("File en pause : %s", type(exc).__name__)
                 with self._cond:

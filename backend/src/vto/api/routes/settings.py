@@ -1,3 +1,5 @@
+from typing import Literal
+
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
@@ -16,6 +18,7 @@ class SettingsView(BaseModel):
     listing_prompt: str
     image_model: str
     text_model: str
+    vinted_mode: Literal["draft", "publish"]
 
 
 class SettingsUpdate(BaseModel):
@@ -23,6 +26,7 @@ class SettingsUpdate(BaseModel):
     listing_prompt: str | None = None
     image_model: str | None = None
     text_model: str | None = None
+    vinted_mode: Literal["draft", "publish"] | None = None
 
 
 class KeyCheck(BaseModel):
@@ -38,6 +42,7 @@ def _view(settings: config.Settings) -> SettingsView:
         listing_prompt=settings.listing_prompt,
         image_model=settings.image_model,
         text_model=settings.text_model,
+        vinted_mode=settings.vinted_mode,
     )
 
 

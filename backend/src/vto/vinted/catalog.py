@@ -42,6 +42,11 @@ class Catalog:
         entry = self._entry(category_id)
         return list(entry.path) if entry else None
 
+    def is_leaf(self, category_id: str | int | None) -> bool:
+        """Catégorie connue et sélectionnable (sans sous-catégorie)."""
+        entry = self._entry(category_id)
+        return entry is not None and not entry.node.children
+
     def sizes(self, category_id: str | int | None) -> list[str]:
         """Grille de tailles de la catégorie ; vide si elle n'en a pas."""
         entry = self._entry(category_id)

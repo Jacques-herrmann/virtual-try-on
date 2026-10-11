@@ -9,10 +9,11 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
 from vto.api import security
 from vto.api.queue import GenerationQueue
-from vto.api.routes import articles, files, scenes, settings, system
+from vto.api.routes import articles, files, scenes, settings, system, vinted
 from vto.api.routes import queue as queue_routes
 from vto.core import errors, paths
 from vto.core.pipeline import ClientFactory
+from vto.vinted.worker import Busy, VintedWorker
 
 log = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ def _add_error_handlers(app: FastAPI) -> None:
         status = 400
         if isinstance(exc, errors.ArticleNotFound):
             status = 404
-        elif isinstance(exc, errors.InvalidTransition):
+        elif isinstance(exc, errors.InvalidTransition | Busy):
             status = 409
         return _error(status, exc.user_message)
 
@@ -46,7 +47,7 @@ def _add_error_handlers(app: FastAPI) -> None:
     async def http_error(request: Request, exc: HTTPException):
         if exc.status_code == 404:
             message = "Introuvable."
-        elif exc.status_code < 500 and isinstance(exc.detail, str):
+        elif (exc.status_code < 500 or exc.status_code == 503) and isinstance(exc.detail, str):
             message = exc.detail
         else:
             message = errors.VtoError.user_message
@@ -79,10 +80,13 @@ def create_app(
     port: int,
     queue: GenerationQueue | None = None,
     static_dir: Path | None = None,
+    vinted_worker: VintedWorker | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Virtual Try-On", docs_url=None, redoc_url=None, openapi_url=None)
     app.state.client_factory = client_factory
     app.state.queue = queue or GenerationQueue(client_factory)
+    app.state.vinted = vinted_worker or VintedWorker()
+    app.state.queue.choices_for = vinted.choices_provider(app)
     app.middleware("http")(security.make_middleware(token, port))
     _add_error_handlers(app)
 
@@ -90,7 +94,7 @@ def create_app(
     def health() -> dict:
         return {"ok": True}
 
-    for module in (articles, files, queue_routes, scenes, settings, system):
+    for module in (articles, files, queue_routes, scenes, settings, system, vinted):
         app.include_router(module.router)
     _add_front(app, static_dir or STATIC_DIR)
     return app

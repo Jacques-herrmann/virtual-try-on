@@ -70,6 +70,12 @@ def test_leaves_for(catalog, garment, audience, expected):
     assert ids(catalog.leaves_for(garment, audience)) == expected
 
 
+def test_is_leaf(catalog):
+    assert catalog.is_leaf("1779") and catalog.is_leaf(1900)
+    assert not catalog.is_leaf("10")  # « Robes » a des sous-catégories
+    assert not catalog.is_leaf("999") and not catalog.is_leaf(None)
+
+
 def test_sizes(catalog):
     assert catalog.sizes("1779") == ["XS", "S", "M"]
     assert catalog.sizes("1781") == []  # feuille sans grille

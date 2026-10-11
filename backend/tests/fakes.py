@@ -54,3 +54,47 @@ class FakeClient:
         self.checked.append(list(models))
         if self.check_error is not None:
             raise self.check_error
+
+
+class FakeVintedWorker:
+    """Worker Vinted factice : enregistre les commandes, `busy` les fait refuser."""
+
+    def __init__(self, loaded=None):
+        self.loaded = loaded
+        self.commands = []
+        self.busy = False
+
+    def _command(self, *command):
+        from vto.vinted.worker import Busy
+
+        if self.busy:
+            raise Busy()
+        self.commands.append(command)
+
+    def connect(self):
+        self._command("connect")
+
+    def disconnect(self):
+        self._command("disconnect")
+
+    def send(self, article_ids):
+        self._command("send", list(article_ids))
+
+    def stop(self):
+        self.commands.append(("stop",))
+
+    def open_url(self, url):
+        self._command("open", url)
+
+    def wait_loaded(self, timeout=None):
+        return self.loaded is not None
+
+    def status(self):
+        return {
+            "connected": None,
+            "connecting": False,
+            "data_revision": self.loaded.revision if self.loaded else None,
+            "data_source": self.loaded.source if self.loaded else None,
+            "batch": {"running": False, "paused_reason": None, "current": None, "done": 0,
+                      "total": 0, "failed": 0, "message": None},
+        }

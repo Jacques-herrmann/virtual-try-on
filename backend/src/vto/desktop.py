@@ -19,6 +19,7 @@ from vto.api.queue import GenerationQueue
 from vto.api.security import LOGIN_PATH
 from vto.core import scenes
 from vto.core.logging import setup_logging
+from vto.vinted.worker import VintedWorker
 
 log = logging.getLogger(__name__)
 
@@ -57,10 +58,13 @@ def main(argv: list[str] | None = None) -> None:
     scenes.ensure_default_scenes()
     queue = GenerationQueue()
     queue.start()
+    # Charge les données Vinted en arrière-plan : la fenêtre n'attend pas le réseau.
+    vinted = VintedWorker()
+    vinted.start()
 
     port = DEV_PORT if args.dev else find_free_port()
     token = DEV_TOKEN if args.dev else secrets.token_urlsafe(32)
-    app = create_app(token=token, port=port, queue=queue)
+    app = create_app(token=token, port=port, queue=queue, vinted_worker=vinted)
     server = uvicorn.Server(
         uvicorn.Config(app, host="127.0.0.1", port=port, log_config=None, access_log=False)
     )
@@ -70,6 +74,7 @@ def main(argv: list[str] | None = None) -> None:
               f"?token={DEV_TOKEN}")
         server.run()
         queue.stop()
+        vinted.shutdown()
         return
 
     thread = threading.Thread(target=server.run, name="api", daemon=True)
@@ -88,6 +93,7 @@ def main(argv: list[str] | None = None) -> None:
 
     # Fenêtre fermée : l'article en cours sera repris au prochain lancement.
     queue.stop()
+    vinted.shutdown()
     server.should_exit = True
     thread.join(timeout=5)
 

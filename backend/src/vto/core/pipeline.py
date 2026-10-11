@@ -18,7 +18,8 @@ ProgressCallback = Callable[[str, str, str], None]
 # Construit un client à partir d'une clé ; les tests injectent un FakeClient.
 ClientFactory = Callable[[str], GenAIClient]
 # Valeurs Vinted proposées pour l'annonce d'un article ; fourni par l'appelant (l'API).
-ChoicesProvider = Callable[[Article], ListingChoices]
+# None : pas de données Vinted, l'annonce reste libre.
+ChoicesProvider = Callable[[Article], ListingChoices | None]
 
 # Erreurs qui touchent tout le lot : inutile d'enchaîner les échecs.
 FATAL = (errors.MissingApiKey, errors.InvalidApiKey, errors.QuotaExceeded)

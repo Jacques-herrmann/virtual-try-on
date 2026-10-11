@@ -1,6 +1,7 @@
 """Données Vinted de test."""
 
-from vto.vinted.schema import REQUIRED_LOCATORS
+from vto.vinted.remote import LoadedData
+from vto.vinted.schema import REQUIRED_LOCATORS, VintedData
 
 
 def minimal() -> dict:
@@ -27,3 +28,8 @@ def minimal() -> dict:
         "parcel_sizes": {"Petit": "Petit"},
         "audiences": {"femme": 1904, "homme": 5},
     }
+
+
+def loaded_data(revision="r1") -> LoadedData:
+    data = VintedData.model_validate({**minimal(), "revision": revision})
+    return LoadedData(data=data, source="bundled", revision=revision)

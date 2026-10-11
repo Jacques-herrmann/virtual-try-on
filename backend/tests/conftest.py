@@ -79,14 +79,29 @@ def make_api(data_dir):
 
     made = []
 
-    def _make(client_factory, *, static_dir=None, login=True, start_queue=True, api_key="k"):
+    def _make(
+        client_factory,
+        *,
+        static_dir=None,
+        login=True,
+        start_queue=True,
+        api_key="k",
+        vinted_worker=None,
+    ):
+        from fakes import FakeVintedWorker
+        from samples import loaded_data
         from vto.core import config
 
         if api_key:
             config.save_settings(config.Settings(gemini_api_key=api_key))
         queue = GenerationQueue(client_factory)
         app = create_app(
-            client_factory, token=API_TOKEN, port=API_PORT, queue=queue, static_dir=static_dir
+            client_factory,
+            token=API_TOKEN,
+            port=API_PORT,
+            queue=queue,
+            static_dir=static_dir,
+            vinted_worker=vinted_worker or FakeVintedWorker(loaded_data()),
         )
         client = TestClient(
             app, base_url=f"http://127.0.0.1:{API_PORT}", raise_server_exceptions=False
