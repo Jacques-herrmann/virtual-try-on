@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Profil (factice)</title></head>
+<body>
+<header><a data-testid="user-menu-button" href="#">Moi</a></header>
+<h1 data-testid="profile-username">vendeuse</h1>
+<div id="items"></div>
+<script>
+const title = new URLSearchParams(location.search).get('title') || '';
+document.querySelector('#items').innerHTML = `
+  <a data-testid="product-item-id-7--overlay-link" href="/items/7/edit" title="Ancien brouillon, 0,00 €">Brouillon</a>
+  <a data-testid="product-item-id-8--overlay-link" href="/items/8/edit" title="${title.replace(/"/g, '&quot;')}, 0,00 €">Brouillon</a>`;
+</script>
+</body>
+</html>

@@ -24,6 +24,7 @@ REQUIRED_LOCATORS = (
     "popup_close",
     "photo_input",
     "photo_thumb",
+    "ai_photo",
     "title",
     "description",
     "category_open",
@@ -31,7 +32,9 @@ REQUIRED_LOCATORS = (
     "brand_open",
     "brand_input",
     "brand_option",
+    "brand_options",
     "size_open",
+    "size_tab",
     "size_option",
     "condition_open",
     "condition_option",
@@ -43,6 +46,7 @@ REQUIRED_LOCATORS = (
     "save_draft",
     "publish",
     "saved_marker",
+    "draft_link",
 )
 
 

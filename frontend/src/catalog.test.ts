@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { VintedCatalog } from '@/types'
 
-import { cascadeOptions, categoryPath, depth, isLeaf, sizesFor } from './catalog'
+import { cascadeOptions, categoryPath, depth, isLeaf, sameSize, sizesFor } from './catalog'
 
 const catalog: VintedCatalog = {
   revision: 'r1',
@@ -75,5 +75,14 @@ describe('sizesFor', () => {
     expect(sizesFor(catalog, '1781')).toEqual([])
     expect(sizesFor(catalog, null)).toEqual([])
     expect(sizesFor(null, '1779')).toEqual([])
+  })
+})
+
+describe('sameSize', () => {
+  it('ignore la différence entre espace normale et insécable', () => {
+    expect(sameSize('FR 38', 'FR\u00a038')).toBe(true)
+    expect(sameSize('M', 'M')).toBe(true)
+    expect(sameSize('FR 38', 'FR 40')).toBe(false)
+    expect(sameSize(null, '')).toBe(true)
   })
 })

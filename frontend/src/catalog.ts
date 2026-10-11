@@ -57,3 +57,9 @@ export function sizesFor(catalog: VintedCatalog | null, id: string | null | unde
   const group = find(catalog.catalog, id)?.node.size_group
   return group ? (catalog.size_groups[group] ?? []) : []
 }
+
+/** Vinted écrit « FR 38 » avec une espace insécable : on compare les espaces à l'identique. */
+export function sameSize(a: string | null | undefined, b: string | null | undefined): boolean {
+  const clean = (s: string | null | undefined) => (s ?? '').split(/\s+/).filter(Boolean).join(' ')
+  return clean(a) === clean(b)
+}

@@ -55,3 +55,23 @@ def first_visible(
         if time.monotonic() >= deadline:
             raise LocatorNotFound(name)
         page.wait_for_timeout(POLL_MS)
+
+
+def first_present(
+    page,
+    name: str,
+    alternatives: Sequence[Locator],
+    *,
+    timeout: float,
+    label: str | None = None,
+):
+    """Comme `first_visible`, pour un élément présent mais caché (champ fichier, case stylée)."""
+    locators = [resolve(page, alt, label) for alt in alternatives]
+    deadline = time.monotonic() + timeout / 1000
+    while True:
+        for locator in locators:
+            if locator.count():
+                return locator.first
+        if time.monotonic() >= deadline:
+            raise LocatorNotFound(name)
+        page.wait_for_timeout(POLL_MS)

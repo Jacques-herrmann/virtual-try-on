@@ -8,7 +8,7 @@ import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
 import { computed, ref, watch } from 'vue'
 
-import { cascadeOptions, categoryPath, depth, isLeaf, sizesFor } from '@/catalog'
+import { cascadeOptions, categoryPath, depth, isLeaf, sameSize, sizesFor } from '@/catalog'
 import { CONDITIONS, type Listing, PARCEL_SIZES, type VintedCatalog } from '@/types'
 
 const props = defineProps<{
@@ -49,8 +49,13 @@ const sizes = computed(() => sizesFor(props.catalog, draft.value.category))
 // Sans catégorie choisie, la taille reste libre ; une catégorie sans grille n'a pas de taille.
 const showSize = computed(() => !draft.value.category || sizes.value.length > 0)
 const sizeOutOfGrid = computed(
-  () => sizes.value.length > 0 && !!draft.value.size && !sizes.value.includes(draft.value.size),
+  () =>
+    sizes.value.length > 0 &&
+    !!draft.value.size &&
+    !sizes.value.some((s) => sameSize(s, draft.value.size)),
 )
+// Taille équivalente mais écrite autrement (espaces) : affichée telle quelle dans la liste.
+const sizeNotExact = computed(() => !!draft.value.size && !sizes.value.includes(draft.value.size))
 
 const colors = computed(() => {
   const known = props.catalog?.colors ?? []
@@ -126,7 +131,7 @@ defineExpose({ dirty })
           input-id="lsize"
           :options="sizes"
           show-clear
-          :placeholder="sizeOutOfGrid ? draft.size ?? undefined : undefined"
+          :placeholder="sizeNotExact ? draft.size ?? undefined : undefined"
           :disabled="readonly"
           fluid
         />

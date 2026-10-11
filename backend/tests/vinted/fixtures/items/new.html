@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Vends ton article | Vinted (factice)</title>
+<style>
+  body { font-family: sans-serif; margin: 0; }
+  header { position: sticky; top: 0; height: 60px; background: #fff; border-bottom: 1px solid #ddd; z-index: 10; }
+  main { padding: 20px; max-width: 700px; }
+  .field { margin: 16px 0; }
+  .content { border: 1px solid #ccc; padding: 8px; }
+  .hidden { display: none; }
+  [role=button], [role=radio], [role=checkbox] { cursor: pointer; padding: 4px; }
+  [aria-checked=true] { background: #cfe; }
+  .visually-hidden { position: absolute; opacity: 0; width: 1px; height: 1px; }
+</style>
+</head>
+<body>
+<header><a data-testid="user-menu-button" href="#">Moi</a></header>
+<main>
+  <div data-testid="media-upload">
+    <input data-testid="add-photos-input" type="file" name="photos" multiple style="display:none">
+    <div id="thumbs"></div>
+    <label id="ai-cell" class="hidden">
+      <input id="ai_photo" type="checkbox" class="visually-hidden"
+             aria-label="Marquer les photos comme générées par l'IA">
+      Marquer les photos comme générées par l'IA
+    </label>
+  </div>
+
+  <div class="field"><input data-testid="title--input" type="text"></div>
+  <div class="field"><textarea data-testid="description--input"></textarea></div>
+
+  <div class="field" id="category-field">
+    <input data-testid="catalog-select-dropdown-input" readonly>
+    <div data-testid="catalog-select-dropdown-content" class="content hidden"></div>
+  </div>
+
+  <div id="details" class="hidden">
+    <div class="field">
+      <input data-testid="brand-select-dropdown-input" readonly>
+      <div data-testid="brand-select-dropdown-content" class="content hidden">
+        <input data-testid="brand-search--input" placeholder="Rechercher une marque">
+        <div id="brands"></div>
+      </div>
+    </div>
+    <div class="field" id="size-field">
+      <input data-testid="category-size-single-grid_chips-input" readonly>
+      <div data-testid="category-size-single-grid_chips-content" class="content hidden">
+        <button type="button" data-tab="S/M/L">S/M/L</button>
+        <button type="button" data-tab="FR">FR</button>
+        <div id="chips"></div>
+      </div>
+    </div>
+    <div class="field">
+      <input data-testid="category-condition-single-list-input" readonly>
+      <div data-testid="category-condition-single-list-content" class="content hidden"></div>
+    </div>
+    <div class="field">
+      <input data-testid="color-select-dropdown-input" readonly>
+      <div data-testid="color-select-dropdown-content" class="content hidden"></div>
+    </div>
+    <div class="field"><input data-testid="price-input--input" type="text" placeholder="0,00 €"></div>
+    <div class="field" id="parcels"></div>
+  </div>
+
+  <div id="buttons">
+    <button type="button" data-testid="upload-form-save-draft-button">Sauvegarder le brouillon</button>
+    <button type="button" data-testid="upload-form-save-button">Ajouter</button>
+  </div>
+</main>
+<script>
+const params = new URLSearchParams(location.search);
+const $ = (sel) => document.querySelector(sel);
+const state = { photos: [], ai: false, category: null, brand: null, size: null, condition: null,
+                colors: [], parcel: null };
+
+if (params.has('nocategory')) { $('#category-field').style.display = 'none'; $('#details').classList.remove('hidden'); }
+if (params.has('nosave')) $('#buttons').remove();
+
+// Photos
+$('[data-testid=add-photos-input]').addEventListener('change', (e) => {
+  state.photos = [...e.target.files].map((f) => f.name);
+  $('#thumbs').innerHTML = state.photos
+    .map((n, i) => `<div data-testid="image-wrapper-${i}">${n}</div>`).join('');
+  $('#ai-cell').classList.remove('hidden');
+});
+$('#ai_photo').addEventListener('change', (e) => { state.ai = e.target.checked; });
+
+// Listes : un clic sur le champ ouvre, un second ferme (Échap ne ferme pas).
+function toggler(testid, onOpen) {
+  const input = $(`[data-testid=${testid}-input]`);
+  const content = $(`[data-testid=${testid}-content]`);
+  input.addEventListener('click', () => {
+    const open = content.classList.toggle('hidden') === false;
+    if (open && onOpen) onOpen();
+  });
+  return { input, content, close: () => content.classList.add('hidden') };
+}
+
+// Catégories
+const TREE = [
+  { id: 1904, label: 'Femmes', children: [
+    { id: 4, label: 'Vêtements', children: [
+      { id: 10, label: 'Robes', children: [{ id: 178, label: 'Mini' }, { id: 1056, label: 'Midi' }] },
+    ] },
+    { id: 19, label: 'Sacs', children: [{ id: 157, label: 'Sacs à dos' }] },
+  ] },
+  { id: 5, label: 'Hommes', children: [] },
+];
+const category = toggler('catalog-select-dropdown', () => showNodes(TREE));
+function showNodes(nodes) {
+  category.content.innerHTML = nodes
+    .map((n) => `<div id="catalog-${n.id}" role="button" tabindex="0">${n.label}</div>`).join('');
+  nodes.forEach((n) => $(`#catalog-${n.id}`).addEventListener('click', () => {
+    if (n.children && n.children.length) return showNodes(n.children);
+    state.category = n.id;
+    category.input.value = n.label;
+    category.close();
+    $('#details').classList.remove('hidden');
+    $('#size-field').classList.toggle('hidden', n.id === 157);  // sacs : pas de taille
+  }));
+}
+
+// Marques
+const BRANDS = ['Zara', 'Zara Kids', 'Sézane', 'Sézane x La Redoute', 'H&M'];
+const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const brand = toggler('brand-select-dropdown');
+$('[data-testid=brand-search--input]').addEventListener('input', (e) => {
+  const q = norm(e.target.value);
+  const found = BRANDS.filter((b) => norm(b).includes(q));
+  const options = found.map((b) => `<div role="radio" aria-label="${b}" aria-checked="false">${b}</div>`);
+  if (!found.length) options.push(`<div role="radio">Utiliser "${e.target.value}" comme marque</div>`);
+  $('#brands').innerHTML = options.join('');
+  $('#brands').querySelectorAll('[role=radio][aria-label]').forEach((el) =>
+    el.addEventListener('click', () => {
+      state.brand = el.getAttribute('aria-label');
+      brand.input.value = state.brand;
+      brand.close();
+    }));
+});
+
+// Tailles (onglets)
+const SIZES = { 'S/M/L': ['XS', 'S', 'M', 'L'], FR: ['FR 36', 'FR 38', 'FR 40'] };
+const size = toggler('category-size-single-grid_chips', () => showTab('S/M/L'));
+function showTab(tab) {
+  $('#chips').innerHTML = SIZES[tab]
+    .map((s) => `<div role="checkbox" aria-checked="false" aria-label="${s}">${s}</div>`).join('');
+  $('#chips').querySelectorAll('[role=checkbox]').forEach((el) =>
+    el.addEventListener('click', () => {
+      state.size = el.getAttribute('aria-label');
+      size.input.value = state.size;
+      size.close();
+    }));
+}
+document.querySelectorAll('[data-tab]').forEach((b) =>
+  b.addEventListener('click', () => showTab(b.dataset.tab)));
+
+// États
+const CONDITIONS = ['Neuf avec étiquette', 'Neuf sans étiquette', 'Très bon état', 'Bon état', 'Satisfaisant'];
+const condition = toggler('category-condition-single-list');
+condition.content.innerHTML = CONDITIONS.map((c, i) =>
+  `<div role="radio" data-testid="condition-${i}"><div>${c}</div><div>Description de l'état ${c}.</div></div>`).join('');
+condition.content.querySelectorAll('[role=radio]').forEach((el, i) =>
+  el.addEventListener('click', () => {
+    state.condition = CONDITIONS[i];
+    condition.input.value = state.condition;
+    condition.close();
+  }));
+
+// Couleurs (2 au plus)
+const COLORS = ['Noir', 'Blanc', 'Bleu', 'Rouge'];
+const color = toggler('color-select-dropdown');
+color.content.innerHTML = COLORS.map((c) =>
+  `<div role="checkbox" aria-checked="false" aria-label="${c}">${c}</div>`).join('');
+color.content.querySelectorAll('[role=checkbox]').forEach((el) =>
+  el.addEventListener('click', () => {
+    const c = el.getAttribute('aria-label');
+    if (state.colors.includes(c)) state.colors = state.colors.filter((x) => x !== c);
+    else if (state.colors.length < 2) state.colors.push(c);
+    el.setAttribute('aria-checked', state.colors.includes(c));
+    color.input.value = state.colors.join(', ');
+  }));
+
+// Colis
+$('#parcels').innerHTML = ['Petit', 'Moyen', 'Grand'].map((p, i) =>
+  `<label><input type="radio" name="parcel" value="${p}"><span>${p}</span><div>Pour un article de taille ${i}</div></label>`).join('');
+$('#parcels').querySelectorAll('label').forEach((el) =>
+  el.addEventListener('click', () => { state.parcel = el.querySelector('input').value; }));
+
+// Enregistrement
+function save(mode) {
+  const saved = { ...state, mode, title: $('[data-testid=title--input]').value,
+    description: $('[data-testid=description--input]').value,
+    price: $('[data-testid=price-input--input]').value };
+  sessionStorage.setItem('saved', JSON.stringify(saved));
+  setTimeout(() => {
+    location.href = mode === 'draft'
+      ? `/member/42.html?title=${encodeURIComponent(saved.title)}`
+      : '/items/99.html';
+  }, 300);
+}
+$('[data-testid=upload-form-save-draft-button]')?.addEventListener('click', () => save('draft'));
+$('[data-testid=upload-form-save-button]')?.addEventListener('click', () => save('publish'));
+</script>
+</body>
+</html>

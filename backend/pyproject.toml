@@ -51,4 +51,4 @@ markers = [
     "browser: pilote un vrai navigateur",
     "live_vinted: crée un brouillon sur vinted.fr",
 ]
-addopts = "-m 'not live and not live_vinted'"
+addopts = "-m 'not live and not live_vinted and not browser'"

@@ -91,6 +91,11 @@
     "name": "{label}"
    }
   ],
+  "brand_options": [
+   {
+    "css": "[data-testid='brand-select-dropdown-content'] [role='radio']"
+   }
+  ],
   "size_open": [
    {
     "css": "[data-testid^='category-size-'][data-testid$='-input']"
