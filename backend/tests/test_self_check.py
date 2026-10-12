@@ -44,7 +44,9 @@ def test_missing_playwright_driver_fails(tmp_path, monkeypatch):
     assert "ÉCHEC pilote Playwright" in out.read_text(encoding="utf-8")
 
 
-def test_main_self_check_exits_with_its_code(tmp_path, monkeypatch):
+def test_main_self_check_exits_with_its_code(data_dir, tmp_path, monkeypatch):
+    # Ne jamais brancher le journal sur le vrai dossier de données (ni le garder ouvert).
+    monkeypatch.setattr(desktop, "setup_logging", lambda **kw: None)
     calls = []
     monkeypatch.setattr(self_check, "run", lambda output: calls.append(output) or 3)
     with pytest.raises(SystemExit) as exc:
