@@ -120,7 +120,7 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 - [x] `packaging/vto.spec` : mode dossier, `console=False`, nom `VirtualTryOn`, icône `packaging/icon.ico` (provisoire, générée par `packaging/make_icon.py` ; à remplacer par celle du produit), point d'entrée `packaging/launcher.py` (appelle `vto.desktop.main`) ; `datas` : `vto/api/static`, `vto/vinted/data`, `vto/core/default_scenes` via `collect_data_files` ; `collect_all("playwright")` pour le pilote ; `collect_submodules("vto")` ; métadonnées de version Windows (`version_info`) générées depuis `__version__`.
 - [x] Build local : `npm run build` puis `pyinstaller packaging/vto.spec --noconfirm`.
 - [x] `dist/VirtualTryOn/VirtualTryOn.exe --self-check --output selfcheck.txt` → 0 (2026-10-12, Python 3.14 + PyInstaller 6.22.3 : aucun module ni fichier à ajouter ; 174 Mo). Lancement réel : serveur et données Vinted OK.
-- [ ] **Avec l'utilisateur** — lancer l'exe à la main : fenêtre, génération d'un article (clé Gemini du `.env` saisie dans l'app), connexion Vinted et création d'un brouillon. Noter dans ce plan les modules ou fichiers qu'il a fallu ajouter.
+- [x] **Avec l'utilisateur** — lancer l'exe à la main (2026-10-12, 0.2.0rc5, vraies données : génération, validation, brouillon Vinted OK, aucune erreur au log) : fenêtre, génération d'un article (clé Gemini du `.env` saisie dans l'app), connexion Vinted et création d'un brouillon. Noter dans ce plan les modules ou fichiers qu'il a fallu ajouter.
 - [x] `.gitignore` : `build/`, `dist/`, `packaging/Output/`.
 - [x] Commit `add pyinstaller spec`.
 
