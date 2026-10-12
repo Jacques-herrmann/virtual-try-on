@@ -103,7 +103,7 @@ Le spec PyInstaller embarque explicitement : `vto/api/static`, `vto/vinted/data`
 ```
 
 - Joint à chaque Release ; lu à l'URL stable `https://github.com/Jacques-herrmann/virtual-try-on/releases/latest/download/latest.json`.
-- URL surchargeable par `VTO_UPDATE_URL` (tests, essai, et futur Worker du sous-projet 5).
+- URL surchargeable par `VTO_UPDATE_URL` (tests, essai, et futur Worker du sous-projet 5). `http://` n'est accepté que vers `127.0.0.1` (manifeste local pour l'essai du bandeau).
 - Validé par un modèle pydantic strict ; `url` doit être en `https://`.
 - `notes` provient du corps du tag annoté (`git tag -a`), vide sinon.
 - Relever `minimum_version` en urgence = publier une version corrective avec `packaging/minimum_version.txt` modifié.
@@ -181,7 +181,7 @@ Sans réseau, `httpx.MockTransport` pour le serveur, faux lanceur de processus :
 
 ## 7. Acceptation manuelle
 
-Dans le Bac à sable Windows (Windows vierge) :
+Dans un compte Windows local dédié (profil vierge, sans outils de dev) — le poste est en Windows 11 Famille, sans Bac à sable ni Hyper-V :
 
 1. Publier `v0.2.0`, l'installer : pas d'UAC ; noter l'avertissement SmartScreen pour la page d'aide.
 2. Saisir la clé Gemini, générer un article, se connecter à Vinted, créer un brouillon.
