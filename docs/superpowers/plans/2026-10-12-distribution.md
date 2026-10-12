@@ -126,12 +126,12 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 12 — Installeur Inno Setup (spec §2.4)
 
-- [ ] Installer Inno Setup 6 sur le poste (`winget install JRSoftware.InnoSetup`).
-- [ ] Télécharger `MicrosoftEdgeWebview2Setup.exe` (bootstrapper Evergreen) dans `packaging/redist/` ; l'ajouter au dépôt (redistribuable, ~2 Mo) ou le télécharger en CI — choisir le téléchargement en CI depuis l'URL officielle `https://go.microsoft.com/fwlink/p/?LinkId=2124703` pour ne rien versionner de binaire ; build local : même téléchargement par un petit script `packaging/fetch_redist.ps1`.
-- [ ] `packaging/installer.iss` : `AppId` (GUID généré une fois, ne plus jamais changer), `AppVersion` passée par `/DAppVersion=`, `PrivilegesRequired=lowest`, `DefaultDirName={localappdata}\Programs\VirtualTryOn`, `DisableDirPage=yes`, français (`Languages\French.isl`), `CloseApplications=yes`, `RestartApplications=no`, `OutputBaseFilename=VirtualTryOn-Setup-{#AppVersion}` ; `[Tasks]` raccourci Bureau ; `[Run]` lancement `postinstall skipifsilent` + relance `Check: WizardSilent` (`nowait`) ; `[Code]` détection WebView2 (clés `HKCU`/`HKLM` `…\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}`, valeur `pv`) et exécution du bootstrapper `/silent /install` si absent, message français en cas d'échec ; aucun `[UninstallDelete]` sur les données.
-- [ ] Build local : `iscc /DAppVersion=0.2.0 packaging\installer.iss`.
-- [ ] Vérifier sur le poste : installation sans UAC, raccourcis, lancement, réinstallation par-dessus l'app ouverte en `/VERYSILENT` (fermeture puis relance), désinstallation qui conserve `%LOCALAPPDATA%\VirtualTryOn`.
-- [ ] Commit `add inno setup installer`.
+- [x] Installer Inno Setup 6 sur le poste (`winget install JRSoftware.InnoSetup`).
+- [x] Bootstrapper WebView2 téléchargé par `packaging/fetch_redist.ps1` (URL officielle, signature Authenticode Microsoft vérifiée) dans `packaging/redist/` (ignoré par git) ; même script en CI.
+- [x] `packaging/installer.iss` : `AppId` (GUID généré une fois, ne plus jamais changer), `AppVersion` passée par `/DAppVersion=`, `PrivilegesRequired=lowest`, `DefaultDirName={autopf}\VirtualTryOn` (= `%LOCALAPPDATA%\Programs` en mode utilisateur), `DisableDirPage=yes`, français (`Languages\French.isl`), `CloseApplications=yes`, `RestartApplications=no`, `OutputBaseFilename=VirtualTryOn-Setup-{#AppVersion}` ; `[Tasks]` raccourci Bureau ; `[Run]` lancement `postinstall skipifsilent` + relance `Check: WizardSilent` (`nowait`) ; `[Code]` détection WebView2 (clés `HKCU`/`HKLM` `…\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}`, valeur `pv`) et exécution du bootstrapper `/silent /install` si absent, message français en cas d'échec ; aucun `[UninstallDelete]` sur les données ; `[InstallDelete]` vide `{app}\_internal` avant la copie (fichiers d'une ancienne version). Script en UTF-8 avec BOM.
+- [x] Build local : `iscc /DAppVersion=0.2.0 packaging\installer.iss`. Attention en test : `Start-Process -Wait` de PowerShell 5.1 attend aussi l'app relancée, et `ExitCode` y est peu fiable ; tester depuis bash ou avec `WaitForExit()`.
+- [x] Vérifier sur le poste (2026-10-12, dossier et données temporaires ; WebView2 déjà présent, bootstrapper non exercé) — installeur 59,6 Mo : installation sans UAC, raccourcis, lancement, réinstallation par-dessus l'app ouverte en `/VERYSILENT` (fermeture puis relance), désinstallation qui conserve `%LOCALAPPDATA%\VirtualTryOn`.
+- [x] Commit `add inno setup installer`.
 
 ### Tâche 13 — Manifeste de release (spec §3.1, §5)
 
