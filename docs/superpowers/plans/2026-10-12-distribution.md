@@ -57,11 +57,11 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 5 — État de mise à jour (spec §3.2)
 
-- [ ] Tests `test_check.py` :
+- [x] Tests `test_check.py` :
   - `compute_status(current, manifest)` : `required` / `available` / `up_to_date`, y compris `0.3.0rc1 < 0.3.0` et `0.2.10 > 0.2.9` ;
-  - `UpdateChecker` : première vérification à `start()`, puis à chaque intervalle (intervalle et attente injectables) ; échec → état `unknown`, dernier manifeste valide conservé ; `snapshot()` renvoie `{current, latest, status, notes, can_install}` ; `can_install` suit `paths.is_frozen()` ; `is_required()`.
-- [ ] Implémenter `updates/check.py` (thread démon, verrou, `stop()`).
-- [ ] Commit `add update checker`.
+  - `UpdateChecker` : première vérification à `start()`, puis à chaque intervalle (intervalle et attente injectables) ; échec → dernier état valide conservé (`unknown` tant qu'aucune vérification n'a abouti) ; `snapshot()` renvoie `{current, latest, status, notes, can_install}` ; `can_install` suit `paths.is_frozen()` ; `is_required()`.
+- [x] Implémenter `updates/check.py` (thread démon, verrou, `stop()`).
+- [x] Commit `add update checker`.
 
 ### Tâche 6 — Téléchargement et lancement (spec §3.3)
 

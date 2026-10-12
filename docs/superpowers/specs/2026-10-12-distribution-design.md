@@ -111,7 +111,7 @@ Le spec PyInstaller embarque explicitement : `vto/api/static`, `vto/vinted/data`
 ### 3.2 Vérification (`updates.check`)
 
 - Au démarrage, dans un thread, sans bloquer la fenêtre ; puis toutes les 6 h. Délai réseau : 5 s.
-- État calculé : `required` si `__version__ < minimum_version`, sinon `available` si `__version__ < version`, sinon `up_to_date`. En cas d'échec réseau ou de manifeste invalide : `unknown`, une ligne dans le log, aucun message au vendeur.
+- État calculé : `required` si `__version__ < minimum_version`, sinon `available` si `__version__ < version`, sinon `up_to_date`. En cas d'échec réseau ou de manifeste invalide : le dernier état valide est conservé (`unknown` si aucune vérification n'a encore abouti), une ligne dans le log, aucun message au vendeur.
 - Gardé en mémoire ; exposé par `GET /api/update` → `{current, latest, status, notes, can_install}`. `can_install` est faux hors exécutable empaqueté (`paths.is_frozen()`).
 - `required` est consulté par le service d'envoi Vinted : l'envoi est refusé avec « Cette version ne fonctionne plus avec Vinted. Mettez l'application à jour pour envoyer vos annonces. » La génération et la relecture restent disponibles.
 
