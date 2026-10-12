@@ -44,6 +44,10 @@ LAUNCH_ARGS = (
     "--no-first-run",
     "--no-default-browser-check",
     "--start-maximized",
+    # Une fenêtre recouverte par d'autres n'est plus dessinée : clics et défilements bloqués.
+    "--disable-backgrounding-occluded-windows",
+    "--disable-renderer-backgrounding",
+    "--disable-features=CalculateNativeWinOcclusion",
 )
 
 
