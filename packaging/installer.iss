@@ -19,7 +19,9 @@ AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
 AppPublisher={#AppName}
 AppSupportURL={#HelpUrl}
-VersionInfoVersion={#AppVersion}
+; Versions texte : VersionInfoVersion exige des chiffres seuls, refusant les préversions (0.3.0rc1).
+VersionInfoTextVersion={#AppVersion}
+VersionInfoProductTextVersion={#AppVersion}
 PrivilegesRequired=lowest
 DefaultDirName={autopf}\VirtualTryOn
 DisableDirPage=yes
