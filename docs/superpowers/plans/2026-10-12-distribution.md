@@ -51,9 +51,9 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 4 — Manifeste (spec §3.1)
 
-- [ ] Tests `tests/updates/test_manifest.py` : manifeste valide ; champ manquant ; champ inconnu accepté et ignoré (un manifeste plus récent ne casse pas une ancienne app) ; `url` en `http://` refusée ; `VTO_UPDATE_URL` en `http://127.0.0.1…` accepté (manifeste local pour l'essai du bandeau), toute autre URL `http://` refusée ; `sha256` qui n'est pas 64 hexadécimaux refusé ; version non PEP 440 refusée ; JSON invalide, code 404, délai dépassé → `ManifestUnavailable` ; `VTO_UPDATE_URL` prioritaire sur l'URL par défaut.
-- [ ] Implémenter `updates/manifest.py` : modèle pydantic `Manifest`, `fetch_manifest(url=None, transport=None)`, délai 5 s, `follow_redirects=True` (GitHub redirige `releases/latest/download`).
-- [ ] Commit `add update manifest`.
+- [x] Tests `tests/updates/test_manifest.py` : manifeste valide ; champ manquant ; champ inconnu accepté et ignoré (un manifeste plus récent ne casse pas une ancienne app) ; `url` en `http://` refusée ; `VTO_UPDATE_URL` en `http://127.0.0.1…` accepté (manifeste local pour l'essai du bandeau), toute autre URL `http://` refusée ; `sha256` qui n'est pas 64 hexadécimaux refusé ; version non PEP 440 refusée ; JSON invalide, code 404, délai dépassé → `ManifestUnavailable` ; `VTO_UPDATE_URL` prioritaire sur l'URL par défaut.
+- [x] Implémenter `updates/manifest.py` : modèle pydantic `Manifest`, `fetch_manifest(url=None, transport=None)`, délai 5 s, `follow_redirects=True` (GitHub redirige `releases/latest/download`).
+- [x] Commit `add update manifest`.
 
 ### Tâche 5 — État de mise à jour (spec §3.2)
 
