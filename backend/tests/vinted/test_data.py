@@ -4,7 +4,7 @@ from vto.vinted import remote
 from vto.vinted.catalog import Catalog
 from vto.vinted.schema import REQUIRED_LOCATORS, VintedData
 
-PUBLISHED = Path(__file__).parents[3] / "data" / "vinted.json"
+PUBLISHED = Path(__file__).parents[3] / "data" / "vinted-v1.json"
 
 
 def test_bundled_copy_matches_published_file():

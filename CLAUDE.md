@@ -42,7 +42,7 @@ pytest backend/tests -m browser  # pilote un navigateur (Chrome installé ou `pl
 pytest backend/tests -m live_vinted  # crée puis efface un vrai brouillon (profil Vinted connecté)
 ruff check backend
 
-vto-vinted-catalog               # relève le catalogue Vinted (~1 h, reprenable) et réécrit data/vinted.json ;
+vto-vinted-catalog               # relève le catalogue Vinted (~1 h, reprenable) et réécrit data/vinted-v1.json ;
                                  # recopier ensuite dans backend/src/vto/vinted/data/vinted.json
 
 cd frontend && npm ci            # Node ≥ 22.12 (nvm-windows sur le poste de dev)

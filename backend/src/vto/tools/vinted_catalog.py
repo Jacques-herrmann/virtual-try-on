@@ -1,6 +1,6 @@
 """Relevé du catalogue Vinted (outil de développement, hors de l'app livrée).
 
-    vto-vinted-catalog [--data data/vinted.json] [--limit N] [--restart]
+    vto-vinted-catalog [--data data/vinted-v1.json] [--limit N] [--restart]
 
 Ouvre le profil du navigateur dédié (vendeur de test connecté) sur « Vends ton article »,
 lit l'arbre des catégories, puis choisit chaque catégorie finale pour relever sa grille de
@@ -260,7 +260,7 @@ def scrape(page, data: VintedData, progress: dict, limit: int | None) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--data", type=Path, default=Path("data/vinted.json"))
+    parser.add_argument("--data", type=Path, default=Path("data/vinted-v1.json"))
     parser.add_argument("--limit", type=int, help="nombre de feuilles à relever cette fois")
     parser.add_argument("--restart", action="store_true", help="oublier le relevé en cours")
     args = parser.parse_args(argv)

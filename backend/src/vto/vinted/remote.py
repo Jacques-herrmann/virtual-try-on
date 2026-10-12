@@ -11,12 +11,14 @@ import httpx
 from pydantic import ValidationError
 
 from vto.core import paths
-from vto.vinted.schema import VintedData
+from vto.vinted.schema import FORMAT, VintedData
 
 log = logging.getLogger(__name__)
 
+# Une app ne lit que le format qu'elle comprend : le numéro fait partie du chemin.
 DEFAULT_URL = (
-    "https://raw.githubusercontent.com/Jacques-herrmann/virtual-try-on/main/data/vinted.json"
+    "https://raw.githubusercontent.com/Jacques-herrmann/virtual-try-on/main/data/"
+    f"vinted-v{FORMAT}.json"
 )
 TIMEOUT = 5.0
 
@@ -36,7 +38,7 @@ def bundled_text() -> str:
 
 def _cache_files() -> tuple[Path, Path]:
     cache = paths.cache_dir()
-    return cache / "vinted.json", cache / "vinted.etag"
+    return cache / f"vinted-v{FORMAT}.json", cache / f"vinted-v{FORMAT}.etag"
 
 
 def _read_cache() -> VintedData | None:

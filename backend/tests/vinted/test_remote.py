@@ -1,13 +1,14 @@
 import json
 import logging
 import os
+from typing import get_args
 
 import httpx
 import pytest
 
 from samples import minimal
 from vto.core import paths
-from vto.vinted import remote
+from vto.vinted import remote, schema
 
 
 def payload(revision="2026-10-11.1") -> bytes:
@@ -51,11 +52,11 @@ def load(server):
 
 
 def cache_file():
-    return paths.cache_dir() / "vinted.json"
+    return paths.cache_dir() / "vinted-v1.json"
 
 
 def etag_file():
-    return paths.cache_dir() / "vinted.etag"
+    return paths.cache_dir() / "vinted-v1.etag"
 
 
 def fill_cache(revision="cache", etag='"v1"'):
@@ -148,3 +149,15 @@ def test_cache_write_is_atomic(data_dir, bundled, monkeypatch):
     assert json.loads(cache_file().read_bytes())["revision"] == "cache"
     assert not list(paths.cache_dir().glob("*.tmp"))
 
+
+
+def test_default_url_is_numbered_by_format():
+    assert schema.FORMAT == 1
+    assert get_args(schema.VintedData.model_fields["format"].annotation) == (schema.FORMAT,)
+    assert remote.DEFAULT_URL.endswith(f"/main/data/vinted-v{schema.FORMAT}.json")
+
+
+def test_unnumbered_cache_is_ignored(data_dir, bundled):
+    (paths.cache_dir() / "vinted.json").write_text("{}", encoding="utf-8")
+    loaded = load(serve(status=500))
+    assert loaded.source == "bundled"

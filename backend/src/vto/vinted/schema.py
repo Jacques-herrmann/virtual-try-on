@@ -110,8 +110,12 @@ class CategoryNode(_Strict):
     garment_types: list[GarmentType] | None = None  # hérité par les descendants
 
 
+# Numéro de format : change à chaque évolution incompatible ; il fait partie de l'URL distante.
+FORMAT = 1
+
+
 class VintedData(_Strict):
-    format: Literal[1]
+    format: Literal[1]  # = FORMAT
     revision: str
     urls: Urls
     locators: dict[str, Alternatives]

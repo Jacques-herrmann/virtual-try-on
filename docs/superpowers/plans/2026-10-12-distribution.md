@@ -34,12 +34,12 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 2 — `vinted.json` numéroté (spec §2.5)
 
-- [ ] Tests (`tests/vinted/test_remote.py`) : URL par défaut = `…/main/data/vinted-v1.json` dérivée de `VintedData.FORMAT` ; cache `vinted-v1.json` / `vinted-v1.etag` ; l'ancien cache `vinted.json` est ignoré.
-- [ ] `schema.py` : constante `FORMAT = 1`, utilisée par le `Literal` de `format` (ou test qui vérifie leur égalité).
-- [ ] `remote.py` : URL et noms du cache dérivés de `FORMAT`.
-- [ ] `git mv data/vinted.json data/vinted-v1.json` ; `vto-vinted-catalog --data` par défaut `data/vinted-v1.json` (docstring incluse) ; adapter le test qui compare le fichier du dépôt et la copie embarquée.
-- [ ] `CLAUDE.md` : commande `vto-vinted-catalog` et chemin de copie mis à jour.
-- [ ] Commit `serve vinted data under a format-numbered path`.
+- [x] Tests (`tests/vinted/test_remote.py`) : URL par défaut = `…/main/data/vinted-v1.json` dérivée de `VintedData.FORMAT` ; cache `vinted-v1.json` / `vinted-v1.etag` ; l'ancien cache `vinted.json` est ignoré.
+- [x] `schema.py` : constante `FORMAT = 1`, utilisée par le `Literal` de `format` (ou test qui vérifie leur égalité).
+- [x] `remote.py` : URL et noms du cache dérivés de `FORMAT`.
+- [x] `git mv data/vinted.json data/vinted-v1.json` ; `vto-vinted-catalog --data` par défaut `data/vinted-v1.json` (docstring incluse) ; adapter le test qui compare le fichier du dépôt et la copie embarquée.
+- [x] `CLAUDE.md` : commande `vto-vinted-catalog` et chemin de copie mis à jour.
+- [x] Commit `serve vinted data under a format-numbered path`.
 
 ## Partie B — Package `vto.updates`
 
