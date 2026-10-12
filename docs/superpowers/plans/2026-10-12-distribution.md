@@ -65,15 +65,15 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 6 — Téléchargement et lancement (spec §3.3)
 
-- [ ] Tests `test_install.py` :
+- [x] Tests `test_install.py` :
   - téléchargement en flux dans `updates_cache_dir()`, progression (`received`, `total`) observable pendant le flux ;
-  - empreinte bonne → fichier `VirtualTryOn-Setup-X.Y.Z.exe` conservé ; mauvaise → fichier supprimé, `UpdateError` « La mise à jour téléchargée est abîmée… » ;
+  - empreinte bonne → fichier `VirtualTryOn-Setup-X.Y.Z.exe` conservé ; mauvaise → fichier supprimé, `UpdateError` « La mise à jour téléchargée est abîmée… » (messages au tutoiement, comme le reste de l'app) ;
   - erreur réseau → `UpdateError` « Le téléchargement de la mise à jour a échoué… » ;
   - lanceur appelé avec `[chemin, "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/LOG=<logs>/update-X.Y.Z.log"]` ; `OSError` du lanceur → `UpdateError` « Windows a bloqué la mise à jour. » et le rappel d'arrêt n'est **pas** appelé ; succès → rappel d'arrêt appelé ;
   - `clean_old_installers()` supprime les `.exe` de `updates_cache_dir()` et rien d'autre.
-- [ ] Implémenter `updates/install.py` : `Installer(launcher=..., on_launched=...)` avec états `idle | downloading | launching | error` ; lanceur par défaut `subprocess.Popen(..., creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP, close_fds=True)`.
-- [ ] Ajouter `UpdateError` (sous-classe de `VtoError`) dans `updates`.
-- [ ] Commit `add update download and installer launch`.
+- [x] Implémenter `updates/install.py` : `Installer(launcher=..., on_launched=...)` avec états `idle | downloading | launching | error` ; lanceur par défaut `subprocess.Popen(..., creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP, close_fds=True)`.
+- [x] Ajouter `UpdateError` (sous-classe de `VtoError`) dans `updates`.
+- [x] Commit `add update download and installer launch`.
 
 ## Partie C — API, Vinted et lancement
 

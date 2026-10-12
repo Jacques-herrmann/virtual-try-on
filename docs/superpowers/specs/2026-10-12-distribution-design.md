@@ -113,7 +113,7 @@ Le spec PyInstaller embarque explicitement : `vto/api/static`, `vto/vinted/data`
 - Au démarrage, dans un thread, sans bloquer la fenêtre ; puis toutes les 6 h. Délai réseau : 5 s.
 - État calculé : `required` si `__version__ < minimum_version`, sinon `available` si `__version__ < version`, sinon `up_to_date`. En cas d'échec réseau ou de manifeste invalide : le dernier état valide est conservé (`unknown` si aucune vérification n'a encore abouti), une ligne dans le log, aucun message au vendeur.
 - Gardé en mémoire ; exposé par `GET /api/update` → `{current, latest, status, notes, can_install}`. `can_install` est faux hors exécutable empaqueté (`paths.is_frozen()`).
-- `required` est consulté par le service d'envoi Vinted : l'envoi est refusé avec « Cette version ne fonctionne plus avec Vinted. Mettez l'application à jour pour envoyer vos annonces. » La génération et la relecture restent disponibles.
+- `required` est consulté par le service d'envoi Vinted : l'envoi est refusé avec « Cette version ne fonctionne plus avec Vinted. Mets l'application à jour pour envoyer tes annonces. » La génération et la relecture restent disponibles.
 
 ### 3.3 Installation (`updates.install`)
 
@@ -140,9 +140,9 @@ Les anciens installeurs de `cache/updates/` sont supprimés au démarrage suivan
 | Cas | Message au vendeur | Log |
 |---|---|---|
 | Pas de réseau, manifeste illisible | aucun (pas de bandeau) | cause et URL |
-| Échec du téléchargement | « Le téléchargement de la mise à jour a échoué. Vérifiez votre connexion et réessayez. » | exception httpx |
-| SHA-256 différent | « La mise à jour téléchargée est abîmée. Réessayez dans quelques minutes. » | attendu / obtenu |
-| Lancement de l'installeur impossible | « Windows a bloqué la mise à jour. » + lien vers la page d'aide | OSError |
+| Échec du téléchargement | « Le téléchargement de la mise à jour a échoué. Vérifie ta connexion et réessaie. » | exception httpx |
+| SHA-256 différent | « La mise à jour téléchargée est abîmée. Réessaie dans quelques minutes. » | attendu / obtenu |
+| Lancement de l'installeur impossible | « Windows a bloqué la mise à jour. Consulte la page d'aide pour l'autoriser. » | OSError |
 | Échec pendant l'installation | (Inno annule et restaure les fichiers ; l'ancienne version reste utilisable) | journal Inno `/LOG` dans `logs/` |
 
 ## 4. Lancement et test de fumée
