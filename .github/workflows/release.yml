@@ -1,0 +1,114 @@
+name: Release
+
+# Tag vX.Y.Z (annoté : son message devient les notes) → installeur testé + latest.json
+# dans une Release GitHub en brouillon. La publication reste manuelle, après essai.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Récupérer le tag annoté
+        run: git fetch --force origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Front
+        working-directory: frontend
+        run: npm ci && npm test && npm run build
+
+      - name: Backend
+        run: pip install -e "backend[dev,build]"
+
+      - name: Version du tag = vto.__version__
+        run: |
+          VERSION=$(python -c "import vto; print(vto.__version__)")
+          if [ "v$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "Le tag $GITHUB_REF_NAME ne correspond pas à vto.__version__ ($VERSION)"; exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Tests
+        working-directory: backend
+        run: ruff check . ../packaging && pytest
+
+      - name: Exécutable (PyInstaller)
+        run: pyinstaller packaging/vto.spec --noconfirm
+
+      - name: Test de fumée de l'exécutable
+        run: |
+          ./dist/VirtualTryOn/VirtualTryOn.exe --self-check --output selfcheck.txt || { cat selfcheck.txt; exit 1; }
+          cat selfcheck.txt
+
+      - name: Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) {
+            choco install innosetup -y --no-progress
+          }
+          ./packaging/fetch_redist.ps1
+
+      - name: Installeur
+        run: |
+          "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" //Q "//DAppVersion=$VERSION" packaging/installer.iss
+          echo "INSTALLER=packaging/Output/VirtualTryOn-Setup-$VERSION.exe" >> "$GITHUB_ENV"
+
+      # À activer avec le certificat (sous-projet ultérieur) : signer
+      # dist/VirtualTryOn/VirtualTryOn.exe avant l'installeur, puis l'installeur lui-même.
+      - name: Signature
+        if: false
+        run: echo "signature non configurée"
+
+      - name: Installer, vérifier, désinstaller
+        run: |
+          ROOT=$(cygpath -w "$RUNNER_TEMP")
+          export VTO_DATA_DIR="$ROOT\\vto-data"
+          mkdir -p "$RUNNER_TEMP/vto-data" && echo garder > "$RUNNER_TEMP/vto-data/temoin.txt"
+          "./$INSTALLER" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART '//TASKS=' \
+            "//DIR=$ROOT\\vto-install" "//LOG=$ROOT\\install.log"
+          sleep 5
+          taskkill //IM VirtualTryOn.exe //F || true  # relancée par l'installeur silencieux
+          "$RUNNER_TEMP/vto-install/VirtualTryOn.exe" --self-check --output installed.txt \
+            || { cat installed.txt; exit 1; }
+          sleep 2
+          "$RUNNER_TEMP/vto-install/unins000.exe" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART
+          sleep 5
+          test "$(cat "$RUNNER_TEMP/vto-data/temoin.txt")" = garder
+          test ! -e "$RUNNER_TEMP/vto-install/VirtualTryOn.exe"
+
+      - name: Manifeste
+        run: |
+          if [ "$(git cat-file -t "$GITHUB_REF_NAME")" = tag ]; then
+            git tag -l --format='%(contents)' "$GITHUB_REF_NAME" > notes.txt
+          else
+            : > notes.txt
+          fi
+          python packaging/make_manifest.py --installer "$INSTALLER" --version "$VERSION" \
+            --notes-file notes.txt --out latest.json
+          cat latest.json
+
+      - name: Release brouillon
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PRERELEASE=$(python -c "from packaging.version import Version; print('--prerelease' if Version('$VERSION').is_prerelease else '')")
+          gh release create "$GITHUB_REF_NAME" --draft $PRERELEASE \
+            --title "Virtual Try-On $VERSION" --notes-file notes.txt \
+            "$INSTALLER" latest.json
