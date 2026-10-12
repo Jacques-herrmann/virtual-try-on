@@ -107,11 +107,11 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 10 — Bandeau de mise à jour (spec §3.4)
 
-- [ ] `types.ts` / `api.ts` : `UpdateSnapshot`, `UpdateProgress`, `getUpdate()`, `installUpdate()`, `getUpdateProgress()`.
-- [ ] Tests Vitest `UpdateBanner.test.ts` : rien si `up_to_date` ou `unknown` ; `available` masquable (mémorisé pour la session) ; `required` rouge, non masquable ; « Nouveautés » affiche les notes ; clic → appel d'installation, puis barre de progression en interrogeant `progress` ; erreur 409 ou état `error` → message affiché, bouton réactivé ; `can_install` faux → bouton désactivé avec l'explication ; état `launching` → « Installation… l'application va redémarrer. »
-- [ ] `UpdateBanner.vue` (PrimeVue `Message`, `ProgressBar`, `Dialog`) monté dans `App.vue` au-dessus du contenu ; interrogation de `/api/update` au chargement puis toutes les 10 min.
-- [ ] Vérifier à la main : manifeste local servi par `python -m http.server`, `VTO_UPDATE_URL=http://127.0.0.1:8000/latest.json`. (`http://127.0.0.1` est accepté pour l'URL du manifeste et celle de l'installeur, tâche 4).
-- [ ] Commit `add update banner`.
+- [x] `types.ts` / `api.ts` : `UpdateSnapshot`, `UpdateProgress`, `getUpdate()`, `installUpdate()`, `getUpdateProgress()`.
+- [x] Tests Vitest `UpdateBanner.test.ts` : rien si `up_to_date` ou `unknown` ; `available` masquable (mémorisé pour la session) ; `required` rouge, non masquable ; « Nouveautés » affiche les notes ; clic → appel d'installation, puis barre de progression en interrogeant `progress` ; erreur 409 ou état `error` → message affiché, bouton réactivé ; `can_install` faux → bouton désactivé avec l'explication ; état `launching` → « Installation… l'application va redémarrer. »
+- [x] `UpdateBanner.vue` (`ProgressBar`, `Dialog`) monté dans `App.vue` au-dessus du contenu, lien « Aide » vers `docs/aide/installation.md` en cas d'erreur ; interrogation de `/api/update` au chargement puis toutes les 10 min.
+- [x] Vérifier à la main (API vérifiée le 2026-10-12 : `available` avec un manifeste local ; rendu visuel à revoir avec l'exe, tâche 11) : manifeste local servi par `python -m http.server`, `VTO_UPDATE_URL=http://127.0.0.1:8000/latest.json`. (`http://127.0.0.1` est accepté pour l'URL du manifeste et celle de l'installeur, tâche 4).
+- [x] Commit `add update banner`.
 
 ## Partie E — Empaquetage
 

@@ -10,6 +10,8 @@ import type {
   SceneDetail,
   SceneInfo,
   SettingsView,
+  UpdateProgress,
+  UpdateSnapshot,
   UserInput,
   VintedCatalog,
   VintedStatus,
@@ -116,6 +118,11 @@ export const api = {
   resetListingPrompt: () => request<SettingsView>('POST', '/api/settings/reset-listing-prompt'),
   checkKey: (key: string) => request<SettingsView>('POST', '/api/settings/check-key', { key }),
   openLogs: () => request<void>('POST', '/api/system/open-logs'),
+
+  // Mises à jour
+  update: () => request<UpdateSnapshot>('GET', '/api/update'),
+  installUpdate: () => request<UpdateProgress>('POST', '/api/update/install'),
+  updateProgress: () => request<UpdateProgress>('GET', '/api/update/progress'),
 
   // Scènes
   listScenes: () => request<SceneInfo[]>('GET', '/api/scenes'),

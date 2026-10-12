@@ -6,6 +6,7 @@ import { computed } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 import { disconnected } from './api'
+import UpdateBanner from './components/UpdateBanner.vue'
 
 const route = useRoute()
 const bare = computed(() => route.meta.bare === true)
@@ -33,9 +34,12 @@ const links = [
         <span>{{ link.label }}</span>
       </RouterLink>
     </nav>
-    <main class="content">
-      <RouterView />
-    </main>
+    <div class="main">
+      <UpdateBanner />
+      <main class="content">
+        <RouterView />
+      </main>
+    </div>
   </div>
 </template>
 
@@ -83,9 +87,16 @@ const links = [
   font-weight: 600;
 }
 
-.content {
+.main {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
   overflow: auto;
 }
 

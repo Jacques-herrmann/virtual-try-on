@@ -172,3 +172,20 @@ export interface SceneDetail extends SceneInfo {
   prompt: string
   backgrounds: string[]
 }
+
+export type UpdateStatus = 'unknown' | 'up_to_date' | 'available' | 'required'
+
+export interface UpdateSnapshot {
+  current: string
+  latest: string | null
+  status: UpdateStatus
+  notes: string
+  can_install: boolean
+}
+
+export interface UpdateProgress {
+  state: 'idle' | 'downloading' | 'launching' | 'error'
+  received: number
+  total: number | null
+  message: string | null
+}
