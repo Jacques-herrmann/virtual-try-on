@@ -157,15 +157,14 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 16 — Acceptation (spec §7)
 
-- [ ] Pousser `main` avant de tagger : `vinted-v1.json` est lu sur `main`.
-- [ ] Créer un compte Windows local « Essai VTO » (Paramètres → Comptes → Autres utilisateurs) : profil vierge, donc `%LOCALAPPDATA%` vide, sans Python ni Node dans le `PATH`. Le poste est en Windows 11 Famille : pas de Bac à sable Windows ni de Hyper-V.
-- [ ] Publier `v0.2.0` puis dérouler la spec §7 dans ce compte :
-  1. installation, pas d'UAC, avertissement SmartScreen noté ;
-  2. clé Gemini, génération, connexion Vinted, brouillon ;
-  3. `v0.2.1` : bandeau, mise à jour en un clic, redémarrage en 0.2.1, données et session intactes ;
-  4. `minimum_version.txt` à `0.2.2`, `v0.2.2` : app 0.2.1 → bandeau rouge, envoi refusé, génération possible ;
-  5. désinstallation : données conservées.
-- [ ] Après l'acceptation, supprimer le compte d'essai.
+- [x] Pousser `main` avant de tagger : `vinted-v1.json` est lu sur `main`.
+- [ ] Publier `v0.2.0` (Release brouillon créée par la CI, publiée par l'utilisateur).
+- [ ] **PC d'un ami** (machine vierge, à la place d'un compte Windows d'essai) : installation depuis le lien de la Release, avertissement SmartScreen, pas d'UAC, ouverture de l'app (WebView2), génération si l'ami a une clé Gemini.
+- [ ] **Poste de l'utilisateur** : installer `v0.2.0` (données réelles conservées), puis :
+  1. `v0.2.1` : bandeau, mise à jour en un clic, redémarrage en 0.2.1, articles et session Vinted intacts ;
+  2. `minimum_version.txt` à `0.2.2`, `v0.2.2` : une app restée en 0.2.1 (bandeau masqué, pas mise à jour) → bandeau rouge, envoi Vinted refusé, génération possible ; puis mise à jour ;
+  3. désinstallation puis réinstallation : données conservées.
+- [ ] Supprimer les Releases brouillons `v0.2.0rc1` à `rc5` (essais de la chaîne).
 - [ ] Mettre le statut du sous-projet 4 à ✅ dans `CLAUDE.md`.
 
 ---
@@ -173,6 +172,6 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 ## Points nécessitant l'utilisateur
 
 - Tâche 11 : icône de l'app (`.ico`, 256×256) — sinon icône provisoire.
-- Tâche 11 et 16 : connexion Vinted dans l'exe et dans le compte d'essai.
+- Tâche 11 et 16 : connexion Vinted dans l'exe.
 - Tâche 12 : installation d'Inno Setup sur le poste (winget, sans droits admin en mode utilisateur).
-- Tâche 16 : publication des Releases sur GitHub (actions visibles publiquement) et création du compte Windows d'essai.
+- Tâche 16 : publication des Releases sur GitHub, essai d'installation par un ami.

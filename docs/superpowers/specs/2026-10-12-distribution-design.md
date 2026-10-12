@@ -181,7 +181,7 @@ Sans réseau, `httpx.MockTransport` pour le serveur, faux lanceur de processus :
 
 ## 7. Acceptation manuelle
 
-Dans un compte Windows local dédié (profil vierge, sans outils de dev) — le poste est en Windows 11 Famille, sans Bac à sable ni Hyper-V :
+Installation sur une machine vierge : le PC d'un ami (étapes 1-2). Mises à jour et désinstallation : sur le poste de l'utilisateur (étapes 3-5).
 
 1. Publier `v0.2.0`, l'installer : pas d'UAC ; noter l'avertissement SmartScreen pour la page d'aide.
 2. Saisir la clé Gemini, générer un article, se connecter à Vinted, créer un brouillon.
