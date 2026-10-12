@@ -136,7 +136,7 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 ### Tâche 13 — Manifeste de release (spec §3.1, §5)
 
 - [x] Tests (`tests/test_make_manifest.py`, le script importé par chemin) : manifeste produit valide pour `vto.updates.manifest.Manifest` ; `sha256` correct ; `minimum_version` lu dans `packaging/minimum_version.txt` (espaces ignorés) ; refus si `minimum_version > version` ; `notes` vides acceptées.
-- [x] `packaging/make_manifest.py --installer … --version … [--notes-file …] --out latest.json` (valide avec le modèle `Manifest` de l'app) ; `packaging/minimum_version.txt` = `0.2.0`.
+- [x] `packaging/make_manifest.py --installer … --version … [--notes-file …] --out latest.json` (valide avec le modèle `Manifest` de l'app) ; `packaging/minimum_version.txt` = `0.1.0` (aucune version plus ancienne n'existe ; `0.2.0` aurait refusé les préversions `0.2.0rcN`, plus anciennes que lui).
 - [x] Commit `add release manifest generator`.
 
 ### Tâche 14 — Workflow de release (spec §5)
