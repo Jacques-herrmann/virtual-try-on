@@ -1,6 +1,7 @@
 """Chemins des données utilisateur. Seul module à construire ces chemins."""
 
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -67,6 +68,8 @@ def is_frozen() -> bool:
 def safe_join(base: Path, rel: str) -> Path | None:
     """`base / rel` résolu, ou None si `rel` est vide, absolu ou sort de `base`."""
     if not rel or Path(rel).is_absolute() or Path(rel).drive or rel.startswith(("/", "\\")):
+        return None
+    if re.match(r"[A-Za-z]:", rel):  # lecteur Windows, refusé aussi hors Windows
         return None
     root = base.resolve()
     target = (root / rel).resolve()
