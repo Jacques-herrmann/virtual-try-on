@@ -89,9 +89,9 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 8 — Envoi Vinted bloqué si mise à jour obligatoire (spec §3.2)
 
-- [ ] Tests : `VintedWorker.send` lève `VtoError` « Cette version ne fonctionne plus avec Vinted… » quand le prédicat `update_required` renvoie vrai ; route d'envoi → 409 avec ce message ; connexion et ouverture de liens toujours possibles.
-- [ ] `VintedWorker(update_required=lambda: False)` par défaut.
-- [ ] Commit `refuse vinted sending when an update is required`.
+- [x] Tests : `VintedWorker.send` lève `VtoError` « Cette version ne fonctionne plus avec Vinted… » quand le prédicat `update_required` renvoie vrai ; route d'envoi → 409 avec ce message ; connexion et ouverture de liens toujours possibles.
+- [x] `VintedWorker(update_required=lambda: False)` par défaut.
+- [x] Commit `refuse vinted sending when an update is required`.
 
 ### Tâche 9 — Lancement : vérification, arrêt demandé, `--self-check` (spec §3.3, §4)
 

@@ -63,6 +63,7 @@ class FakeVintedWorker:
         self.loaded = loaded
         self.commands = []
         self.busy = False
+        self.update_required = False
 
     def _command(self, *command):
         from vto.vinted.worker import Busy
@@ -78,6 +79,10 @@ class FakeVintedWorker:
         self._command("disconnect")
 
     def send(self, article_ids):
+        from vto.vinted.worker import UpdateRequired
+
+        if self.update_required:
+            raise UpdateRequired()
         self._command("send", list(article_ids))
 
     def stop(self):

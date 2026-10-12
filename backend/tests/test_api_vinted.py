@@ -70,6 +70,15 @@ def test_send_while_running_is_409(vapi, fake, worker, scened):
     assert vapi.post("/api/vinted/send", json={"article_ids": [a["id"]]}).status_code == 409
 
 
+def test_send_refused_when_update_required(vapi, fake, worker, scened):
+    a = validated(vapi, fake)
+    worker.update_required = True
+    r = vapi.post("/api/vinted/send", json={"article_ids": [a["id"]]})
+    assert r.status_code == 409
+    assert "Mets l'application à jour" in r.json()["message"]
+    assert worker.commands == []
+
+
 def test_send_requires_validated_articles(vapi, fake, worker, scened):
     a = validated(vapi, fake)
     b = reviewed(vapi, fake)

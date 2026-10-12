@@ -13,6 +13,7 @@ from vto.vinted.worker import (
     LOGIN_TIMEOUT_MESSAGE,
     UNEXPECTED_MESSAGE,
     Busy,
+    UpdateRequired,
     VintedWorker,
 )
 
@@ -397,3 +398,18 @@ def test_browser_used_only_from_worker_thread(env, validated):
     worker.shutdown(TIMEOUT)
     assert env.threads.names == {"vinted-worker"}
     assert env.playwright.stopped
+
+
+def test_send_refused_when_update_required(env, validated):
+    ids = validated(1)
+    required = [True]
+    worker = env.make(update_required=lambda: required[0])
+    with pytest.raises(UpdateRequired) as exc:
+        worker.send(ids)
+    assert "ne fonctionne plus avec Vinted" in exc.value.user_message
+    assert worker.is_busy() is False
+    worker.connect()  # se connecter reste possible
+    assert worker.wait_idle(TIMEOUT)
+    required[0] = False
+    worker.send(ids)
+    assert worker.wait_idle(TIMEOUT)

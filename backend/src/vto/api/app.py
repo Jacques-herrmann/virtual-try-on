@@ -15,7 +15,7 @@ from vto.core import errors, paths
 from vto.core.pipeline import ClientFactory
 from vto.updates.check import UpdateChecker
 from vto.updates.install import Installer
-from vto.vinted.worker import Busy, VintedWorker
+from vto.vinted.worker import Busy, UpdateRequired, VintedWorker
 
 log = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ def _add_error_handlers(app: FastAPI) -> None:
         status = 400
         if isinstance(exc, errors.ArticleNotFound):
             status = 404
-        elif isinstance(exc, errors.InvalidTransition | Busy):
+        elif isinstance(exc, errors.InvalidTransition | Busy | UpdateRequired):
             status = 409
         return _error(status, exc.user_message)
 

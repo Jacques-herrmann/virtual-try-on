@@ -35,6 +35,13 @@ class Busy(errors.VtoError):
     user_message = "Un envoi sur Vinted est déjà en cours. Attends qu'il se termine."
 
 
+class UpdateRequired(errors.VtoError):
+    user_message = (
+        "Cette version ne fonctionne plus avec Vinted. "
+        "Mets l'application à jour pour envoyer tes annonces."
+    )
+
+
 class WindowClosed(Exception):
     """Le vendeur a fermé la fenêtre Vinted."""
 
@@ -74,6 +81,7 @@ class VintedWorker:
         login_timeout: float = LOGIN_TIMEOUT,
         login_poll: float = LOGIN_POLL,
         pause_range: tuple[float, float] = PAUSE_RANGE,
+        update_required: Callable[[], bool] = lambda: False,
     ):
         self._start_playwright = start_playwright
         self._open_context = open_context
@@ -84,6 +92,7 @@ class VintedWorker:
         self._login_timeout = login_timeout
         self._login_poll = login_poll
         self._pause_range = pause_range
+        self._update_required = update_required
 
         self._commands: queue.Queue[tuple] = queue.Queue()
         self._lock = threading.Condition()
@@ -136,6 +145,9 @@ class VintedWorker:
         self._submit("open", url)
 
     def send(self, article_ids: Sequence[str]) -> None:
+        # Une version trop ancienne remplirait mal le formulaire : on bloque l'envoi seulement.
+        if self._update_required():
+            raise UpdateRequired()
         with self._lock:
             if self._busy:
                 raise Busy()
