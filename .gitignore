@@ -52,3 +52,9 @@ venv/
 
 # Front compilé
 backend/src/vto/api/static/
+
+# Empaquetage
+build/
+dist/
+packaging/Output/
+packaging/redist/
