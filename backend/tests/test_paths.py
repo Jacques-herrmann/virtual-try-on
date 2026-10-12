@@ -49,3 +49,14 @@ def test_vinted_paths_are_under_data_dir(data_dir):
 def test_vinted_directories_are_created_on_demand(data_dir):
     for d in (paths.browser_profile_dir(), paths.cache_dir(), paths.vinted_log_dir()):
         assert d.is_dir()
+
+
+def test_is_frozen_follows_pyinstaller_flag(monkeypatch):
+    assert paths.is_frozen() is False
+    monkeypatch.setattr("sys.frozen", True, raising=False)
+    assert paths.is_frozen() is True
+
+
+def test_updates_cache_dir_is_created_under_cache(data_dir):
+    assert paths.updates_cache_dir() == data_dir / "cache" / "updates"
+    assert paths.updates_cache_dir().is_dir()

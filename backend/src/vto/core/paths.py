@@ -1,6 +1,7 @@
 """Chemins des données utilisateur. Seul module à construire ces chemins."""
 
 import os
+import sys
 from pathlib import Path
 
 import platformdirs
@@ -49,8 +50,18 @@ def cache_dir() -> Path:
     return _ensure(data_dir() / "cache")
 
 
+def updates_cache_dir() -> Path:
+    """Installeurs téléchargés par l'app : jamais des données du client."""
+    return _ensure(cache_dir() / "updates")
+
+
 def vinted_log_dir() -> Path:
     return _ensure(logs_dir() / "vinted")
+
+
+def is_frozen() -> bool:
+    """Vrai dans l'exécutable PyInstaller (app installée), faux en développement."""
+    return bool(getattr(sys, "frozen", False))
 
 
 def safe_join(base: Path, rel: str) -> Path | None:

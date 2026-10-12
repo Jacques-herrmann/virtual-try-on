@@ -45,9 +45,9 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 3 — Chemins et détection de l'exécutable (spec §2.1)
 
-- [ ] Tests `paths` : `is_frozen()` faux en test, vrai si `sys.frozen` est monkeypatché ; `updates_cache_dir()` sous `cache_dir()`, créé à la demande.
-- [ ] Implémenter dans `core/paths.py`.
-- [ ] Commit `add frozen detection and updates cache path`.
+- [x] Tests `paths` : `is_frozen()` faux en test, vrai si `sys.frozen` est monkeypatché ; `updates_cache_dir()` sous `cache_dir()`, créé à la demande.
+- [x] Implémenter dans `core/paths.py`.
+- [x] Commit `add frozen detection and updates cache path`.
 
 ### Tâche 4 — Manifeste (spec §3.1)
 
