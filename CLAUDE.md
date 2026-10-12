@@ -35,7 +35,7 @@ Ordre : 1 → 2 → 3 → 4 → 5. Chaque sous-projet suit le cycle brainstormin
 ## Commandes
 
 ```
-pip install -e backend[dev]
+pip install -e backend[dev,build]   # build = PyInstaller ; réinstaller après un changement de version
 pytest backend/tests             # sans réseau
 pytest backend/tests -m live     # nécessite GEMINI_API_KEY
 pytest backend/tests -m browser  # pilote un navigateur (Chrome installé ou `playwright install chromium`)
@@ -52,12 +52,29 @@ npm run build                    # compile dans backend/src/vto/api/static (igno
 vto-app                          # application complète (fenêtre pywebview)
 vto-app --dev                    # API seule sur 127.0.0.1:8765, puis `npm run dev` et
                                  # http://localhost:5173/api/session?token=dev
+vto-app --self-check --output f  # test de fumée (modules, front, données, scènes, pilote Playwright)
+
+# Empaquetage local (après npm run build) ; Inno Setup 6 : winget install JRSoftware.InnoSetup
+pyinstaller packaging/vto.spec --noconfirm          # → dist/VirtualTryOn/ (mode dossier)
+powershell -File packaging/fetch_redist.ps1         # bootstrapper WebView2 (non versionné)
+iscc /DAppVersion=X.Y.Z packaging/installer.iss     # → packaging/Output/VirtualTryOn-Setup-X.Y.Z.exe
 ```
+
+## Publier une version
+
+1. Monter `__version__` dans `backend/src/vto/__init__.py` (PEP 440 : `0.3.0`, `0.3.0rc1`), commit, push sur `main`.
+2. Si une ancienne version ne doit plus envoyer sur Vinted : monter `packaging/minimum_version.txt`.
+3. `git tag -a vX.Y.Z` — le message du tag devient les notes « Nouveautés » (en français, pour le vendeur) — puis `git push origin vX.Y.Z`.
+4. `release.yml` construit, teste (exécutable, installation, désinstallation) et crée une Release **brouillon** avec l'installeur et `latest.json`. Une préversion (`rc`) est marquée *prerelease* et n'est jamais proposée aux apps.
+5. Essayer l'installeur du brouillon, puis publier la Release : les apps installées la voient via `releases/latest/download/latest.json` (surchargeable par `VTO_UPDATE_URL`).
+
+Ne jamais changer l'`AppId` de `packaging/installer.iss`. Une évolution incompatible de `vinted.json` = nouveau `format` et nouveau fichier `data/vinted-v{N}.json`, l'ancien étant maintenu tant que des versions au-dessus de `minimum_version` le lisent.
 
 ## État du dépôt
 
 - Prototype supprimé, remplacé par `backend/` (package `vto`). L'ancien script Selenium `legacy/create_post.py` a été supprimé avec le sous-projet 3 (envoi Vinted par `vto.vinted`, sans identifiants stockés).
 - App : API FastAPI locale (`vto.api`, protégée par cookie de session + contrôle du Host) et UI Vue 3 + PrimeVue 4 dans `frontend/`. PrimeVue reste en 4.x : la v5 n'est plus MIT (licence commerciale PrimeTek).
+- Distribution : `packaging/` (spec PyInstaller, script Inno Setup, générateur de `latest.json`, icône provisoire `make_icon.py`), mises à jour par `vto.updates` + bandeau du front, page d'aide vendeur `docs/aide/installation.md`. Code non signé : avertissement SmartScreen documenté dans la page d'aide.
 - Pack de scènes livré : `backend/src/vto/core/default_scenes/`, embarqué dans le paquet (décors de l'auteur, droits OK pour redistribution).
 - Secret local dans `.env` (ignoré par git) : `GEMINI_API_KEY`. Ne jamais le commiter. Aucun identifiant Vinted : le vendeur se connecte lui-même dans la fenêtre dédiée.
 - Historique git nettoyé des secrets le 2026-10-10 (`git filter-repo --replace-text`). Le dépôt GitHub étant public, la clé et le mot de passe y ont été exposés avant le nettoyage.

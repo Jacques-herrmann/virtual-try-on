@@ -151,9 +151,9 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 15 — Documentation (spec §8)
 
-- [ ] `docs/aide/installation.md` : télécharger, SmartScreen (« Informations complémentaires » → « Exécuter quand même »), antivirus, WebView2, où sont les données, désinstaller ; captures plus tard.
-- [ ] `CLAUDE.md` : commandes de build local, procédure de publication (bump de `__version__` → commit → `git tag -a vX.Y.Z` avec les notes → push du tag → essai de l'installeur du brouillon → publication de la Release), chemins `core/default_scenes` et `data/vinted-v1.json`, sous-projet 4 à jour.
-- [ ] Commit `document packaging and release`.
+- [x] `docs/aide/installation.md` : télécharger, SmartScreen (« Informations complémentaires » → « Exécuter quand même »), antivirus, WebView2, où sont les données, désinstaller ; captures plus tard.
+- [x] `CLAUDE.md` : commandes de build local, procédure de publication (bump de `__version__` → commit → `git tag -a vX.Y.Z` avec les notes → push du tag → essai de l'installeur du brouillon → publication de la Release), chemins `core/default_scenes` et `data/vinted-v1.json`, sous-projet 4 à jour.
+- [x] Commit `document packaging and release`.
 
 ### Tâche 16 — Acceptation (spec §7)
 
