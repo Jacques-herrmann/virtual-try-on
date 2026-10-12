@@ -1,6 +1,6 @@
 {
  "format": 1,
- "revision": "2026-10-11.4",
+ "revision": "2026-10-12.1",
  "urls": {
   "home": "https://www.vinted.fr",
   "new_item": "https://www.vinted.fr/items/new"
@@ -833,7 +833,7 @@
         {
          "id": 119,
          "label": "Soutiens-gorge",
-         "size_group": "femmes-vetements"
+         "size_group": "femmes-vetements-2"
         },
         {
          "id": 120,
@@ -868,12 +868,11 @@
         {
          "id": 1262,
          "label": "Chaussettes",
-         "size_group": "femmes-vetements"
+         "size_group": "femmes-vetements-3"
         },
         {
          "id": 1847,
-         "label": "Accessoires de lingerie",
-         "size_group": "femmes-vetements"
+         "label": "Accessoires de lingerie"
         },
         {
          "id": 124,
@@ -948,7 +947,7 @@
           {
            "id": 1618,
            "label": "Soutiens-gorge grossesse & allaitement",
-           "size_group": "femmes-vetements"
+           "size_group": "femmes-vetements-2"
           }
          ]
         },
@@ -1014,35 +1013,32 @@
          "children": [
           {
            "id": 1441,
-           "label": "Lunettes",
-           "size_group": "femmes-vetements"
+           "label": "Lunettes"
           },
           {
            "id": 1444,
            "label": "Gants",
-           "size_group": "femmes-vetements"
+           "size_group": "femmes-vetements-4"
           },
           {
            "id": 1443,
            "label": "Chapeaux",
-           "size_group": "femmes-vetements"
+           "size_group": "femmes-vetements-5"
           },
           {
            "id": 1440,
-           "label": "Écharpes",
-           "size_group": "femmes-vetements"
+           "label": "Écharpes"
           },
           {
            "id": 3049,
-           "label": "Bracelets",
-           "size_group": "femmes-vetements"
+           "label": "Bracelets"
           }
          ]
         },
         {
          "id": 1439,
          "label": "Brassières",
-         "size_group": "femmes-vetements"
+         "size_group": "femmes-vetements-2"
         },
         {
          "id": 580,
@@ -1361,11 +1357,13 @@
       },
       {
        "id": 20,
-       "label": "Ceintures"
+       "label": "Ceintures",
+       "size_group": "femmes-accessoires"
       },
       {
        "id": 90,
-       "label": "Gants"
+       "label": "Gants",
+       "size_group": "femmes-vetements-4"
       },
       {
        "id": 1123,
@@ -1381,31 +1379,38 @@
        "children": [
         {
          "id": 2933,
-         "label": "Cagoules"
+         "label": "Cagoules",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 2934,
-         "label": "Bonnets"
+         "label": "Bonnets",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 230,
-         "label": "Casquettes"
+         "label": "Casquettes",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 2935,
-         "label": "Cache-oreilles"
+         "label": "Cache-oreilles",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 2936,
-         "label": "Fascinators"
+         "label": "Fascinators",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 231,
-         "label": "Chapeaux"
+         "label": "Chapeaux",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 234,
-         "label": "Bandeaux"
+         "label": "Bandeaux",
+         "size_group": "femmes-vetements-5"
         }
        ]
       },
@@ -1447,7 +1452,8 @@
         },
         {
          "id": 553,
-         "label": "Bagues"
+         "label": "Bagues",
+         "size_group": "femmes-accessoires-2"
         },
         {
          "id": 162,
@@ -1473,7 +1479,8 @@
       },
       {
        "id": 22,
-       "label": "Montres"
+       "label": "Montres",
+       "size_group": "femmes-accessoires-3"
       },
       {
        "id": 1140,
@@ -1801,32 +1808,32 @@
         {
          "id": 1786,
          "label": "Blazers",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-vetements-2"
         },
         {
          "id": 1787,
          "label": "Pantalons de costume",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-pantalons"
         },
         {
          "id": 1788,
          "label": "Gilets de costume",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-vetements-2"
         },
         {
          "id": 1789,
          "label": "Ensembles costume",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-vetements-2"
         },
         {
          "id": 1790,
          "label": "Costumes de mariage",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-vetements-2"
         },
         {
          "id": 1866,
          "label": "Autres",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-vetements-2"
         }
        ]
       },
@@ -1948,22 +1955,22 @@
         {
          "id": 1822,
          "label": "Shorts cargo",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-pantalons"
         },
         {
          "id": 1823,
          "label": "Shorts chino",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-pantalons"
         },
         {
          "id": 1824,
          "label": "Shorts en jean",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-pantalons"
         },
         {
          "id": 272,
          "label": "Autres shorts",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-pantalons"
         }
        ]
       },
@@ -1979,7 +1986,7 @@
         {
          "id": 1828,
          "label": "Chaussettes",
-         "size_group": "hommes-vetements"
+         "size_group": "hommes-vetements-3"
         },
         {
          "id": 1830,
@@ -2069,28 +2076,25 @@
          "children": [
           {
            "id": 1471,
-           "label": "Lunettes",
-           "size_group": "hommes-vetements"
+           "label": "Lunettes"
           },
           {
            "id": 1474,
            "label": "Gants",
-           "size_group": "hommes-vetements"
+           "size_group": "femmes-vetements-4"
           },
           {
            "id": 1473,
            "label": "Chapeaux et casquettes",
-           "size_group": "hommes-vetements"
+           "size_group": "femmes-vetements-5"
           },
           {
            "id": 1470,
-           "label": "Écharpes",
-           "size_group": "hommes-vetements"
+           "label": "Écharpes"
           },
           {
            "id": 3050,
-           "label": "Bracelets",
-           "size_group": "hommes-vetements"
+           "label": "Bracelets"
           }
          ]
         },
@@ -2346,7 +2350,8 @@
       },
       {
        "id": 96,
-       "label": "Ceintures"
+       "label": "Ceintures",
+       "size_group": "hommes-accessoires"
       },
       {
        "id": 2959,
@@ -2354,7 +2359,8 @@
       },
       {
        "id": 91,
-       "label": "Gants"
+       "label": "Gants",
+       "size_group": "femmes-vetements-4"
       },
       {
        "id": 2958,
@@ -2366,19 +2372,23 @@
        "children": [
         {
          "id": 2965,
-         "label": "Cagoules"
+         "label": "Cagoules",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 2964,
-         "label": "Bonnets"
+         "label": "Bonnets",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 287,
-         "label": "Casquettes"
+         "label": "Casquettes",
+         "size_group": "femmes-vetements-5"
         },
         {
          "id": 288,
-         "label": "Chapeaux"
+         "label": "Chapeaux",
+         "size_group": "femmes-vetements-5"
         }
        ]
       },
@@ -2408,7 +2418,8 @@
         },
         {
          "id": 242,
-         "label": "Bagues"
+         "label": "Bagues",
+         "size_group": "femmes-accessoires-2"
         },
         {
          "id": 244,
@@ -2434,7 +2445,8 @@
       },
       {
        "id": 97,
-       "label": "Montres"
+       "label": "Montres",
+       "size_group": "femmes-accessoires-3"
       },
       {
        "id": 99,
@@ -2548,7 +2560,8 @@
        "children": [
         {
          "id": 1525,
-         "label": "Chaussures bébé"
+         "label": "Chaussures bébé",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 1530,
@@ -2556,25 +2569,30 @@
          "children": [
           {
            "id": 2695,
-           "label": "Bottines"
+           "label": "Bottines",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2696,
-           "label": "Bottes mi-hautes"
+           "label": "Bottes mi-hautes",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2697,
-           "label": "Bottes de neige"
+           "label": "Bottes de neige",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2698,
-           "label": "Bottes de pluie"
+           "label": "Bottes de pluie",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         },
         {
          "id": 2690,
-         "label": "Mules et sabots"
+         "label": "Mules et sabots",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 1526,
@@ -2582,15 +2600,18 @@
          "children": [
           {
            "id": 2753,
-           "label": "Ballerines, babies et Mary-Jane"
+           "label": "Ballerines, babies et Mary-Jane",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2701,
-           "label": "Espadrilles"
+           "label": "Espadrilles",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2702,
-           "label": "Chaussures à lacets"
+           "label": "Chaussures à lacets",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         },
@@ -2600,29 +2621,35 @@
          "children": [
           {
            "id": 2704,
-           "label": "Tongs"
+           "label": "Tongs",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2705,
-           "label": "Sandales"
+           "label": "Sandales",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2707,
-           "label": "Claquettes"
+           "label": "Claquettes",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         },
         {
          "id": 1528,
-         "label": "Chaussures habillées"
+         "label": "Chaussures habillées",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 2692,
-         "label": "Chaussures à talons"
+         "label": "Chaussures à talons",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 1534,
-         "label": "Chaussons et pantoufles"
+         "label": "Chaussons et pantoufles",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 2693,
@@ -2630,43 +2657,53 @@
          "children": [
           {
            "id": 2708,
-           "label": "Chaussures de basket"
+           "label": "Chaussures de basket",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2709,
-           "label": "Chaussures de danse"
+           "label": "Chaussures de danse",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2710,
-           "label": "Chaussures de foot"
+           "label": "Chaussures de foot",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2711,
-           "label": "Chaussures et bottes de randonnée"
+           "label": "Chaussures et bottes de randonnée",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2712,
-           "label": "Patins à glace"
+           "label": "Patins à glace",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2713,
-           "label": "Patins à roulettes et rollers"
+           "label": "Patins à roulettes et rollers",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2714,
-           "label": "Chaussures de course"
+           "label": "Chaussures de course",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2715,
-           "label": "Chaussures de ski"
+           "label": "Chaussures de ski",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2716,
-           "label": "Bottes de snowboard"
+           "label": "Bottes de snowboard",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2717,
-           "label": "Chaussures aquatiques"
+           "label": "Chaussures aquatiques",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         },
@@ -2676,15 +2713,18 @@
          "children": [
           {
            "id": 2718,
-           "label": "Baskets à scratch"
+           "label": "Baskets à scratch",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2719,
-           "label": "Baskets à lacets"
+           "label": "Baskets à lacets",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2720,
-           "label": "Baskets sans lacets"
+           "label": "Baskets sans lacets",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         }
@@ -3003,11 +3043,13 @@
        "children": [
         {
          "id": 1581,
-         "label": "Ceintures"
+         "label": "Ceintures",
+         "size_group": "enfants-vetements-pour-filles-2"
         },
         {
          "id": 1578,
-         "label": "Gants"
+         "label": "Gants",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 1582,
@@ -3015,7 +3057,8 @@
         },
         {
          "id": 1577,
-         "label": "Chapeaux et casquettes"
+         "label": "Chapeaux et casquettes",
+         "size_group": "enfants-vetements-pour-filles-3"
         },
         {
          "id": 1586,
@@ -3063,7 +3106,7 @@
         {
          "id": 1600,
          "label": "Chaussettes",
-         "size_group": "enfants-vetements"
+         "size_group": "enfants-vetements-pour-filles-4"
         },
         {
          "id": 1601,
@@ -3179,11 +3222,13 @@
        "children": [
         {
          "id": 1653,
-         "label": "Chaussures bébé"
+         "label": "Chaussures bébé",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 2721,
-         "label": "Mocassins et chaussures bateau"
+         "label": "Mocassins et chaussures bateau",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 1657,
@@ -3191,25 +3236,30 @@
          "children": [
           {
            "id": 2726,
-           "label": "Bottines"
+           "label": "Bottines",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2727,
-           "label": "Bottes mi-hautes"
+           "label": "Bottes mi-hautes",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2728,
-           "label": "Bottes de neige"
+           "label": "Bottes de neige",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2729,
-           "label": "Bottes de pluie"
+           "label": "Bottes de pluie",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         },
         {
          "id": 2722,
-         "label": "Espadrilles"
+         "label": "Espadrilles",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 2723,
@@ -3217,29 +3267,35 @@
          "children": [
           {
            "id": 2730,
-           "label": "Mules et sabots"
+           "label": "Mules et sabots",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2732,
-           "label": "Tongs"
+           "label": "Tongs",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2733,
-           "label": "Sandales"
+           "label": "Sandales",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2734,
-           "label": "Claquettes"
+           "label": "Claquettes",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         },
         {
          "id": 1655,
-         "label": "Chaussures habillées"
+         "label": "Chaussures habillées",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 1661,
-         "label": "Chaussons et pantoufles"
+         "label": "Chaussons et pantoufles",
+         "size_group": "enfants-vetements-pour-filles"
         },
         {
          "id": 2724,
@@ -3247,43 +3303,53 @@
          "children": [
           {
            "id": 2735,
-           "label": "Chaussures de basket"
+           "label": "Chaussures de basket",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2737,
-           "label": "Chaussures de danse"
+           "label": "Chaussures de danse",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2738,
-           "label": "Chaussures de foot"
+           "label": "Chaussures de foot",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2742,
-           "label": "Chaussures et bottes de randonnée"
+           "label": "Chaussures et bottes de randonnée",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2743,
-           "label": "Patins à glace"
+           "label": "Patins à glace",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2744,
-           "label": "Patins à roulettes et rollers"
+           "label": "Patins à roulettes et rollers",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2745,
-           "label": "Chaussures de course"
+           "label": "Chaussures de course",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2746,
-           "label": "Chaussures de ski"
+           "label": "Chaussures de ski",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2748,
-           "label": "Bottes de snowboard"
+           "label": "Bottes de snowboard",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2749,
-           "label": "Chaussures aquatiques"
+           "label": "Chaussures aquatiques",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         },
@@ -3293,15 +3359,18 @@
          "children": [
           {
            "id": 2750,
-           "label": "Baskets à scratch"
+           "label": "Baskets à scratch",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2751,
-           "label": "Baskets à lacets"
+           "label": "Baskets à lacets",
+           "size_group": "enfants-vetements-pour-filles"
           },
           {
            "id": 2752,
-           "label": "Baskets sans lacets"
+           "label": "Baskets sans lacets",
+           "size_group": "enfants-vetements-pour-filles"
           }
          ]
         }
@@ -3583,15 +3652,18 @@
        "children": [
         {
          "id": 1743,
-         "label": "Ceintures"
+         "label": "Ceintures",
+         "size_group": "enfants-vetements-pour-filles-2"
         },
         {
          "id": 1740,
-         "label": "Gants"
+         "label": "Gants",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 1749,
-         "label": "Chapeaux et casquettes"
+         "label": "Chapeaux et casquettes",
+         "size_group": "enfants-vetements-pour-filles-3"
         },
         {
          "id": 1741,
@@ -3634,7 +3706,7 @@
         {
          "id": 1757,
          "label": "Chaussettes",
-         "size_group": "enfants-vetements"
+         "size_group": "enfants-vetements-pour-filles-4"
         },
         {
          "id": 1758,
@@ -3711,15 +3783,18 @@
        "children": [
         {
          "id": 3312,
-         "label": "Figurines"
+         "label": "Figurines",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3311,
-         "label": "Accessoires"
+         "label": "Accessoires",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3313,
-         "label": "Sets de jeux"
+         "label": "Sets de jeux",
+         "size_group": "enfants-vetements"
         }
        ]
       },
@@ -3729,35 +3804,43 @@
        "children": [
         {
          "id": 3315,
-         "label": "Tabliers et blouses"
+         "label": "Tabliers et blouses",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3316,
-         "label": "Perles et fabrication de bijoux"
+         "label": "Perles et fabrication de bijoux",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3317,
-         "label": "Argile et pâte à modeler"
+         "label": "Argile et pâte à modeler",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3319,
-         "label": "Kits créatifs"
+         "label": "Kits créatifs",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3320,
-         "label": "Peinture et dessin"
+         "label": "Peinture et dessin",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3321,
-         "label": "Tableaux et ardoises"
+         "label": "Tableaux et ardoises",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3322,
-         "label": "Pochoirs et tampons"
+         "label": "Pochoirs et tampons",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3323,
-         "label": "Gommettes et accessoires de papeterie"
+         "label": "Gommettes et accessoires de papeterie",
+         "size_group": "enfants-vetements"
         }
        ]
       },
@@ -3767,45 +3850,55 @@
        "children": [
         {
          "id": 3347,
-         "label": "Centres d'activités et trotteurs"
+         "label": "Centres d'activités et trotteurs",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3348,
-         "label": "Tapis d'éveil et d'activités"
+         "label": "Tapis d'éveil et d'activités",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3345,
-         "label": "Jouets de bain"
+         "label": "Jouets de bain",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3346,
-         "label": "Bouncers, jumpers & swings"
+         "label": "Bouncers, jumpers & swings",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3349,
-         "label": "Planches d'activités"
+         "label": "Planches d'activités",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3350,
-         "label": "Push & pull toys"
+         "label": "Push & pull toys",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3351,
-         "label": "Hochets"
+         "label": "Hochets",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3352,
-         "label": "Sorting & stacking toys"
+         "label": "Sorting & stacking toys",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3353,
-         "label": "Jouets de dentition"
+         "label": "Jouets de dentition",
+         "size_group": "enfants-vetements"
         }
        ]
       },
       {
        "id": 1767,
-       "label": "Jeux de construction"
+       "label": "Jeux de construction",
+       "size_group": "enfants-vetements"
       },
       {
        "id": 1731,
@@ -3813,23 +3906,28 @@
        "children": [
         {
          "id": 3327,
-         "label": "Poupées et poupons"
+         "label": "Poupées et poupons",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3324,
-         "label": "Accessoires pour poupée et poupon"
+         "label": "Accessoires pour poupée et poupon",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3325,
-         "label": "Meubles et accessoires pour maison de poupée"
+         "label": "Meubles et accessoires pour maison de poupée",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3326,
-         "label": "Maisons de poupées"
+         "label": "Maisons de poupées",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3328,
-         "label": "Kits de jeu pour poupée et poupon"
+         "label": "Kits de jeu pour poupée et poupon",
+         "size_group": "enfants-vetements"
         }
        ]
       },
@@ -3839,27 +3937,33 @@
        "children": [
         {
          "id": 3330,
-         "label": "Déguisements"
+         "label": "Déguisements",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3331,
-         "label": "Tentes et tunnels de jeux"
+         "label": "Tentes et tunnels de jeux",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3332,
-         "label": "Toy food, cookware, & dishes"
+         "label": "Toy food, cookware, & dishes",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3333,
-         "label": "Boîtes à bijoux pour enfant"
+         "label": "Boîtes à bijoux pour enfant",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3334,
-         "label": "Cuisines pour enfant"
+         "label": "Cuisines pour enfant",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3335,
-         "label": "Matériel de bricolage pour enfant"
+         "label": "Matériel de bricolage pour enfant",
+         "size_group": "enfants-vetements"
         }
        ]
       },
@@ -3869,23 +3973,28 @@
        "children": [
         {
          "id": 3354,
-         "label": "Cartes flash"
+         "label": "Cartes flash",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3355,
-         "label": "Kaléidoscopes et prismes"
+         "label": "Kaléidoscopes et prismes",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3356,
-         "label": "Jeux de lecture et d'écriture"
+         "label": "Jeux de lecture et d'écriture",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3357,
-         "label": "Jeux scientifiques et STEM"
+         "label": "Jeux scientifiques et STEM",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3358,
-         "label": "Autres jeux éducatifs"
+         "label": "Autres jeux éducatifs",
+         "size_group": "enfants-vetements"
         }
        ]
       },
@@ -3895,41 +4004,50 @@
        "children": [
         {
          "id": 3364,
-         "label": "Musiques et histoires"
+         "label": "Musiques et histoires",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3360,
-         "label": "Peluches interactives"
+         "label": "Peluches interactives",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3361,
-         "label": "Équipements de karaoké pour enfants"
+         "label": "Équipements de karaoké pour enfants",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3363,
-         "label": "Boîtes à musique et histoires"
+         "label": "Boîtes à musique et histoires",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3362,
-         "label": "Jouets télécommandés"
+         "label": "Jouets télécommandés",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3359,
-         "label": "Appareils photo pour enfant"
+         "label": "Appareils photo pour enfant",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3365,
-         "label": "Talkies-walkies"
+         "label": "Talkies-walkies",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3366,
-         "label": "Autres jeux et jouets électroniques"
+         "label": "Autres jeux et jouets électroniques",
+         "size_group": "enfants-vetements"
         }
        ]
       },
       {
        "id": 1766,
-       "label": "Jeux/jouets musicaux et instruments"
+       "label": "Jeux/jouets musicaux et instruments",
+       "size_group": "enfants-vetements"
       },
       {
        "id": 3336,
@@ -3937,31 +4055,38 @@
        "children": [
         {
          "id": 3337,
-         "label": "Fidgets"
+         "label": "Fidgets",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3339,
-         "label": "Kits de jonglage"
+         "label": "Kits de jonglage",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3340,
-         "label": "Coffrets et accessoires de magie"
+         "label": "Coffrets et accessoires de magie",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3338,
-         "label": "Farces et attrapes"
+         "label": "Farces et attrapes",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3341,
-         "label": "Slime & putty"
+         "label": "Slime & putty",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3342,
-         "label": "Yoyos"
+         "label": "Yoyos",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3343,
-         "label": "Autres jeux fantaisie et gadgets"
+         "label": "Autres jeux fantaisie et gadgets",
+         "size_group": "enfants-vetements"
         }
        ]
       },
@@ -3971,41 +4096,50 @@
        "children": [
         {
          "id": 3367,
-         "label": "Piscines à balles et accessoires"
+         "label": "Piscines à balles et accessoires",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3368,
-         "label": "Jeux d'eau et de plage"
+         "label": "Jeux d'eau et de plage",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3369,
-         "label": "Machines et flacons à bulles"
+         "label": "Machines et flacons à bulles",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3370,
-         "label": "Pistolets à projectiles en mousse et accessoires"
+         "label": "Pistolets à projectiles en mousse et accessoires",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3371,
-         "label": "Autres jeux de plein air"
+         "label": "Autres jeux de plein air",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3372,
-         "label": "Cerfs-volants et fusées"
+         "label": "Cerfs-volants et fusées",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3373,
-         "label": "Jeux de sable et d'eau"
+         "label": "Jeux de sable et d'eau",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3374,
-         "label": "Jeux de sport"
+         "label": "Jeux de sport",
+         "size_group": "enfants-vetements"
         }
        ]
       },
       {
        "id": 1764,
-       "label": "Peluches"
+       "label": "Peluches",
+       "size_group": "enfants-vetements"
       },
       {
        "id": 3375,
@@ -4013,27 +4147,33 @@
        "children": [
         {
          "id": 3471,
-         "label": "Avions"
+         "label": "Avions",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3468,
-         "label": "Voitures"
+         "label": "Voitures",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3470,
-         "label": "Trains"
+         "label": "Trains",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3469,
-         "label": "Camions"
+         "label": "Camions",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3472,
-         "label": "Circuits et garages"
+         "label": "Circuits et garages",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3473,
-         "label": "Autres véhicules"
+         "label": "Autres véhicules",
+         "size_group": "enfants-vetements"
         }
        ]
       }
@@ -4049,19 +4189,23 @@
        "children": [
         {
          "id": 3462,
-         "label": "Slings et écharpes"
+         "label": "Slings et écharpes",
+         "size_group": "enfants-poussettes-porte-bebe-et-sieges-auto"
         },
         {
          "id": 3463,
-         "label": "Porte-bébé souples"
+         "label": "Porte-bébé souples",
+         "size_group": "enfants-poussettes-porte-bebe-et-sieges-auto"
         },
         {
          "id": 3464,
-         "label": "Porte-bébé de hanche"
+         "label": "Porte-bébé de hanche",
+         "size_group": "enfants-poussettes-porte-bebe-et-sieges-auto"
         },
         {
          "id": 3465,
-         "label": "Backpack carriers"
+         "label": "Backpack carriers",
+         "size_group": "enfants-poussettes-porte-bebe-et-sieges-auto"
         }
        ]
       },
@@ -4105,11 +4249,13 @@
       },
       {
        "id": 3383,
-       "label": "Sièges auto"
+       "label": "Sièges auto",
+       "size_group": "enfants-poussettes-porte-bebe-et-sieges-auto-2"
       },
       {
        "id": 3384,
-       "label": "Rehausseurs"
+       "label": "Rehausseurs",
+       "size_group": "enfants-poussettes-porte-bebe-et-sieges-auto-2"
       },
       {
        "id": 3385,
@@ -4157,15 +4303,18 @@
        "children": [
         {
          "id": 1569,
-         "label": "Matelas pour lit à barreaux"
+         "label": "Matelas pour lit à barreaux",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 1570,
-         "label": "Matelas pour berceau"
+         "label": "Matelas pour berceau",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 1571,
-         "label": "Matelas pour lit enfant"
+         "label": "Matelas pour lit enfant",
+         "size_group": "enfants-vetements"
         }
        ]
       },
@@ -4195,7 +4344,8 @@
         },
         {
          "id": 3279,
-         "label": "Mobiles"
+         "label": "Mobiles",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3280,
@@ -4321,15 +4471,18 @@
        "children": [
         {
          "id": 3400,
-         "label": "Couches lavables"
+         "label": "Couches lavables",
+         "size_group": "enfants-bain-et-change"
         },
         {
          "id": 3401,
-         "label": "Couches de bain"
+         "label": "Couches de bain",
+         "size_group": "enfants-bain-et-change"
         },
         {
          "id": 3402,
-         "label": "Couches jetables"
+         "label": "Couches jetables",
+         "size_group": "enfants-bain-et-change"
         }
        ]
       },
@@ -4427,7 +4580,8 @@
       },
       {
        "id": 3425,
-       "label": "Pregnancy support belts"
+       "label": "Pregnancy support belts",
+       "size_group": "enfants-sante-et-grossesse"
       },
       {
        "id": 3426,
@@ -4513,11 +4667,13 @@
        "children": [
         {
          "id": 3445,
-         "label": "Couverts"
+         "label": "Couverts",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3446,
-         "label": "Assiettes et bols"
+         "label": "Assiettes et bols",
+         "size_group": "enfants-vetements"
         },
         {
          "id": 3447,
@@ -4585,7 +4741,8 @@
         },
         {
          "id": 3299,
-         "label": "Draps-housses et alèses"
+         "label": "Draps-housses et alèses",
+         "size_group": "enfants-sommeil-et-literie"
         },
         {
          "id": 3300,
@@ -4593,7 +4750,8 @@
         },
         {
          "id": 3301,
-         "label": "Draps"
+         "label": "Draps",
+         "size_group": "enfants-sommeil-et-literie"
         }
        ]
       },
@@ -4611,7 +4769,8 @@
       },
       {
        "id": 3307,
-       "label": "Gigoteuses et turbulettes"
+       "label": "Gigoteuses et turbulettes",
+       "size_group": "enfants-vetements"
       },
       {
        "id": 3308,
@@ -4647,12 +4806,345 @@
     },
     {
      "id": 1502,
-     "label": "Autres articles pour bébé et enfant"
+     "label": "Autres articles pour bébé et enfant",
+     "size_group": "enfants-vetements"
     }
    ]
   }
  ],
  "size_groups": {
+  "enfants-bain-et-change": [
+   "Jusqu'à 2 kg",
+   "2–5 kg",
+   "3–6 kg",
+   "4–9 kg",
+   "7–18 kg",
+   "9–20 kg",
+   "11–25 kg",
+   "13–27 kg",
+   "16 kg et plus"
+  ],
+  "enfants-poussettes-porte-bebe-et-sieges-auto": [
+   "Peu importe",
+   "0 mois",
+   "3 mois",
+   "6 mois",
+   "9 mois",
+   "12 mois",
+   "18 mois",
+   "2 ans",
+   "3 ans",
+   "4 ans",
+   "5 ans",
+   "6 ans",
+   "7 ans",
+   "8 ans"
+  ],
+  "enfants-poussettes-porte-bebe-et-sieges-auto-2": [
+   "0–13 kg",
+   "9–18 kg",
+   "15–36 kg",
+   "22–36 kg",
+   "Autre"
+  ],
+  "enfants-sante-et-grossesse": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "Taille unique",
+   "Autre"
+  ],
+  "enfants-sommeil-et-literie": [
+   "Berceau",
+   "Lit nouveau né",
+   "Lit de voyage bébé",
+   "Lit bébé"
+  ],
+  "enfants-vetements": [
+   "Prématuré, jusqu'à 44cm",
+   "Naissance / 44 cm",
+   "Jusqu'à 1 mois / 50 cm",
+   "1-3 mois / 56 cm",
+   "3-6 mois / 62 cm",
+   "6-9 mois / 68 cm",
+   "9-12 mois / 74 cm",
+   "12-18 mois / 80 cm",
+   "18-24 mois / 86 cm",
+   "24-36 mois / 92 cm",
+   "3 ans / 98 cm",
+   "4 ans / 104 cm",
+   "5 ans / 110 cm",
+   "6 ans / 116 cm",
+   "7 ans / 122 cm",
+   "8 ans / 128 cm",
+   "9 ans / 134 cm",
+   "10 ans / 140 cm",
+   "11 ans / 146 cm",
+   "12 ans / 152 cm",
+   "13 ans / 158 cm",
+   "14 ans / 164 cm",
+   "15 ans / 170 cm",
+   "16 ans / 176 cm",
+   "Taille unique",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL"
+  ],
+  "enfants-vetements-pour-filles": [
+   "EU 15",
+   "EU 15,5",
+   "EU 16",
+   "EU 16,5",
+   "EU 17",
+   "EU 17,5",
+   "EU 18",
+   "EU 18,5",
+   "EU 19",
+   "EU 19,5",
+   "EU 20",
+   "EU 20,5",
+   "EU 21",
+   "EU 21,5",
+   "EU 22",
+   "EU 22,5",
+   "EU 23",
+   "EU 23,5",
+   "EU 24",
+   "EU 24,5",
+   "EU 25",
+   "EU 25,5",
+   "EU 26",
+   "EU 26,5",
+   "EU 27",
+   "EU 27,5",
+   "EU 28",
+   "EU 28,5",
+   "EU 29",
+   "EU 29,5",
+   "EU 30",
+   "EU 30,5",
+   "EU 31",
+   "EU 31,5",
+   "EU 32",
+   "EU 32,5",
+   "EU 33",
+   "EU 33,5",
+   "EU 34",
+   "EU 34,5",
+   "EU 35",
+   "EU 35,5",
+   "EU 36",
+   "EU 36,5",
+   "EU 37",
+   "EU 37,5",
+   "EU 38",
+   "EU 38,5",
+   "EU 39",
+   "EU 39,5",
+   "EU 40",
+   "Très petit bébé",
+   "UK 0 bébé",
+   "UK 0,5 bébé",
+   "UK 1 bébé",
+   "UK 1,5 bébé",
+   "UK 2 bébé",
+   "UK 2,5 bébé",
+   "UK 3 bébé",
+   "UK 3,5 bébé",
+   "UK 4 bébé",
+   "UK 4,5 bébé",
+   "UK 5 bébé",
+   "UK 5,5 bébé",
+   "UK 6 bébé",
+   "UK 6,5 bébé",
+   "UK 7 enfant",
+   "UK 7,5 enfant",
+   "UK 8 enfant",
+   "UK 8,5 enfant",
+   "UK 9 enfant",
+   "UK 9,5 enfant",
+   "UK 10 enfant",
+   "UK 10,5 enfant",
+   "UK 11 enfant",
+   "UK 11,5 enfant",
+   "UK 12 enfant",
+   "UK 12,5 enfant",
+   "UK 13 enfant",
+   "UK 13,5 enfant",
+   "UK 1 junior",
+   "UK 1,5 junior",
+   "UK 2 junior",
+   "UK 2,5 junior",
+   "UK 3 junior",
+   "UK 3,5 junior",
+   "UK 4 junior",
+   "UK 4,5 junior",
+   "UK 5 junior",
+   "UK 5,5 junior",
+   "UK 6 junior",
+   "UK 6,5 junior",
+   "US 0 bébé",
+   "US 0,5 bébé",
+   "US 1C",
+   "US 1.5C",
+   "US 2C",
+   "US 2.5C",
+   "US 3C",
+   "US 3.5C",
+   "US 4C",
+   "US 4.5C",
+   "US 5C",
+   "US 5.5C",
+   "US 6C",
+   "US 6.5C",
+   "US 7C",
+   "US 7.5C",
+   "US 8C",
+   "US 8.5C",
+   "US 9C",
+   "US 9.5C",
+   "US 10C",
+   "US 10.5C",
+   "US 11C",
+   "US 11.5C",
+   "US 12C",
+   "US 12.5C",
+   "US 13C",
+   "US 1Y",
+   "US 1.5Y",
+   "US 2Y",
+   "US 2.5Y",
+   "US 3Y",
+   "US 3.5Y",
+   "US 4Y",
+   "US 4.5Y",
+   "US 5Y",
+   "US 5.5Y",
+   "US 6Y",
+   "US 6.5Y",
+   "US 7Y",
+   "US 7.5Y"
+  ],
+  "enfants-vetements-pour-filles-2": [
+   "45 cm",
+   "50 cm",
+   "55 cm",
+   "60 cm",
+   "65 cm",
+   "70 cm",
+   "75 cm",
+   "80 cm",
+   "85 cm",
+   "Ajustable",
+   "Taille unique"
+  ],
+  "enfants-vetements-pour-filles-3": [
+   "Prématurés, 30 cm",
+   "0-3 mois, 38 cm",
+   "3-6 mois, 42 cm",
+   "6-12 mois, 47 cm",
+   "1-2 ans, 49 cm",
+   "2-3 ans, 51 cm",
+   "3-5 ans, 53 cm",
+   "5-8 ans, 54 cm",
+   "8-12 ans, 56 cm",
+   "12 ans et plus > 56 cm",
+   "Universel"
+  ],
+  "enfants-vetements-pour-filles-4": [
+   "13-15",
+   "16-18",
+   "19-21",
+   "22-24",
+   "25-27",
+   "28-30",
+   "31-33",
+   "34-36",
+   "37-39",
+   "40-42"
+  ],
+  "femmes-accessoires": [
+   "65 cm",
+   "70 cm",
+   "75 cm",
+   "80 cm",
+   "85 cm",
+   "90 cm",
+   "95 cm",
+   "100 cm",
+   "105 cm",
+   "110 cm",
+   "115 cm",
+   "Ajustable"
+  ],
+  "femmes-accessoires-2": [
+   "14,1 mm",
+   "14,5 mm",
+   "14,9 mm",
+   "15,3 mm",
+   "15,7 mm",
+   "16,1 mm",
+   "16,5 mm",
+   "16,9 mm",
+   "17,3 mm",
+   "17,7 mm",
+   "18,1 mm",
+   "18,5 mm",
+   "19 mm",
+   "19,4 mm",
+   "19,8 mm",
+   "20,2 mm",
+   "20,6 mm",
+   "21 mm",
+   "21,4 mm",
+   "21,8 mm",
+   "22,2 mm",
+   "22,6 mm",
+   "Ajustable"
+  ],
+  "femmes-accessoires-3": [
+   "Jusqu'à 30 mm",
+   "30–38 mm",
+   "39–42 mm",
+   "43–46 mm",
+   "47 mm et plus",
+   "Taille unique"
+  ],
+  "femmes-chaussures": [
+   "34",
+   "34.5",
+   "35",
+   "35.5",
+   "36",
+   "36.5",
+   "37",
+   "37.5",
+   "38",
+   "38.5",
+   "39",
+   "39.5",
+   "40",
+   "40.5",
+   "41",
+   "41.5",
+   "42",
+   "42.5",
+   "43",
+   "43.5",
+   "44",
+   "44.5",
+   "45",
+   "45.5",
+   "46",
+   "Taille unique",
+   "Autre"
+  ],
   "femmes-vetements": [
    "XXXS",
    "XXS",
@@ -4748,36 +5240,117 @@
    "US 24",
    "US 26"
   ],
-  "femmes-chaussures": [
-   "34",
-   "34.5",
-   "35",
-   "35.5",
-   "36",
-   "36.5",
-   "37",
-   "37.5",
-   "38",
-   "38.5",
-   "39",
-   "39.5",
-   "40",
-   "40.5",
-   "41",
-   "41.5",
-   "42",
-   "42.5",
-   "43",
-   "43.5",
-   "44",
-   "44.5",
-   "45",
-   "45.5",
-   "46",
-   "Taille unique",
-   "Autre"
-  ],
-  "hommes-vetements": [
+  "femmes-vetements-2": [
+   "75A et AA",
+   "75B",
+   "75C",
+   "75D",
+   "75E",
+   "75F",
+   "75G",
+   "75H",
+   "75I",
+   "75J",
+   "75K",
+   "75L",
+   "80A et AA",
+   "80B",
+   "80C",
+   "80D",
+   "80E",
+   "80F",
+   "80G",
+   "80H",
+   "80I",
+   "80J",
+   "80K",
+   "80L",
+   "85A et AA",
+   "85B",
+   "85C",
+   "85D",
+   "85E",
+   "85F",
+   "85G",
+   "85H",
+   "85I",
+   "85J",
+   "85K",
+   "85L",
+   "90A et AA",
+   "90B",
+   "90C",
+   "90D",
+   "90E",
+   "90F",
+   "90G",
+   "90H",
+   "90I",
+   "90J",
+   "90K",
+   "90L",
+   "95A et AA",
+   "95B",
+   "95C",
+   "95D",
+   "95E",
+   "95F",
+   "95G",
+   "95H",
+   "95I",
+   "95J",
+   "95K",
+   "95L",
+   "100A et AA",
+   "100B",
+   "100C",
+   "100D",
+   "100E",
+   "100F",
+   "100G",
+   "100H",
+   "100I",
+   "100J",
+   "100K",
+   "100L",
+   "105A et AA",
+   "105B",
+   "105C",
+   "105D",
+   "105E",
+   "105F",
+   "106G",
+   "105H",
+   "105I",
+   "105J",
+   "105K",
+   "105L",
+   "110A et AA",
+   "110B",
+   "110C",
+   "110D",
+   "110E",
+   "110F",
+   "110G",
+   "110H",
+   "110I",
+   "110J",
+   "110K",
+   "110L",
+   "115A et AA",
+   "115B",
+   "115C",
+   "115D",
+   "115E",
+   "115F",
+   "115G",
+   "115H",
+   "115I",
+   "115J",
+   "115K",
+   "115L",
+   "Autre",
+   "XXS",
    "XS",
    "S",
    "M",
@@ -4790,7 +5363,139 @@
    "6XL",
    "7XL",
    "8XL",
+   "9XL"
+  ],
+  "femmes-vetements-3": [
+   "S | 35–38",
+   "M | 39–42",
+   "L | 43–46",
+   "XL | 47–51",
    "Taille unique"
+  ],
+  "femmes-vetements-4": [
+   "5",
+   "5,5",
+   "6",
+   "6,5",
+   "7",
+   "7,5",
+   "8",
+   "8,5",
+   "9",
+   "9,5",
+   "10",
+   "10,5",
+   "11",
+   "11,5",
+   "12",
+   "Taille unique",
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL"
+  ],
+  "femmes-vetements-5": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "Taille unique",
+   "52",
+   "53",
+   "54",
+   "55",
+   "56",
+   "57",
+   "58",
+   "59",
+   "60",
+   "61",
+   "62",
+   "63",
+   "64",
+   "65"
+  ],
+  "hommes-accessoires": [
+   "70 cm",
+   "75 cm",
+   "80 cm",
+   "85 cm",
+   "90 cm",
+   "95 cm",
+   "100 cm",
+   "105 cm",
+   "110 cm",
+   "115 cm",
+   "120 cm",
+   "125 cm",
+   "130 cm",
+   "Ajustable"
+  ],
+  "hommes-chaussures": [
+   "38",
+   "38,5",
+   "39",
+   "39,5",
+   "40",
+   "40,5",
+   "41",
+   "41,5",
+   "42",
+   "42,5",
+   "43",
+   "43,5",
+   "44",
+   "44,5",
+   "45",
+   "45,5",
+   "46",
+   "46,5",
+   "47",
+   "47,5",
+   "48",
+   "48,5",
+   "49",
+   "50",
+   "51",
+   "52",
+   "Taille unique",
+   "Autre"
+  ],
+  "hommes-chemises": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "XXXL",
+   "4XL",
+   "5XL",
+   "6XL",
+   "7XL",
+   "8XL",
+   "Taille unique",
+   "35 cm",
+   "36 cm",
+   "37 cm",
+   "38 cm",
+   "39 cm",
+   "40 cm",
+   "41 cm",
+   "42 cm",
+   "43 cm",
+   "44 cm",
+   "45 cm",
+   "46 cm",
+   "47 cm",
+   "48 cm",
+   "49 cm",
+   "50 cm",
+   "51 cm",
+   "52 cm"
   ],
   "hommes-pantalons": [
    "XS",
@@ -4830,7 +5535,22 @@
    "W52 | FR 62",
    "W54 | FR 64"
   ],
-  "hommes-chemises": [
+  "hommes-vetements": [
+   "XS",
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "XXXL",
+   "4XL",
+   "5XL",
+   "6XL",
+   "7XL",
+   "8XL",
+   "Taille unique"
+  ],
+  "hommes-vetements-2": [
    "XS",
    "S",
    "M",
@@ -4844,87 +5564,49 @@
    "7XL",
    "8XL",
    "Taille unique",
-   "35 cm",
-   "36 cm",
-   "37 cm",
-   "38 cm",
-   "39 cm",
-   "40 cm",
-   "41 cm",
-   "42 cm",
-   "43 cm",
-   "44 cm",
-   "45 cm",
-   "46 cm",
-   "47 cm",
-   "48 cm",
-   "49 cm",
-   "50 cm",
-   "51 cm",
-   "52 cm"
-  ],
-  "hommes-chaussures": [
-   "38",
-   "38,5",
-   "39",
-   "39,5",
-   "40",
-   "40,5",
-   "41",
-   "41,5",
+   "22",
+   "23",
+   "24",
+   "25",
+   "26",
+   "27",
+   "28",
+   "29",
+   "30",
    "42",
-   "42,5",
-   "43",
-   "43,5",
    "44",
-   "44,5",
-   "45",
-   "45,5",
    "46",
-   "46,5",
-   "47",
-   "47,5",
    "48",
-   "48,5",
-   "49",
    "50",
-   "51",
    "52",
-   "Taille unique",
-   "Autre"
+   "54",
+   "56",
+   "58",
+   "60",
+   "62",
+   "64",
+   "66",
+   "68",
+   "70",
+   "72",
+   "74",
+   "76",
+   "78",
+   "90",
+   "94",
+   "98",
+   "102",
+   "106",
+   "110",
+   "112",
+   "118"
   ],
-  "enfants-vetements": [
-   "Prématuré, jusqu'à 44cm",
-   "Naissance / 44 cm",
-   "Jusqu'à 1 mois / 50 cm",
-   "1-3 mois / 56 cm",
-   "3-6 mois / 62 cm",
-   "6-9 mois / 68 cm",
-   "9-12 mois / 74 cm",
-   "12-18 mois / 80 cm",
-   "18-24 mois / 86 cm",
-   "24-36 mois / 92 cm",
-   "3 ans / 98 cm",
-   "4 ans / 104 cm",
-   "5 ans / 110 cm",
-   "6 ans / 116 cm",
-   "7 ans / 122 cm",
-   "8 ans / 128 cm",
-   "9 ans / 134 cm",
-   "10 ans / 140 cm",
-   "11 ans / 146 cm",
-   "12 ans / 152 cm",
-   "13 ans / 158 cm",
-   "14 ans / 164 cm",
-   "15 ans / 170 cm",
-   "16 ans / 176 cm",
-   "Taille unique",
-   "XS",
-   "S",
-   "M",
-   "L",
-   "XL",
-   "XXL"
+  "hommes-vetements-3": [
+   "XS | 36–37",
+   "S | 38–42",
+   "M | 43–46",
+   "L | 47–52",
+   "Taille unique"
   ]
  },
  "conditions": {
