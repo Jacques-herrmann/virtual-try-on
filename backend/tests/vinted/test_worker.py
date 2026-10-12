@@ -323,8 +323,10 @@ def test_second_send_is_refused(env, validated):
     ids = validated(2)
     started, release = env.filler.gate(ids[0])
     worker = env.make()
+    assert worker.is_busy() is False
     worker.send(ids[:1])
     assert started.wait(TIMEOUT)
+    assert worker.is_busy() is True
     with pytest.raises(Busy):
         worker.send(ids[1:])
     with pytest.raises(Busy):

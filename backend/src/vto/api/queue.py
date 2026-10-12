@@ -93,6 +93,11 @@ class GenerationQueue:
                 "reason": self._reason,
             }
 
+    def is_busy(self) -> bool:
+        """Un article est traité ou va l'être (une file en pause ne compte pas)."""
+        with self._cond:
+            return self._current is not None or (bool(self._pending) and not self._paused)
+
     def _idle(self) -> bool:
         return self._current is None and (not self._pending or self._paused or self._stopped)
 

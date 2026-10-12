@@ -79,13 +79,13 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 7 — Routes de mise à jour (spec §3.2, §3.3)
 
-- [ ] Tests `test_api_update.py` (checker et installer factices) :
+- [x] Tests `test_api_update.py` (checker et installer factices) :
   - `GET /api/update` renvoie le snapshot ;
   - `POST /api/update/install` : 409 si la file de génération n'est pas vide (« Une génération est en cours… »), 409 si un envoi Vinted tourne (« Un envoi Vinted est en cours… »), 409 si `can_install` faux, 409 si rien à installer, 202 sinon ; double appel pendant le téléchargement → 409 ;
   - `GET /api/update/progress` : état, octets, message d'erreur.
-- [ ] Ajouter à `GenerationQueue` (et `VintedWorker` si absent) une méthode `is_busy()` testée.
-- [ ] `routes/update.py` ; `create_app(..., updates=...)` optionnel (les tests existants passent sans).
-- [ ] Commit `add update routes`.
+- [x] Ajouter à `GenerationQueue` et `VintedWorker` une méthode `is_busy()` testée. Une file **en pause** n'est pas occupée : rien ne tourne, et ses articles reprennent au lancement suivant.
+- [x] `routes/update.py` ; `create_app(..., updates=...)` optionnel (les tests existants passent sans).
+- [x] Commit `add update routes`.
 
 ### Tâche 8 — Envoi Vinted bloqué si mise à jour obligatoire (spec §3.2)
 

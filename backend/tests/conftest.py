@@ -87,6 +87,8 @@ def make_api(data_dir):
         start_queue=True,
         api_key="k",
         vinted_worker=None,
+        update_checker=None,
+        installer=None,
     ):
         from fakes import FakeVintedWorker
         from samples import loaded_data
@@ -102,6 +104,8 @@ def make_api(data_dir):
             queue=queue,
             static_dir=static_dir,
             vinted_worker=vinted_worker or FakeVintedWorker(loaded_data()),
+            update_checker=update_checker,
+            installer=installer,
         )
         client = TestClient(
             app, base_url=f"http://127.0.0.1:{API_PORT}", raise_server_exceptions=False

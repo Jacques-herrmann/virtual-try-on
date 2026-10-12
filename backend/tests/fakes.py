@@ -89,6 +89,9 @@ class FakeVintedWorker:
     def wait_loaded(self, timeout=None):
         return self.loaded is not None
 
+    def is_busy(self):
+        return self.busy
+
     def status(self):
         return {
             "connected": None,

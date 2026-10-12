@@ -224,3 +224,30 @@ def test_stop_prevents_further_work(make_queue, make_article):
     q.enqueue(a.id)
     assert q.wait_idle(TIMEOUT)
     assert rec.calls == []
+
+
+def test_is_busy_while_running_or_pending(make_queue, make_article):
+    rec = Recorder()
+    q = make_queue(rec)
+    assert q.is_busy() is False
+    a = make_article()
+    q.enqueue(a.id)  # pas démarrée : en attente
+    assert q.is_busy() is True
+    started, release = rec.gate(a.id)
+    q.start()
+    assert started.wait(TIMEOUT)
+    assert q.is_busy() is True
+    release.set()
+    assert q.wait_idle(TIMEOUT)
+    assert q.is_busy() is False
+
+
+def test_paused_queue_is_not_busy(make_queue, make_article):
+    # En pause, rien ne tourne ; les articles en attente reprennent au prochain lancement.
+    config.save_settings(config.Settings())
+    q = make_queue(Recorder())
+    q.start()
+    q.enqueue(make_article().id)
+    assert q.wait_idle(TIMEOUT)
+    assert q.is_busy() is False
+    config.save_settings(config.Settings(gemini_api_key="k"))

@@ -9,10 +9,12 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
 from vto.api import security
 from vto.api.queue import GenerationQueue
-from vto.api.routes import articles, files, scenes, settings, system, vinted
+from vto.api.routes import articles, files, scenes, settings, system, update, vinted
 from vto.api.routes import queue as queue_routes
 from vto.core import errors, paths
 from vto.core.pipeline import ClientFactory
+from vto.updates.check import UpdateChecker
+from vto.updates.install import Installer
 from vto.vinted.worker import Busy, VintedWorker
 
 log = logging.getLogger(__name__)
@@ -81,12 +83,17 @@ def create_app(
     queue: GenerationQueue | None = None,
     static_dir: Path | None = None,
     vinted_worker: VintedWorker | None = None,
+    update_checker: UpdateChecker | None = None,
+    installer: Installer | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Virtual Try-On", docs_url=None, redoc_url=None, openapi_url=None)
     app.state.client_factory = client_factory
     app.state.queue = queue or GenerationQueue(client_factory)
     app.state.vinted = vinted_worker or VintedWorker()
     app.state.queue.choices_for = vinted.choices_provider(app)
+    # Sans vérificateur démarré, l'état reste « inconnu » : aucun bandeau.
+    app.state.updates = update_checker or UpdateChecker()
+    app.state.installer = installer or Installer()
     app.middleware("http")(security.make_middleware(token, port))
     _add_error_handlers(app)
 
@@ -94,7 +101,7 @@ def create_app(
     def health() -> dict:
         return {"ok": True}
 
-    for module in (articles, files, queue_routes, scenes, settings, system, vinted):
+    for module in (articles, files, queue_routes, scenes, settings, system, update, vinted):
         app.include_router(module.router)
     _add_front(app, static_dir or STATIC_DIR)
     return app

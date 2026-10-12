@@ -178,6 +178,11 @@ class VintedWorker:
                 },
             }
 
+    def is_busy(self) -> bool:
+        """Une commande (connexion, envoi…) est en cours ou en attente."""
+        with self._lock:
+            return self._busy
+
     def wait_idle(self, timeout: float | None = None) -> bool:
         with self._lock:
             return self._lock.wait_for(lambda: not self._busy, timeout)
