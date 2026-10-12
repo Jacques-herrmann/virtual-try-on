@@ -95,13 +95,13 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 9 — Lancement : vérification, arrêt demandé, `--self-check` (spec §3.3, §4)
 
-- [ ] Tests `test_desktop.py` :
+- [x] Tests `test_self_check.py` (contrôles dans `vto/self_check.py`, appelés par `desktop.py`) :
   - `--self-check --output f` en environnement de dev : code 0, `f` liste chaque contrôle OK ; ressource manquante (monkeypatch) → code 1 et le nom de la ressource dans `f` ;
-  - les contrôles : import de tous les sous-modules de `vto` (`pkgutil.walk_packages`), front compilé présent (`index.html`), `vinted.json` embarqué valide, pack de scènes non vide, pilote Playwright présent (`playwright._impl._driver.compute_driver_executable()` existe) ;
+  - les contrôles : import de tous les sous-modules de `vto` (`pkgutil.walk_packages`), front compilé présent (`index.html`), `vinted.json` embarqué valide, pack de scènes non vide, pilote Playwright présent (`playwright._impl._driver.compute_driver_executable()` existe), pywebview et sa plateforme WinForms importables (pythonnet) ;
   - `request_shutdown()` : appelle `webview.windows[0].destroy()` si une fenêtre existe (webview factice).
-- [ ] `desktop.py` : créer `UpdateChecker` et `Installer` (avec `on_launched=request_shutdown`), les passer à `create_app` et à `VintedWorker` ; `clean_old_installers()` au démarrage ; arrêter le checker à la sortie.
-- [ ] Le front compilé doit exister pour le test de succès : marquer ce test `skipif` si `api/static/index.html` manque, et le faire tourner en CI après `npm run build`.
-- [ ] Commit `add self-check and update wiring to desktop`.
+- [x] `desktop.py` : créer `UpdateChecker` et `Installer` (avec `on_launched=request_shutdown`), les passer à `create_app` et à `VintedWorker` ; `clean_old_installers()` au démarrage ; arrêter le checker à la sortie.
+- [x] Le front compilé doit exister pour le test de succès : marquer ce test `skipif` si `api/static/index.html` manque, et le faire tourner en CI après `npm run build`.
+- [x] Commit `add self-check and update wiring to desktop`.
 
 ## Partie D — Front
 

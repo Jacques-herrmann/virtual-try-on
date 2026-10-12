@@ -2,6 +2,7 @@
 
     vto-app          application complète
     vto-app --dev    API seule sur 127.0.0.1:8765 (jeton « dev »), pour `npm run dev`
+    vto-app --self-check --output f   test de fumée de l'exécutable (code 0 si tout va bien)
 """
 
 import argparse
@@ -11,14 +12,18 @@ import socket
 import threading
 import time
 import urllib.request
+from pathlib import Path
 
 import uvicorn
 
+from vto import self_check
 from vto.api.app import create_app
 from vto.api.queue import GenerationQueue
 from vto.api.security import LOGIN_PATH
 from vto.core import scenes
 from vto.core.logging import setup_logging
+from vto.updates.check import UpdateChecker
+from vto.updates.install import Installer, clean_old_installers
 from vto.vinted.worker import VintedWorker
 
 log = logging.getLogger(__name__)
@@ -49,22 +54,47 @@ def _wait_until_ready(port: int, timeout: float = STARTUP_TIMEOUT) -> bool:
     return False
 
 
+def request_shutdown() -> None:
+    """Ferme la fenêtre (appelé depuis un autre thread quand l'installeur est lancé).
+
+    `main` reprend alors après `webview.start()` et arrête proprement le reste.
+    """
+    import webview
+
+    for window in list(webview.windows):
+        window.destroy()
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="vto-app", description="Virtual Try-On")
     parser.add_argument("--dev", action="store_true", help="API seule, pour le serveur Vite")
+    parser.add_argument("--self-check", action="store_true", help="test de fumée, puis quitte")
+    parser.add_argument("--output", type=Path, help="fichier du rapport de --self-check")
     args = parser.parse_args(argv)
 
     setup_logging(console=args.dev)
+    if args.self_check:
+        raise SystemExit(self_check.run(args.output))
     scenes.ensure_default_scenes()
     queue = GenerationQueue()
     queue.start()
+    clean_old_installers()
+    updates = UpdateChecker()
+    updates.start()
     # Charge les données Vinted en arrière-plan : la fenêtre n'attend pas le réseau.
-    vinted = VintedWorker()
+    vinted = VintedWorker(update_required=updates.is_required)
     vinted.start()
 
     port = DEV_PORT if args.dev else find_free_port()
     token = DEV_TOKEN if args.dev else secrets.token_urlsafe(32)
-    app = create_app(token=token, port=port, queue=queue, vinted_worker=vinted)
+    app = create_app(
+        token=token,
+        port=port,
+        queue=queue,
+        vinted_worker=vinted,
+        update_checker=updates,
+        installer=Installer(on_launched=request_shutdown),
+    )
     server = uvicorn.Server(
         uvicorn.Config(app, host="127.0.0.1", port=port, log_config=None, access_log=False)
     )
@@ -75,6 +105,7 @@ def main(argv: list[str] | None = None) -> None:
         server.run()
         queue.stop()
         vinted.shutdown()
+        updates.stop()
         return
 
     thread = threading.Thread(target=server.run, name="api", daemon=True)
@@ -94,6 +125,7 @@ def main(argv: list[str] | None = None) -> None:
     # Fenêtre fermée : l'article en cours sera repris au prochain lancement.
     queue.stop()
     vinted.shutdown()
+    updates.stop()
     server.should_exit = True
     thread.join(timeout=5)
 
