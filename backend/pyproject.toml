@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "vto"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Photos portées et annonces Vinted générées par IA"
 requires-python = ">=3.12"
 dependencies = [
@@ -18,16 +18,21 @@ dependencies = [
     "python-multipart",  # uploads multipart de FastAPI
     "pywebview",
     "playwright>=1.63",  # pilote Chrome/Edge installé, aucun navigateur téléchargé
-    "httpx>=0.28",  # téléchargement de vinted.json
+    "httpx>=0.28",  # téléchargement de vinted.json et des mises à jour
+    "packaging",  # comparaison des versions (mises à jour)
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff", "httpx2"]  # httpx2 : client de TestClient
+build = ["pyinstaller>=6.22"]
 
 [project.scripts]
 vto = "vto.cli:app"
 vto-app = "vto.desktop:main"
 vto-vinted-catalog = "vto.tools.vinted_catalog:main"
+
+[tool.hatch.version]
+path = "src/vto/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/vto"]

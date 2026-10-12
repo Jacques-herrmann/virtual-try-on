@@ -1,7 +1,7 @@
 # Plan d'implémentation — Sous-projet 4 : Distribution
 
 Spec : `docs/superpowers/specs/2026-10-12-distribution-design.md` (référencée ci-dessous par « spec §x »).
-Branche : `feat/distribution`, créée depuis `main`.
+Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ## Conventions
 
@@ -155,9 +155,9 @@ Branche : `feat/distribution`, créée depuis `main`.
 - [ ] `CLAUDE.md` : commandes de build local, procédure de publication (bump de `__version__` → commit → `git tag -a vX.Y.Z` avec les notes → push du tag → essai de l'installeur du brouillon → publication de la Release), chemins `core/default_scenes` et `data/vinted-v1.json`, sous-projet 4 à jour.
 - [ ] Commit `document packaging and release`.
 
-### Tâche 16 — Acceptation et PR (spec §7)
+### Tâche 16 — Acceptation (spec §7)
 
-- [ ] Fusionner `feat/distribution` dans `main` après revue (PR), avant de tagger : les manifestes et `vinted-v1.json` sont lus sur `main`.
+- [ ] Pousser `main` avant de tagger : `vinted-v1.json` est lu sur `main`.
 - [ ] Créer un compte Windows local « Essai VTO » (Paramètres → Comptes → Autres utilisateurs) : profil vierge, donc `%LOCALAPPDATA%` vide, sans Python ni Node dans le `PATH`. Le poste est en Windows 11 Famille : pas de Bac à sable Windows ni de Hyper-V.
 - [ ] Publier `v0.2.0` puis dérouler la spec §7 dans ce compte :
   1. installation, pas d'UAC, avertissement SmartScreen noté ;
