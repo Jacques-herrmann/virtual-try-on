@@ -400,13 +400,14 @@ def test_browser_used_only_from_worker_thread(env, validated):
     assert env.playwright.stopped
 
 
-def test_send_refused_when_update_required(env, validated):
+def test_send_refused_when_update_required(env, validated, caplog):
     ids = validated(1)
     required = [True]
     worker = env.make(update_required=lambda: required[0])
     with pytest.raises(UpdateRequired) as exc:
         worker.send(ids)
     assert "ne fonctionne plus avec Vinted" in exc.value.user_message
+    assert "mise à jour obligatoire" in caplog.text
     assert worker.is_busy() is False
     worker.connect()  # se connecter reste possible
     assert worker.wait_idle(TIMEOUT)

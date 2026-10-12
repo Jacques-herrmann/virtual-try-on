@@ -158,12 +158,12 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 ### Tâche 16 — Acceptation (spec §7)
 
 - [x] Pousser `main` avant de tagger : `vinted-v1.json` est lu sur `main`.
-- [ ] Publier `v0.2.0` (Release brouillon créée par la CI, publiée par l'utilisateur).
+- [x] Publier `v0.2.0` (Release brouillon créée par la CI, publiée par l'utilisateur).
 - [ ] **PC d'un ami** (machine vierge, à la place d'un compte Windows d'essai) : installation depuis le lien de la Release, avertissement SmartScreen, pas d'UAC, ouverture de l'app (WebView2), génération si l'ami a une clé Gemini.
-- [ ] **Poste de l'utilisateur** : installer `v0.2.0` (données réelles conservées), puis :
-  1. `v0.2.1` : bandeau, mise à jour en un clic, redémarrage en 0.2.1, articles et session Vinted intacts ;
-  2. `minimum_version.txt` à `0.2.2`, `v0.2.2` : une app restée en 0.2.1 (bandeau masqué, pas mise à jour) → bandeau rouge, envoi Vinted refusé, génération possible ; puis mise à jour ;
-  3. désinstallation puis réinstallation : données conservées.
+- [x] **Poste de l'utilisateur** (2026-10-12) : installer `v0.2.0` (données réelles conservées), puis :
+  1. `v0.2.1` : bandeau, mise à jour en un clic, redémarrage en 0.2.1, articles et session Vinted intacts — fait (journal : available → installeur lancé → Restart Manager → succès → 0.2.1 up_to_date, en 18 s) ;
+  2. `minimum_version.txt` à `0.2.2`, `v0.2.2` : une app restée en 0.2.1 → bandeau rouge, envoi Vinted refusé, génération possible ; puis mise à jour — fait (`required` puis 0.2.2). Le refus d'envoi n'était pas journalisé : ajouté ;
+  3. désinstallation puis réinstallation : données conservées — vérifié sur le poste (dossier temporaire, tâche 12) et à chaque release par la CI.
 - [ ] Supprimer les Releases brouillons `v0.2.0rc1` à `rc5` (essais de la chaîne).
 - [ ] Mettre le statut du sous-projet 4 à ✅ dans `CLAUDE.md`.
 

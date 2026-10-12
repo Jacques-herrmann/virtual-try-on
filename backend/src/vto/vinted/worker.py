@@ -147,6 +147,7 @@ class VintedWorker:
     def send(self, article_ids: Sequence[str]) -> None:
         # Une version trop ancienne remplirait mal le formulaire : on bloque l'envoi seulement.
         if self._update_required():
+            log.warning("Envoi Vinted refusé : version trop ancienne, mise à jour obligatoire")
             raise UpdateRequired()
         with self._lock:
             if self._busy:
