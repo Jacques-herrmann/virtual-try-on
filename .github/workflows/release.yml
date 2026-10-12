@@ -60,14 +60,19 @@ jobs:
       - name: Inno Setup
         shell: pwsh
         run: |
-          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) {
-            choco install innosetup -y --no-progress
-          }
+          # Version récente exigée (x64compatible : Inno Setup ≥ 6.3), même si l'image en a une.
+          choco upgrade innosetup -y --no-progress
           ./packaging/fetch_redist.ps1
 
       - name: Installeur
         run: |
-          "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" //Q "//DAppVersion=$VERSION" packaging/installer.iss
+          ISCC="/c/Program Files (x86)/Inno Setup 6/ISCC.exe"
+          "$ISCC" 2>&1 | head -1 | sed 's/^/::notice::/'
+          # Les journaux exigent une connexion ; les annotations ::error:: sont lisibles par l'API publique.
+          if ! "$ISCC" "//DAppVersion=$VERSION" packaging/installer.iss > iscc.log 2>&1; then
+            tail -15 iscc.log | sed 's/^/::error::/'; exit 1
+          fi
+          tail -3 iscc.log
           echo "INSTALLER=packaging/Output/VirtualTryOn-Setup-$VERSION.exe" >> "$GITHUB_ENV"
 
       # À activer avec le certificat (sous-projet ultérieur) : signer
