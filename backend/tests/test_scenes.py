@@ -75,6 +75,18 @@ def test_ensure_default_scenes(data_dir, tmp_path, make_image):
     assert (paths.scenes_dir() / "mannequin" / "prompt.md").read_text(encoding="utf-8") == "modifié"
 
 
+def test_default_scenes_source_is_packaged():
+    source = scenes.default_scenes_source()
+    assert "vto" in source.parts
+    for slug in ("mannequin", "cintre"):
+        assert (source / slug / "prompt.md").is_file()
+
+
+def test_ensure_default_scenes_uses_packaged_pack(data_dir):
+    assert scenes.ensure_default_scenes() is True
+    assert (paths.scenes_dir() / "mannequin" / "prompt.md").is_file()
+
+
 def test_pick_background_by_audience(data_dir, make_scene):
     make_scene("m", bgs=("femme/f.jpg", "homme/h.jpg", "chaussures/c.jpg"))
     s = scenes.list_scenes()[0]

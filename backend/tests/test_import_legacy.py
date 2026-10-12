@@ -31,7 +31,7 @@ def defaults(tmp_path, monkeypatch):
         (src / slug).mkdir(parents=True)
         (src / slug / "prompt.md").write_text(f"prompt {slug}", encoding="utf-8")
         (src / slug / "meta.json").write_text(f'{{"name": "{slug}"}}', encoding="utf-8")
-    monkeypatch.setattr(scenes, "DEFAULT_SCENES_SOURCE", src)
+    monkeypatch.setattr(scenes, "default_scenes_source", lambda: src)
     return src
 
 

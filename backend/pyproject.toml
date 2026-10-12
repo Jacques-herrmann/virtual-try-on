@@ -37,7 +37,11 @@ path = "src/vto/__init__.py"
 [tool.hatch.build.targets.wheel]
 packages = ["src/vto"]
 # Le front compilé (api/static) est ignoré par git mais doit être embarqué.
-artifacts = ["src/vto/api/static/**", "src/vto/vinted/data/*.json"]
+artifacts = [
+    "src/vto/api/static/**",
+    "src/vto/vinted/data/*.json",
+    "src/vto/core/default_scenes/**",
+]
 
 [tool.ruff]
 line-length = 100

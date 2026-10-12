@@ -99,7 +99,7 @@ def main(argv: list[str] | None = None) -> None:
         "--as-default-pack",
         type=Path,
         metavar="DOSSIER",
-        help="écrit seulement les décors dans ce dossier (ex. default_scenes du dépôt)",
+        help="écrit seulement les décors dans ce dossier (ex. backend/src/vto/core/default_scenes)",
     )
     args = parser.parse_args(argv)
     if args.as_default_pack:

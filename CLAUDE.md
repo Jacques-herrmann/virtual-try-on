@@ -58,6 +58,6 @@ vto-app --dev                    # API seule sur 127.0.0.1:8765, puis `npm run d
 
 - Prototype supprimé, remplacé par `backend/` (package `vto`). L'ancien script Selenium `legacy/create_post.py` a été supprimé avec le sous-projet 3 (envoi Vinted par `vto.vinted`, sans identifiants stockés).
 - App : API FastAPI locale (`vto.api`, protégée par cookie de session + contrôle du Host) et UI Vue 3 + PrimeVue 4 dans `frontend/`. PrimeVue reste en 4.x : la v5 n'est plus MIT (licence commerciale PrimeTek).
-- Pack de scènes livré : `default_scenes/` (décors de l'auteur, droits OK pour redistribution).
+- Pack de scènes livré : `backend/src/vto/core/default_scenes/`, embarqué dans le paquet (décors de l'auteur, droits OK pour redistribution).
 - Secret local dans `.env` (ignoré par git) : `GEMINI_API_KEY`. Ne jamais le commiter. Aucun identifiant Vinted : le vendeur se connecte lui-même dans la fenêtre dédiée.
 - Historique git nettoyé des secrets le 2026-10-10 (`git filter-repo --replace-text`). Le dépôt GitHub étant public, la clé et le mot de passe y ont été exposés avant le nettoyage.

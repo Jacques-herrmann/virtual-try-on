@@ -20,8 +20,11 @@ from vto.core.models import Audience, GarmentType
 
 log = logging.getLogger(__name__)
 
-# Emplacement provisoire du pack livré ; le packaging (sous-projet 4) décidera du définitif.
-DEFAULT_SCENES_SOURCE = Path(__file__).resolve().parents[4] / "default_scenes"
+
+def default_scenes_source() -> Path:
+    """Pack de scènes livré avec l'app (données du paquet `vto.core`)."""
+    # Toujours un vrai dossier : installation éditable, wheel ou exécutable PyInstaller.
+    return Path(str(files("vto.core").joinpath("default_scenes")))
 
 
 class SceneMeta(BaseModel):
@@ -118,7 +121,7 @@ def render_prompt(scene: Scene, garment_type: str) -> str:
 
 def ensure_default_scenes(source: Path | None = None) -> bool:
     """Copie le pack par défaut si le client n'a encore aucune scène. Renvoie True si copié."""
-    source = source or DEFAULT_SCENES_SOURCE
+    source = source or default_scenes_source()
     target = paths.scenes_dir()
     if any(target.iterdir()) or not source.is_dir():
         return False

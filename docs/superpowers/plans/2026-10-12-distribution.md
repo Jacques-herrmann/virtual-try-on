@@ -19,18 +19,18 @@ Branche : `main` (travail direct, à la demande de l'utilisateur).
 
 ### Tâche 0 — Version unique (spec §2.2)
 
-- [ ] Test : `vto.__version__` est une version PEP 440 valide ; `importlib.metadata.version("vto")` lui est égale.
-- [ ] `pyproject.toml` : `dynamic = ["version"]`, `[tool.hatch.version] path = "src/vto/__init__.py"` ; dépendance `packaging` ; extra `build = ["pyinstaller"]` (version stable actuelle, vérifiée sur PyPI, compatible 3.12).
-- [ ] `pip install -e backend[dev]`, `pytest`, `ruff check` verts.
-- [ ] Commit `read package version from vto init`.
+- [x] Test : `vto.__version__` est une version PEP 440 valide ; `importlib.metadata.version("vto")` lui est égale.
+- [x] `pyproject.toml` : `dynamic = ["version"]`, `[tool.hatch.version] path = "src/vto/__init__.py"` ; dépendance `packaging` ; extra `build = ["pyinstaller"]` (version stable actuelle, vérifiée sur PyPI, compatible 3.12).
+- [x] `pip install -e backend[dev]`, `pytest`, `ruff check` verts.
+- [x] Commit `read package version from vto init`.
 
 ### Tâche 1 — Pack de scènes dans le paquet (spec §2.3)
 
-- [ ] `git mv default_scenes backend/src/vto/core/default_scenes`.
-- [ ] Tests (`test_scenes.py`) : `ensure_default_scenes()` sans argument copie le pack lu via `importlib.resources` ; le paramètre `source` reste utilisable par les tests.
-- [ ] `scenes.py` : remplacer `DEFAULT_SCENES_SOURCE` (et son commentaire « emplacement provisoire ») par une fonction `default_scenes_source()` basée sur `files("vto.core") / "default_scenes"` (convertie en `Path` : `as_file` si besoin) ; adapter `tools/import_legacy.py` et son aide.
-- [ ] `pyproject.toml` : ajouter `src/vto/core/default_scenes/**` aux `artifacts` du wheel. Vérifier : `pip wheel backend -w %TEMP%\w` puis le wheel contient les décors et `prompt.md`.
-- [ ] Commit `move default scenes into the package`.
+- [x] `git mv default_scenes backend/src/vto/core/default_scenes`.
+- [x] Tests (`test_scenes.py`) : `ensure_default_scenes()` sans argument copie le pack lu via `importlib.resources` ; le paramètre `source` reste utilisable par les tests.
+- [x] `scenes.py` : remplacer `DEFAULT_SCENES_SOURCE` (et son commentaire « emplacement provisoire ») par une fonction `default_scenes_source()` basée sur `files("vto.core") / "default_scenes"` (convertie en `Path` : `as_file` si besoin) ; adapter `tools/import_legacy.py` et son aide.
+- [x] `pyproject.toml` : ajouter `src/vto/core/default_scenes/**` aux `artifacts` du wheel. Vérifier : `pip wheel backend -w %TEMP%\w` puis le wheel contient les décors et `prompt.md`.
+- [x] Commit `move default scenes into the package`.
 
 ### Tâche 2 — `vinted.json` numéroté (spec §2.5)
 
