@@ -1,0 +1,19 @@
+name = "vto-licence"
+main = "src/index.ts"
+compatibility_date = "2026-08-15"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+PUBLIC_BASE_URL = "https://vto-licence.workers.dev"
+GITHUB_REPO = "Jacques-herrmann/virtual-try-on"
+PAYMENT_LINK_URL = "https://buy.stripe.com/test"
+
+# Identifiant réel renseigné au déploiement (`wrangler d1 create vto-licence`).
+[[d1_databases]]
+binding = "DB"
+database_name = "vto-licence"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# Secrets (wrangler secret put) : STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET,
+# TOKEN_PRIVATE_KEY, GITHUB_TOKEN, RESEND_API_KEY.

@@ -19,13 +19,13 @@ Branche : `main` (travail direct).
 
 ### Tâche 0 — Squelette (spec §2.1, §2.2)
 
-- [ ] `worker/` : `package.json` (wrangler, typescript, vitest, `@cloudflare/vitest-pool-workers`, `@cloudflare/workers-types`), `tsconfig.json`, `wrangler.toml` (nom `vto-licence`, binding D1 `DB`, variables `PUBLIC_BASE_URL`, `GITHUB_REPO`, `PAYMENT_LINK_URL`), `vitest.config.ts`, `.dev.vars.example`.
-- [ ] `schema.sql` (spec §2.2) + migration D1 `migrations/0001_init.sql` ; les tests appliquent la migration à la D1 locale.
-- [ ] `src/index.ts` : routeur minimal, `GET /health` → `{ok: true}` ; réponses JSON d'erreur `{code, message}` en français.
-- [ ] Test : `/health`, route inconnue → 404.
-- [ ] `.gitignore` : `worker/node_modules`, `worker/.wrangler`, `worker/.dev.vars`.
-- [ ] `ci.yml` : job `worker` (`npm ci`, `npm run typecheck`, `npm test`).
-- [ ] Commit `add worker skeleton`.
+- [x] `worker/` : `package.json` (wrangler, typescript, vitest, `@cloudflare/vitest-pool-workers`, `@cloudflare/workers-types`), `tsconfig.json`, `wrangler.toml` (nom `vto-licence`, binding D1 `DB`, variables `PUBLIC_BASE_URL`, `GITHUB_REPO`, `PAYMENT_LINK_URL`), `vitest.config.ts`, `.dev.vars.example`.
+- [x] `schema.sql` (spec §2.2) + migration D1 `migrations/0001_init.sql` ; les tests appliquent la migration à la D1 locale.
+- [x] `src/index.ts` : routeur minimal, `GET /health` → `{ok: true}` ; réponses JSON d'erreur `{code, message}` en français.
+- [x] Test : `/health`, route inconnue → 404.
+- [x] `.gitignore` : `worker/node_modules`, `worker/.wrangler`, `worker/.dev.vars`.
+- [x] `ci.yml` : job `worker` (`npm ci`, `npm run typecheck`, `npm test`).
+- [x] Commit `add worker skeleton`.
 
 ### Tâche 1 — Licences et clés (spec §2.2)
 

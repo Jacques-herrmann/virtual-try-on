@@ -58,3 +58,8 @@ build/
 dist/
 packaging/Output/
 packaging/redist/
+
+# Worker de licence
+worker/node_modules/
+worker/.wrangler/
+worker/.dev.vars
