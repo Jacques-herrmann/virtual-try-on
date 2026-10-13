@@ -20,6 +20,7 @@ dependencies = [
     "playwright>=1.63",  # pilote Chrome/Edge installé, aucun navigateur téléchargé
     "httpx>=0.28",  # téléchargement de vinted.json et des mises à jour
     "packaging",  # comparaison des versions (mises à jour)
+    "cryptography>=46",  # vérification des jetons de licence (Ed25519)
 ]
 
 [project.optional-dependencies]

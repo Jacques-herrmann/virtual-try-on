@@ -98,11 +98,12 @@ Branche : `main` (travail direct).
 
 ### Tâche 8 — Clé et jeton (spec §3.1)
 
-- [ ] Dépendance `cryptography` (version stable vérifiée sur PyPI).
-- [ ] Tests `tests/licensing/test_key.py` : mêmes cas de normalisation que le Worker (tableau partagé `worker/test/fixtures/keys.json`).
-- [ ] Tests `test_token.py` : vecteur partagé de la tâche 2 vérifié ; signature fausse, `kid` inconnu, `dev` d'un autre PC, `exp` passé, statut expiré ; clés publiques injectables pour les tests.
-- [ ] Implémenter `licensing/__init__.py` (`LicenseError`), `key.py`, `token.py` (clé publique de production `k1` embarquée).
-- [ ] Commit `add license key and token verification`.
+- [x] Dépendance `cryptography` (version stable vérifiée sur PyPI).
+- [x] Tests `tests/licensing/test_key.py` : mêmes cas de normalisation que le Worker (tableau partagé `worker/test/fixtures/keys.json`).
+- [x] Tests `test_token.py` : vecteur partagé de la tâche 2 vérifié ; signature fausse, `kid` inconnu, `dev` d'un autre PC, `exp` passé, statut expiré ; clés publiques injectables pour les tests.
+- [x] Implémenter `licensing/__init__.py` (`LicenseError`), `key.py`, `token.py` (clé publique de production `k1` embarquée).
+- [x] Clé de production `k1` générée : publique dans `token.py`, privée dans `.env` (ignoré par git) en attendant `wrangler secret put` (tâche 7).
+- [x] Commit `add license key and token verification`.
 
 ### Tâche 9 — Client et état (spec §3.1)
 
