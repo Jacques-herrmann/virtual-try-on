@@ -21,7 +21,7 @@ export async function sendLicenseEmail(env: Env, to: string, key: string): Promi
   // Styles en ligne (messageries) ; le nom en texte plutôt qu'en image, souvent bloquée.
   const html = `<div style="font-family:'Segoe UI',Arial,sans-serif;color:#2E1F2B;background:#FBF7F2;padding:24px">
 <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #E9DFD4;border-radius:18px;padding:28px">
-<p style="margin:0 0 20px;font-size:26px;font-weight:800;letter-spacing:-0.5px">wear<span style="color:#E8774A">o</span></p>
+<p style="margin:0 0 20px;font-size:26px;font-weight:800;letter-spacing:-0.5px">Kal<span style="color:#E8774A">o</span>é</p>
 <p>Bonjour,</p>
 <p>Merci pour ton abonnement à Kaloé !</p>
 <p>Ta clé de licence :<br><strong style="display:inline-block;margin-top:6px;padding:8px 12px;background:#FDE8DC;border-radius:10px;font-family:Consolas,monospace;font-size:18px">${escapeHtml(key)}</strong></p>

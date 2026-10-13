@@ -3,7 +3,7 @@ import { AIDE_HTML } from "./aide.generated";
 import { sendLicenseEmail } from "./email";
 import type { Env } from "./env";
 import { escapeHtml, nowSeconds } from "./http";
-import { LOGO_SVG } from "./logo.generated";
+import { ICON_SVG, LOGO_SVG } from "./logo.generated";
 import { getLicenseByEmail, isValidStatus, type License } from "./licenses";
 import {
   licenseFromSession,
@@ -48,6 +48,7 @@ export function htmlPage(title: string, body: string, status = 200): Response {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)} · Kaloé</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${encodeURIComponent(ICON_SVG)}">
 <style>${STYLE}</style>
 </head>
 <body>

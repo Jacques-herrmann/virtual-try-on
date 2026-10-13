@@ -14,7 +14,7 @@
 #define LegacyDir "VirtualTryOn"
 #define LegacyExe "VirtualTryOn.exe"
 #define LegacyName "Virtual Try-On"
-#define HelpUrl "https://github.com/Jacques-herrmann/virtual-try-on/blob/main/docs/aide/installation.md"
+#define HelpUrl "https://kaloe.fr/aide"
 
 [Setup]
 ; Ne jamais changer AppId : c'est lui qui relie les versions entre elles.
