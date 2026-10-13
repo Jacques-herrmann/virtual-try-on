@@ -12,9 +12,12 @@ import LicenseSection from '@/components/LicenseSection.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import SectionCard from '@/components/ui/SectionCard.vue'
 import { useNotify } from '@/composables/notify'
+import { useAutoTour } from '@/composables/tour'
 import { useSettings } from '@/stores/settings'
 import { useVinted } from '@/stores/vinted'
 import type { VintedMode, VintedStatus } from '@/types'
+
+useAutoTour('settings')
 
 const { settings, load, set } = useSettings()
 const showAdvanced = ref(false)
@@ -202,6 +205,7 @@ function keySaved() {
           <Button
             label="Connecter mon compte"
             icon="icon-log-in"
+            data-tour="vinted-connect"
             :loading="vintedWorking || !!vinted.status.value?.connecting"
             :disabled="!!vinted.status.value?.batch.running"
             @click="vintedAction(vinted.connect)"
@@ -218,6 +222,7 @@ function keySaved() {
         <label for="vinted-mode">Après le remplissage de l’annonce</label>
         <SelectButton
           id="vinted-mode"
+          data-tour="vinted-mode"
           :model-value="settings?.vinted_mode"
           :options="MODES"
           option-label="label"

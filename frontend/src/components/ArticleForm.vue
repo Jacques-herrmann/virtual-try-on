@@ -8,6 +8,7 @@ import Textarea from 'primevue/textarea'
 import { computed, reactive, ref } from 'vue'
 
 import PhotoDrop from '@/components/PhotoDrop.vue'
+import { useAutoTour } from '@/composables/tour'
 import { BLOCKED } from '@/stores/license'
 import { AUDIENCES, CONDITIONS, GARMENT_TYPES, label, type UserInput } from '@/types'
 
@@ -20,6 +21,8 @@ const props = defineProps<{
   locked?: boolean
 }>()
 const emit = defineEmits<{ submit: [input: UserInput, photos: File[]]; cancel: [] }>()
+
+useAutoTour('article-form', () => props.mode === 'create')
 
 const input = reactive<UserInput>({
   garment_type: props.initial?.garment_type ?? (undefined as unknown as UserInput['garment_type']),
@@ -70,11 +73,12 @@ function submit() {
     <PhotoDrop
       v-if="mode === 'create'"
       v-model="photos"
+      data-tour="photos"
       hint="La première photo sert de référence : vêtement bien visible, à plat ou sur cintre."
     />
 
     <div class="grid">
-      <div class="field">
+      <div class="field" data-tour="garment-type">
         <label for="type">Type de vêtement *</label>
         <Select
           v-model="input.garment_type"
@@ -95,7 +99,7 @@ function submit() {
           option-value="value"
         />
       </div>
-      <div class="field">
+      <div class="field" data-tour="optional-fields">
         <label for="brand">Marque</label>
         <InputText id="brand" v-model="input.brand" fluid />
       </div>
@@ -140,6 +144,7 @@ function submit() {
     <div class="row">
       <Button
         type="submit"
+        data-tour="generate"
         :label="mode === 'create' ? 'Générer' : 'Enregistrer'"
         :icon="mode === 'create' ? 'icon-sparkles' : 'icon-save'"
         :disabled="!canSubmit || (mode === 'create' && locked)"

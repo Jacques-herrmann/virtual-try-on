@@ -102,7 +102,7 @@ function remove(path: string) {
       </div>
     </div>
 
-    <div class="add stack">
+    <div class="add stack" data-tour="backgrounds">
       <h4>Ajouter des décors</h4>
       <PhotoDrop v-model="files" hint="Photos de décor vides (sans vêtement), JPG ou PNG" />
       <div v-if="files.length" class="row">

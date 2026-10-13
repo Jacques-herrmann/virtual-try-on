@@ -1,15 +1,25 @@
+import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { defineComponent, h, ref } from 'vue'
 
 import type { SettingsView } from '@/types'
 
 // driver.js simulé : on garde la configuration reçue et on pilote la fin de visite à la main.
-const drivers: { config: any; drive: ReturnType<typeof vi.fn>; destroy: () => void }[] = []
+interface FakeDriver {
+  config: any
+  drive: ReturnType<typeof vi.fn>
+  destroy: ReturnType<typeof vi.fn>
+  /** Le vendeur ferme la visite (Terminer, Échap) : driver.js appelle onDestroyStarted. */
+  close: () => void
+}
+const drivers: FakeDriver[] = []
 vi.mock('driver.js', () => ({
   driver: (config: any) => {
-    const instance = {
+    const instance: FakeDriver = {
       config,
       drive: vi.fn(),
-      destroy: () => config.onDestroyed?.(undefined, {}, {}),
+      destroy: vi.fn(),
+      close: () => config.onDestroyStarted?.(undefined, {}, {}),
     }
     drivers.push(instance)
     return instance
@@ -32,7 +42,7 @@ vi.mock('@/api', () => ({ api: { updateSettings: (c: unknown) => updateSettings(
 
 const { useSettings } = await import('@/stores/settings')
 const { useTutorial } = await import('@/stores/tutorial')
-const { useTour } = await import('./tour')
+const { useAutoTour, useTour } = await import('./tour')
 
 function settingsWith(tours_seen: string[] = []): SettingsView {
   return {
@@ -84,7 +94,7 @@ describe('useTour', () => {
     expect(drivers[0]!.config.steps.map((s: any) => s.popover.title)).toEqual(['A', 'B'])
     expect(drivers[0]!.drive).toHaveBeenCalled()
 
-    drivers[0]!.destroy()
+    drivers[0]!.close()
     await settle()
     expect(updateSettings).toHaveBeenCalledWith({
       tutorial: { video_seen: true, tours_seen: ['articles'] },
@@ -141,7 +151,7 @@ describe('useTour', () => {
     await Promise.all([first, second])
     expect(drivers).toHaveLength(1)
 
-    drivers[0]!.destroy()
+    drivers[0]!.close()
     await settle()
     expect(drivers).toHaveLength(2)
     expect(drivers[1]!.config.steps[0].popover.title).toBe('S')
@@ -154,7 +164,7 @@ describe('useTour', () => {
     const run = useTour().maybeStart('articles')
     await settle()
     await run
-    drivers[0]!.destroy()
+    drivers[0]!.close()
     await settle()
     expect(useSettings().settings.value?.tutorial.tours_seen).toEqual(['articles'])
     warn.mockRestore()
@@ -166,5 +176,51 @@ describe('useTour', () => {
     expect(updateSettings).toHaveBeenCalledWith({
       tutorial: { video_seen: true, tours_seen: [] },
     })
+  })
+})
+
+describe('useAutoTour', () => {
+  it('lance la visite quand la condition devient vraie et la ferme sans la marquer sinon', async () => {
+    addTargets('a')
+    const ready = ref(false)
+    const Screen = defineComponent({
+      setup() {
+        useAutoTour('articles', () => ready.value)
+        return () => h('div')
+      },
+    })
+    const wrapper = mount(Screen)
+    await settle()
+    expect(drivers).toHaveLength(0)
+
+    ready.value = true
+    await settle()
+    expect(drivers).toHaveLength(1)
+
+    ready.value = false
+    await settle()
+    expect(updateSettings).not.toHaveBeenCalled()
+    wrapper.unmount()
+  })
+
+  it('ferme la visite quand l’écran disparaît', async () => {
+    addTargets('a')
+    const Screen = defineComponent({
+      setup() {
+        useAutoTour('articles')
+        return () => h('div')
+      },
+    })
+    const wrapper = mount(Screen)
+    await settle()
+    expect(drivers).toHaveLength(1)
+    wrapper.unmount()
+    await settle()
+    expect(updateSettings).not.toHaveBeenCalled()
+    // L'écran revient : la visite aussi.
+    const again = mount(Screen)
+    await settle()
+    expect(drivers).toHaveLength(2)
+    again.unmount()
   })
 })

@@ -16,6 +16,7 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import VintedBatchPanel from '@/components/VintedBatchPanel.vue'
 import { useNotify } from '@/composables/notify'
+import { useAutoTour } from '@/composables/tour'
 import { matches, panelFor, useArticles } from '@/stores/articles'
 import { useLicense } from '@/stores/license'
 import { useScenes } from '@/stores/scenes'
@@ -41,6 +42,7 @@ const working = ref(false)
 const selectedId = computed(() => (route.params.id as string | undefined) ?? null)
 const selected = computed(() => articles.value.find((a) => a.id === selectedId.value) ?? null)
 const panel = computed(() => panelFor(selected.value))
+useAutoTour('articles', () => panel.value === 'form' && !creatingOpen.value)
 
 onMounted(async () => {
   try {
@@ -175,7 +177,12 @@ function deleteSelected() {
     <template v-if="panel === 'form'">
       <PageHeader title="Mes articles" :subtitle="summary">
         <template #actions>
-          <Button label="Nouvel article" icon="icon-plus" @click="newArticle" />
+          <Button
+            label="Nouvel article"
+            icon="icon-plus"
+            data-tour="new-article"
+            @click="newArticle"
+          />
         </template>
       </PageHeader>
       <QueueBanner />

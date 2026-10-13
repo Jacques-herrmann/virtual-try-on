@@ -16,10 +16,10 @@ const bare = computed(() => route.meta.bare === true)
 const { license } = useLicense()
 
 const links = [
-  { to: '/articles', label: 'Articles', icon: 'icon-shirt' },
-  { to: '/scenes', label: 'Scènes', icon: 'icon-image' },
-  { to: '/settings', label: 'Réglages', icon: 'icon-settings' },
-  { to: '/aide', label: 'Aide', icon: 'icon-circle-help' },
+  { to: '/articles', label: 'Articles', icon: 'icon-shirt', tour: 'nav-articles' },
+  { to: '/scenes', label: 'Scènes', icon: 'icon-image', tour: 'nav-scenes' },
+  { to: '/settings', label: 'Réglages', icon: 'icon-settings', tour: 'nav-settings' },
+  { to: '/aide', label: 'Aide', icon: 'icon-circle-help', tour: 'nav-help' },
 ]
 
 const version = ref<string | null>(null)
@@ -49,7 +49,13 @@ onMounted(async () => {
       <RouterLink to="/articles" class="brand" aria-label="Kaloé, mes articles">
         <AppLogo :height="30" />
       </RouterLink>
-      <RouterLink v-for="link in links" :key="link.to" :to="link.to" class="nav-link">
+      <RouterLink
+        v-for="link in links"
+        :key="link.to"
+        :to="link.to"
+        class="nav-link"
+        :data-tour="link.tour"
+      >
         <i :class="link.icon" aria-hidden="true" />
         <span>{{ link.label }}</span>
       </RouterLink>

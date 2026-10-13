@@ -1,4 +1,4 @@
-import { driver, type Driver } from 'driver.js'
+import { driver } from 'driver.js'
 import 'driver.js/dist/driver.css'
 import '@/tour.css'
 import { onBeforeUnmount, watch } from 'vue'
@@ -12,9 +12,10 @@ const POLL_MS = 100
 
 interface Session {
   id: TourId
-  driver: Driver | null
-  /** Écran quitté : la visite se ferme sans être marquée vue. */
+  /** Écran quitté avant le lancement. */
   interrupted: boolean
+  finished: boolean
+  finish: ((seen: boolean) => void) | null
 }
 
 let current: Session | null = null
@@ -46,8 +47,11 @@ export function useTour() {
   const { videoOpen, tourSeen, markTourSeen, save } = useTutorial()
 
   function next() {
-    const id = pending.shift()
-    if (id) void maybeStart(id)
+    // Hors de onDestroyed : driver.js finit d'abord de retirer la visite précédente du DOM.
+    setTimeout(() => {
+      const id = pending.shift()
+      if (id) void maybeStart(id)
+    }, 300)
   }
 
   async function maybeStart(id: TourId): Promise<void> {
@@ -56,13 +60,23 @@ export function useTour() {
       if (current.id !== id && !pending.includes(id)) pending.push(id)
       return
     }
-    const session: Session = { id, driver: null, interrupted: false }
+    const session: Session = { id, interrupted: false, finished: false, finish: null }
     current = session
     const steps = await waitForTargets(TOURS[id], session)
     if (session.interrupted || !steps.length || videoOpen.value || tourSeen(id)) {
       if (current === session) current = null
       next()
       return
+    }
+    // Fin de visite, une seule fois : vue si le vendeur l'a terminée ou passée, pas si l'écran
+    // a changé. driver.js n'appelle onDestroyed que s'il a un élément actif : on ne s'y fie pas.
+    const finish = (seen: boolean) => {
+      if (session.finished) return
+      session.finished = true
+      instance.destroy()
+      if (current === session) current = null
+      if (seen) void markTourSeen(id)
+      next()
     }
     const instance = driver({
       steps: steps.map((step) => ({
@@ -74,19 +88,18 @@ export function useTour() {
       nextBtnText: 'Suivant',
       prevBtnText: 'Précédent',
       doneBtnText: 'Terminer',
-      showButtons: ['next', 'previous', 'close'],
+      // « Passer la visite » (et Échap) remplace la croix.
+      showButtons: ['next', 'previous'],
       popoverClass: 'kaloe-tour',
+      overlayColor: '#2e1f2b',
+      overlayOpacity: 0.55,
       stagePadding: 6,
       stageRadius: 12,
-      onPopoverRender: (popover) => addSkipButton(popover.footer, () => instance.destroy()),
-      onDestroyed: () => {
-        if (current === session) current = null
-        // Terminée, passée ou fermée : vue. Interrompue parce que l'écran a changé : elle reviendra.
-        if (!session.interrupted) void markTourSeen(id)
-        next()
-      },
+      onPopoverRender: (popover) => addSkipButton(popover.footer, () => finish(true)),
+      // Terminer, Échap, clic sur le fond : appelé à la place de la fermeture.
+      onDestroyStarted: () => finish(true),
     })
-    session.driver = instance
+    session.finish = finish
     instance.drive()
   }
 
@@ -96,7 +109,7 @@ export function useTour() {
     if (index >= 0) pending.splice(index, 1)
     if (current?.id !== id) return
     current.interrupted = true
-    current.driver?.destroy()
+    current.finish?.(false)
   }
 
   async function resetTours() {
@@ -107,17 +120,15 @@ export function useTour() {
 }
 
 /**
- * Joue la visite `id` dès que `when` est vrai et que la vidéo est fermée ;
- * la ferme sans la marquer vue quand le composant disparaît.
+ * Joue la visite `id` dès que `when` est vrai et que la vidéo est fermée ; la ferme sans la
+ * marquer vue quand `when` redevient faux (ex. : fenêtre ouverte) ou que le composant disparaît.
  */
 export function useAutoTour(id: TourId, when: () => boolean = () => true) {
   const { videoOpen } = useTutorial()
   const { maybeStart, stop } = useTour()
   const stopWatch = watch(
     () => when() && !videoOpen.value,
-    (ready) => {
-      if (ready) void maybeStart(id)
-    },
+    (ready) => (ready ? void maybeStart(id) : stop(id)),
     { immediate: true },
   )
   onBeforeUnmount(() => {

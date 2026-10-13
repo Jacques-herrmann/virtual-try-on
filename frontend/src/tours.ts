@@ -43,7 +43,7 @@ export const TOURS: Record<TourId, TourStep[]> = {
     {
       target: at('status-filter'),
       title: 'Où en sont tes articles',
-      text: '« À relire » : prêts à vérifier. « Validés » : prêts à partir sur Vinted.',
+      text: '« À relire » : prêts à vérifier. « Validés » : prêts à partir sur Vinted.',
     },
     {
       target: at('article-card'),
@@ -53,7 +53,7 @@ export const TOURS: Record<TourId, TourStep[]> = {
     {
       target: at('check-all'),
       title: 'Envoie sur Vinted',
-      text: 'Coche les articles validés, puis clique sur « Envoyer sur Vinted » : Kaloé remplit les annonces à ta place.',
+      text: 'Coche les articles validés, puis clique sur « Envoyer sur Vinted » : Kaloé remplit les annonces à ta place.',
     },
   ],
   'article-form': [
@@ -82,7 +82,7 @@ export const TOURS: Record<TourId, TourStep[]> = {
     {
       target: at('scene-photos'),
       title: 'Les photos générées',
-      text: '« Régénérer » refait une photo, « Écarter » la retire de l’annonce.',
+      text: '« Régénérer » refait une photo, « Écarter » la retire de l’annonce.',
     },
     {
       target: at('gallery'),

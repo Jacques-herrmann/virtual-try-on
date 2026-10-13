@@ -8,6 +8,7 @@ import { api, articleFile } from '@/api'
 import GalleryEditor from '@/components/GalleryEditor.vue'
 import ListingForm from '@/components/ListingForm.vue'
 import { useNotify } from '@/composables/notify'
+import { useAutoTour } from '@/composables/tour'
 import { useArticles } from '@/stores/articles'
 import { useLicense } from '@/stores/license'
 import { useScenes } from '@/stores/scenes'
@@ -16,6 +17,7 @@ import type { Article, Listing } from '@/types'
 
 /** `review` : tout est modifiable ; `validated` : lecture seule ; `error` : réessayer. */
 const props = defineProps<{ article: Article; mode: 'review' | 'validated' | 'error' }>()
+useAutoTour('review', () => props.mode === 'review')
 
 const { upsert, imageVersions } = useArticles()
 const { nameOf } = useScenes()
@@ -163,7 +165,7 @@ async function validate() {
               @click="mode === 'error' ? run('all', () => api.generate(id)) : regenerateAll()"
             />
           </div>
-          <div class="tiles">
+          <div class="tiles" data-tour="scene-photos">
             <figure class="tile">
               <div class="frame">
                 <img :src="articleFile(article, article.photos[0] ?? '')" alt="" />
@@ -214,7 +216,7 @@ async function validate() {
           </small>
         </section>
 
-        <section v-if="galleryEditable" class="panel surface stack">
+        <section v-if="galleryEditable" class="panel surface stack" data-tour="gallery">
           <div class="stack tight">
             <h2>Photos de l'annonce Vinted</h2>
             <p class="muted">L'ordre ci-dessous est celui de l'annonce ; la première sert de couverture.</p>
@@ -228,7 +230,7 @@ async function validate() {
         </section>
       </div>
 
-      <section v-if="article.listing" class="panel surface stack col">
+      <section v-if="article.listing" class="panel surface stack col" data-tour="listing">
         <div class="row between">
           <h2>Annonce</h2>
           <Button
@@ -262,6 +264,7 @@ async function validate() {
       <Button
         label="Valider l'article"
         icon="icon-check"
+        data-tour="validate"
         :loading="working === 'validate'"
         @click="validate"
       />

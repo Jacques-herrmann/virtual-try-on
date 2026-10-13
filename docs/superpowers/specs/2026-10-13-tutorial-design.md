@@ -41,20 +41,22 @@ Approches écartées : visite linéaire unique juste après la vidéo (ne couvre
 
 ### 2.2 Bulles contextuelles
 
-Une visite par écran, 3 à 5 étapes, lancée à la première visite de l'écran (pour Articles : à la fermeture de la vidéo).
+Une visite par écran, 2 à 4 étapes, lancée à la première visite de l'écran (pour Articles : à la fermeture de la vidéo). La visite des articles est coupée en deux : un nouveau vendeur a une liste vide, la seconde partie attend le premier article.
 
 | Visite (`id`) | Déclencheur | Étapes |
 |---|---|---|
-| `articles` | Écran Articles | Nouvel article ; recherche et filtres ; cases à cocher ; Envoyer sur Vinted |
+| `articles` | Écran Articles (liste) | Nouvel article ; Scènes, Réglages et Aide dans la barre latérale |
+| `articles-list` | Écran Articles dès qu'un article existe | Recherche ; filtre par statut ; ouvrir un article ; cocher puis Envoyer sur Vinted |
 | `article-form` | Formulaire Nouvel article | Zone photos ; type de vêtement ; champs facultatifs ; Générer |
 | `review` | Premier article « À relire » ouvert | Régénérer / Écarter ; ordre des photos ; champs de l'annonce ; Valider l'article |
 | `scenes` | Écran Scènes | Activer/désactiver une scène ; ajouter ses décors ; modifier le prompt |
 | `settings` | Écran Réglages | Connecter mon compte Vinted ; mode brouillon/publication |
 
-- Boutons **Suivant**, **Précédent**, **Passer la visite**, compteur « 2/4 ».
+- Boutons **Suivant**, **Précédent**, **Passer la visite**, compteur « 2/4 » ; pas de croix (Échap ferme aussi).
 - Terminer ou passer marque la visite vue.
 - Une étape dont l'élément n'est pas affiché (liste vide, bouton masqué) est sautée ; si aucune étape ne reste, la visite n'est ni lancée ni marquée vue.
-- Changer d'écran pendant une visite la ferme sans la marquer vue : elle reviendra.
+- Changer d'écran ou ouvrir une fenêtre (ex. : clic sur « Nouvel article » pendant la visite) la ferme sans la marquer vue : elle reviendra.
+- Deux visites possibles en même temps (Articles) : jouées l'une après l'autre.
 - Aucune visite ne démarre tant que la vidéo est ouverte.
 
 ### 2.3 Accueil, étape « Clé Gemini »
@@ -86,12 +88,11 @@ Dans `frontend/public/tutorial/`, versionnés (3 à 6 Mo au total) ; Vite les re
 
 - `components/TutorialVideo.vue` : `Dialog` PrimeVue avec `<video>` ; props `src`, `captions`, `poster`, `title` ; la piste `.vtt` est chargée en mode `hidden` et le sous-titre courant (événement `cuechange`) est rendu dans un bloc stylé Kaloé ; émet `close`. Sert aux deux vidéos.
 - `tours.ts` : données seules. `Record<TourId, TourStep[]>` avec `TourStep = { target: string /* '[data-tour="…"]' */, title: string, text: string }`.
+- `stores/tutorial.ts` : état partagé `videoOpen` ; `save(changes)` met à jour `tutorial` localement puis l'enregistre (`PUT /api/settings`, échec ignoré) ; `tourSeen`, `markTourSeen`.
 - `composables/tour.ts` :
-  - `maybeStart(id)` : ne fait rien si `id ∈ tours_seen` ou si la vidéo est ouverte ; attend que les éléments visés existent (les listes arrivent par l'API, délai court borné), filtre les étapes sans élément, lance driver.js, marque la visite vue à la fin ou sur « Passer » via `PUT /api/settings`.
-  - `start(id)` : même chose sans le contrôle `tours_seen`.
-  - Ferme la visite en cours sur changement de route.
-- État partagé `videoOpen` (dans le composable ou un petit store `tutorial`), consulté par `maybeStart` ; à la fermeture de la vidéo principale, `maybeStart('articles')`.
-- Écrans : attributs `data-tour="…"` et appel `maybeStart(…)` au montage dans `ArticlesView`, `ArticleForm`, `ArticleReview` (si l'article est « À relire »), `ScenesView`, `SettingsView`.
+  - `useTour().maybeStart(id)` : ne fait rien si `id ∈ tours_seen` ou si la vidéo est ouverte ; une visite à la fois (les suivantes attendent) ; attend que les éléments visés existent (les listes arrivent par l'API, 1,5 s au plus), filtre les étapes sans élément, lance driver.js, marque la visite vue quand le vendeur la termine ou la passe. `stop(id)` la ferme sans la marquer ; `resetTours()` vide `tours_seen`.
+  - `useAutoTour(id, when?)` : dans un composant, lance la visite dès que `when()` est vrai et la vidéo fermée ; la ferme sans la marquer quand `when()` redevient faux ou au démontage. La fermeture de la vidéo relance donc d'elle-même les visites de l'écran affiché.
+- Écrans : attributs `data-tour="…"` et `useAutoTour(…)` dans `App.vue` (liens de la barre latérale, cibles seulement), `ArticlesView`, `ArticleList`, `ArticleForm` (création), `ArticleReview` (« À relire »), `ScenesView` (`BackgroundGallery`), `SettingsView`.
 - `tour.css` : thème driver.js à partir des jetons de `theme.ts` (abricot/crème, Plus Jakarta Sans, coins arrondis).
 - `WelcomeView` : lien et lecteur de la vidéo de la clé Gemini.
 - `HelpView` : carte « Revoir la vidéo / Relancer les visites guidées ».
@@ -144,7 +145,7 @@ Coupe des premières images blanches (décalage appliqué au `.vtt`), encodage w
 
 ## 5. Erreurs
 
-Messages en français, sans jargon ; détails dans le log.
+Messages en français, sans jargon ; détails dans la console du front (`console.warn`) : le front n'a pas de canal de log vers l'API.
 
 | Situation | Comportement |
 |---|---|
@@ -165,6 +166,7 @@ Messages en français, sans jargon ; détails dans le log.
 
 **Front** (Vitest) :
 - `maybeStart` : rien si visite vue ou vidéo ouverte ; étapes sans élément filtrées ; marquage vu après « Passer » et à la fin (driver.js simulé) ; rien de marqué si aucune étape ;
+- `useAutoTour` : lancement quand la condition devient vraie, fermeture sans marquage quand elle redevient fausse ou au démontage ;
 - `TutorialVideo` : sous-titre courant affiché, marquage vu à la fermeture, message en cas d'erreur de lecture ;
 - cohérence : chaque `target` de `tours.ts` correspond à un `data-tour` présent dans le composant de son écran.
 

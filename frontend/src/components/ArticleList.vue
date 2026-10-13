@@ -11,6 +11,7 @@ import { computed, ref, watch } from 'vue'
 
 import { articleFile } from '@/api'
 import StatusTag from '@/components/StatusTag.vue'
+import { useAutoTour } from '@/composables/tour'
 import {
   applyFilters,
   deletable,
@@ -36,6 +37,8 @@ const emit = defineEmits<{
   send: [ids: string[]]
   delete: [ids: string[]]
 }>()
+
+useAutoTour('articles-list')
 
 const { licensed } = useLicense()
 const { filters, page } = useListFilters()
@@ -129,7 +132,7 @@ function thumbnail(article: Article): string {
 
 <template>
   <div ref="root" class="list">
-    <div class="search-row">
+    <div class="search-row" data-tour="search">
       <IconField class="search">
         <InputIcon class="icon-search" />
         <InputText
@@ -178,9 +181,10 @@ function thumbnail(article: Article): string {
         :allow-empty="false"
         size="small"
         class="filters"
+        data-tour="status-filter"
         aria-label="Filtrer les articles"
       />
-      <div v-if="visible.length" class="check-all">
+      <div v-if="visible.length" class="check-all" data-tour="check-all">
         <Checkbox
           :model-value="allChecked"
           binary
@@ -238,6 +242,7 @@ function thumbnail(article: Article): string {
         v-for="article in pageItems"
         :key="article.id"
         class="card"
+        data-tour="article-card"
         :class="{ selected: article.id === selectedId, checked: checked.includes(article.id) }"
       >
         <button type="button" class="open" @click="emit('select', article.id)">

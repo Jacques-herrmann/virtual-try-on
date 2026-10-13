@@ -12,6 +12,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/api'
 import BackgroundGallery from '@/components/BackgroundGallery.vue'
 import { useNotify } from '@/composables/notify'
+import { useAutoTour } from '@/composables/tour'
 import { useScenes } from '@/stores/scenes'
 import type { SceneDetail, SceneInfo } from '@/types'
 
@@ -27,6 +28,7 @@ const prompt = ref('')
 const saving = ref(false)
 const creatingOpen = ref(false)
 const newName = ref('')
+useAutoTour('scenes', () => detail.value !== null && !creatingOpen.value)
 
 const selectedSlug = computed(() => (route.params.slug as string | undefined) ?? null)
 const dirty = computed(
@@ -192,6 +194,7 @@ async function backgroundsChanged(scene: SceneDetail) {
           />
           <ToggleSwitch
             :model-value="scene.enabled"
+            data-tour="scene-toggle"
             :aria-label="scene.enabled ? 'Désactiver' : 'Activer'"
             @update:model-value="toggle(scene, $event)"
           />
@@ -222,7 +225,14 @@ async function backgroundsChanged(scene: SceneDetail) {
             Envoyées à l'IA avec le décor ([Image A]) et la photo du vêtement ([Image B]).
             <code>{garment_type}</code> est remplacé par le type de vêtement.
           </small>
-          <Textarea id="scene-prompt" v-model="prompt" style="--rows: 12" fluid class="mono" />
+          <Textarea
+            id="scene-prompt"
+            v-model="prompt"
+            style="--rows: 12"
+            fluid
+            class="mono"
+            data-tour="scene-prompt"
+          />
           <div>
             <Button
               label="Enregistrer"
