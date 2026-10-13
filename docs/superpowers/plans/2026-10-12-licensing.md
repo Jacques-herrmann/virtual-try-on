@@ -29,9 +29,9 @@ Branche : `main` (travail direct).
 
 ### Tâche 1 — Licences et clés (spec §2.2)
 
-- [ ] Tests `licenses.test.ts` : format `VTO-XXXX-XXXX-XXXX-XXXX` (Crockford, sans I L O U) ; `normalizeKey` (espaces, minuscules, tirets manquants, `0/O` et `1/I/L` confondus) ; création ; une seule licence par client Stripe (reprise de la clé) ; mise à jour statut / `period_end` / `synced_at` ; `isValidStatus` (`trialing`, `active`, `past_due`).
-- [ ] Implémenter `src/licenses.ts` (requêtes D1 préparées).
-- [ ] Commit `add license keys and storage`.
+- [x] Tests `licenses.test.ts` : format `VTO-XXXX-XXXX-XXXX-XXXX` (Crockford, sans I L O U) ; `normalizeKey` (espaces, minuscules, tirets manquants, `0/O` et `1/I/L` confondus) ; création ; une seule licence par client Stripe (reprise de la clé) ; mise à jour statut / `period_end` / `synced_at` ; `isValidStatus` (`trialing`, `active`, `past_due`).
+- [x] Implémenter `src/licenses.ts` (requêtes D1 préparées).
+- [x] Commit `add license keys and storage`.
 
 ### Tâche 2 — Jetons Ed25519 (spec §2.4)
 

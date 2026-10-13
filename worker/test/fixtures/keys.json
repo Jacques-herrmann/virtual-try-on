@@ -1,0 +1,22 @@
+{
+  "_comment": "Cas de normalisation partagés par le Worker (licenses.test.ts) et l'app (test_key.py).",
+  "cases": [
+    { "input": "VTO-ABCD-EFGH-JKMN-PQRS", "expected": "VTO-ABCD-EFGH-JKMN-PQRS" },
+    { "input": "vto-abcd-efgh-jkmn-pqrs", "expected": "VTO-ABCD-EFGH-JKMN-PQRS" },
+    { "input": "  VTO ABCD EFGH JKMN PQRS  ", "expected": "VTO-ABCD-EFGH-JKMN-PQRS" },
+    { "input": "VTOABCDEFGHJKMNPQRS", "expected": "VTO-ABCD-EFGH-JKMN-PQRS" },
+    { "input": "ABCDEFGHJKMNPQRS", "expected": "VTO-ABCD-EFGH-JKMN-PQRS" },
+    { "input": "ABCD-EFGH-JKMN-PQRS", "expected": "VTO-ABCD-EFGH-JKMN-PQRS" },
+    { "input": "VT0-ABCD-EFGH-JKMN-PQRS", "expected": "VTO-ABCD-EFGH-JKMN-PQRS" },
+    { "input": "VTO-0OO0-1IL1-2345-6789", "expected": "VTO-0000-1111-2345-6789" },
+    { "input": "vto-0oo0-1il1-2345-6789", "expected": "VTO-0000-1111-2345-6789" },
+    { "input": "VTO_WXYZ_TVZZ_0000_9999", "expected": "VTO-WXYZ-TVZZ-0000-9999" },
+    { "input": "VTO-ABCD-EFGH-JKMN-PQR", "expected": null },
+    { "input": "VTO-ABCD-EFGH-JKMN-PQRST", "expected": null },
+    { "input": "VTO-ABCD-EFGH-JKMN-PQRU", "expected": null },
+    { "input": "VTO-ABCD-EFGH-JKMN-PQR!", "expected": null },
+    { "input": "XYZ-ABCD-EFGH-JKMN-PQRS", "expected": null },
+    { "input": "", "expected": null },
+    { "input": "   ", "expected": null }
+  ]
+}
