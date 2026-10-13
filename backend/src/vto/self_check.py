@@ -42,6 +42,17 @@ def _front() -> str:
     return str(api_app.STATIC_DIR)
 
 
+TUTORIAL_FILES = ("kaloe.mp4", "kaloe.vtt")
+
+
+def _tutorial() -> str:
+    folder = api_app.STATIC_DIR / "tutorial"
+    missing = [name for name in TUTORIAL_FILES if not (folder / name).is_file()]
+    if missing:
+        raise FileNotFoundError(", ".join(missing))
+    return ", ".join(TUTORIAL_FILES)
+
+
 def _vinted_data() -> str:
     return f"révision {VintedData.model_validate_json(remote.bundled_text()).revision}"
 
@@ -86,6 +97,7 @@ CHECKS: list[tuple[str, Callable[[], str]]] = [
     ("modules", _modules),
     ("fenêtre", _window),
     ("interface", _front),
+    ("tutoriel", _tutorial),
     ("données Vinted", _vinted_data),
     ("scènes", _scenes),
     ("clés de licence", _license_keys),

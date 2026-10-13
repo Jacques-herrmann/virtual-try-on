@@ -15,7 +15,8 @@ def test_all_checks_pass_in_dev(tmp_path):
     out = tmp_path / "selfcheck.txt"
     assert self_check.run(out) == 0
     text = out.read_text(encoding="utf-8")
-    for name in ("modules", "interface", "données Vinted", "scènes", "pilote Playwright"):
+    names = ("modules", "interface", "tutoriel", "données Vinted", "scènes", "pilote Playwright")
+    for name in names:
         assert f"OK  {name}" in text
     assert "ÉCHEC" not in text
 
@@ -25,6 +26,18 @@ def test_missing_resource_fails(tmp_path, monkeypatch):
     out = tmp_path / "selfcheck.txt"
     assert self_check.run(out) == 1
     assert "ÉCHEC interface" in out.read_text(encoding="utf-8")
+
+
+def test_missing_tutorial_video_fails(tmp_path, monkeypatch):
+    static = tmp_path / "static"
+    (static / "tutorial").mkdir(parents=True)
+    (static / "index.html").write_text("<html></html>", encoding="utf-8")
+    (static / "tutorial" / "kaloe.vtt").write_text("WEBVTT", encoding="utf-8")
+    monkeypatch.setattr(api_app, "STATIC_DIR", static)
+    out = tmp_path / "selfcheck.txt"
+    assert self_check.run(out) == 1
+    text = out.read_text(encoding="utf-8")
+    assert "OK  interface" in text and "ÉCHEC tutoriel" in text and "kaloe.mp4" in text
 
 
 def test_empty_scene_pack_fails(tmp_path, monkeypatch):
