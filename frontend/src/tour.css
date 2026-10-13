@@ -1,0 +1,95 @@
+/* Bulles des visites guidées (driver.js) aux couleurs Kaloé. */
+
+.driver-popover.kaloe-tour {
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+  color: var(--w-ink);
+  background: #fff;
+  border-radius: var(--w-radius-card);
+  box-shadow: var(--w-shadow-raised);
+  padding: 1.1rem 1.2rem 1rem;
+  min-width: 280px;
+  max-width: 340px;
+}
+
+.kaloe-tour .driver-popover-arrow {
+  border-color: #fff;
+}
+
+.kaloe-tour .driver-popover-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  padding-right: 1.5rem;
+}
+
+.kaloe-tour .driver-popover-description {
+  font-size: 0.93rem;
+  color: var(--p-text-muted-color);
+}
+
+.kaloe-tour .driver-popover-close-btn {
+  color: var(--p-text-muted-color);
+  top: 0.4rem;
+  right: 0.4rem;
+}
+
+.kaloe-tour .driver-popover-footer {
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.kaloe-tour .driver-popover-progress-text {
+  font-size: 0.8rem;
+  color: var(--p-text-muted-color);
+}
+
+.kaloe-tour .driver-popover-navigation-btns {
+  gap: 0.4rem;
+}
+
+.kaloe-tour .driver-popover-navigation-btns button + button {
+  margin-left: 0;
+}
+
+.kaloe-tour .driver-popover-footer-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--w-radius-control);
+  border: 1px solid var(--p-apricot-200);
+  background: #fff;
+  color: var(--p-apricot-800);
+  text-shadow: none;
+}
+
+.kaloe-tour .driver-popover-footer-btn:hover,
+.kaloe-tour .driver-popover-footer-btn:focus-visible {
+  background: var(--p-apricot-50);
+}
+
+.kaloe-tour .driver-popover-next-btn {
+  background: var(--p-apricot-500);
+  border-color: var(--p-apricot-500);
+  color: #fff;
+}
+
+.kaloe-tour .driver-popover-next-btn:hover,
+.kaloe-tour .driver-popover-next-btn:focus-visible {
+  background: var(--p-apricot-600);
+  border-color: var(--p-apricot-600);
+}
+
+.kaloe-tour .tour-skip {
+  all: unset;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--p-text-muted-color);
+}
+
+.kaloe-tour .tour-skip:hover,
+.kaloe-tour .tour-skip:focus-visible {
+  color: var(--w-ink);
+  text-decoration: underline;
+}
