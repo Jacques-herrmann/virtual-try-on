@@ -7,6 +7,7 @@ from collections.abc import Callable, Sequence
 
 from vto.core import config, errors, pipeline, storage
 from vto.core.models import Article
+from vto.licensing import LicenseError
 
 log = logging.getLogger(__name__)
 
@@ -17,9 +18,11 @@ class GenerationQueue:
         client_factory: pipeline.ClientFactory | None = None,
         *,
         process: Callable[..., object] = pipeline.process_article,
+        licensed: Callable[[], bool] = lambda: True,
     ):
         self._client_factory = client_factory
         self._process = process
+        self._licensed = licensed
         # Choix Vinted pour l'annonce ; posé par `create_app` (None = annonce libre).
         self.choices_for: pipeline.ChoicesProvider | None = None
         self._pending: deque[str] = deque()
@@ -42,6 +45,12 @@ class GenerationQueue:
         self._thread = threading.Thread(target=self._run, name="generation-queue", daemon=True)
         self._thread.start()
 
+    def check_licensed(self) -> None:
+        """Lève LicenseError sans abonnement actif : générer est réservé aux abonnés."""
+        if not self._licensed():
+            log.warning("Génération refusée : pas d'abonnement actif")
+            raise LicenseError()
+
     def enqueue(
         self,
         article_id: str,
@@ -50,6 +59,7 @@ class GenerationQueue:
         regenerate_listing: bool = False,
     ) -> Article:
         """Met l'article en file et renvoie son état juste après (statut `QUEUED`)."""
+        self.check_licensed()
         with self._cond:
             article = storage.load(article_id)
             storage.enqueue(
@@ -127,6 +137,12 @@ class GenerationQueue:
         while (item := self._next()) is not None:
             article_id, cancel = item
             try:
+                if not self._licensed():
+                    # Abonnement terminé pendant que l'article attendait : il garde sa place.
+                    with self._cond:
+                        self._pending.appendleft(article_id)
+                        self._pause(LicenseError())
+                    continue
                 settings = config.load_settings()
                 try:
                     client = pipeline.build_client(settings, self._client_factory)

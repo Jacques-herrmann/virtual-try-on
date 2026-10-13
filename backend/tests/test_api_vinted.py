@@ -79,6 +79,15 @@ def test_send_refused_when_update_required(vapi, fake, worker, scened):
     assert worker.commands == []
 
 
+def test_send_refused_without_license_is_402(vapi, fake, worker, scened):
+    a = validated(vapi, fake)
+    worker.licensed = False
+    r = vapi.post("/api/vinted/send", json={"article_ids": [a["id"]]})
+    assert r.status_code == 402
+    assert r.json()["message"] == "Cette action demande un abonnement actif."
+    assert worker.commands == []
+
+
 def test_send_requires_validated_articles(vapi, fake, worker, scened):
     a = validated(vapi, fake)
     b = reviewed(vapi, fake)

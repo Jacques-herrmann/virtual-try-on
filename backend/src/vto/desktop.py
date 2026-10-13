@@ -22,6 +22,7 @@ from vto.api.queue import GenerationQueue
 from vto.api.security import LOGIN_PATH
 from vto.core import scenes
 from vto.core.logging import setup_logging
+from vto.licensing.state import LicenseManager
 from vto.updates.check import UpdateChecker
 from vto.updates.install import Installer, clean_old_installers
 from vto.vinted.worker import VintedWorker
@@ -76,13 +77,16 @@ def main(argv: list[str] | None = None) -> None:
     if args.self_check:
         raise SystemExit(self_check.run(args.output))
     scenes.ensure_default_scenes()
-    queue = GenerationQueue()
+    # Le jeton enregistré suffit hors ligne ; le rafraîchissement se fait en arrière-plan.
+    license_manager = LicenseManager()
+    license_manager.start()
+    queue = GenerationQueue(licensed=license_manager.licensed)
     queue.start()
     clean_old_installers()
     updates = UpdateChecker()
     updates.start()
     # Charge les données Vinted en arrière-plan : la fenêtre n'attend pas le réseau.
-    vinted = VintedWorker(update_required=updates.is_required)
+    vinted = VintedWorker(update_required=updates.is_required, licensed=license_manager.licensed)
     vinted.start()
 
     port = DEV_PORT if args.dev else find_free_port()
@@ -106,6 +110,7 @@ def main(argv: list[str] | None = None) -> None:
         queue.stop()
         vinted.shutdown()
         updates.stop()
+        license_manager.stop()
         return
 
     thread = threading.Thread(target=server.run, name="api", daemon=True)
@@ -126,6 +131,7 @@ def main(argv: list[str] | None = None) -> None:
     queue.stop()
     vinted.shutdown()
     updates.stop()
+    license_manager.stop()
     server.should_exit = True
     thread.join(timeout=5)
 

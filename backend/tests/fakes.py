@@ -64,6 +64,7 @@ class FakeVintedWorker:
         self.commands = []
         self.busy = False
         self.update_required = False
+        self.licensed = True
 
     def _command(self, *command):
         from vto.vinted.worker import Busy
@@ -79,10 +80,13 @@ class FakeVintedWorker:
         self._command("disconnect")
 
     def send(self, article_ids):
+        from vto.licensing import LicenseError
         from vto.vinted.worker import UpdateRequired
 
         if self.update_required:
             raise UpdateRequired()
+        if not self.licensed:
+            raise LicenseError()
         self._command("send", list(article_ids))
 
     def stop(self):

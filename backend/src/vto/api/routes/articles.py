@@ -83,6 +83,7 @@ def create_article(
         price=price,
         notes=notes,
     )
+    request.app.state.queue.check_licensed()
     with received_images(photos) as received:
         article = storage.create_article(data, [path for path, _ in received])
     return view(request.app.state.queue.enqueue(article.id))

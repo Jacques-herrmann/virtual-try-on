@@ -13,6 +13,7 @@ from vto.api.routes import articles, files, scenes, settings, system, update, vi
 from vto.api.routes import queue as queue_routes
 from vto.core import errors, paths
 from vto.core.pipeline import ClientFactory
+from vto.licensing import LicenseError
 from vto.updates.check import UpdateChecker
 from vto.updates.install import Installer
 from vto.vinted.worker import Busy, UpdateRequired, VintedWorker
@@ -38,6 +39,8 @@ def _add_error_handlers(app: FastAPI) -> None:
             status = 404
         elif isinstance(exc, errors.InvalidTransition | Busy | UpdateRequired):
             status = 409
+        elif isinstance(exc, LicenseError):
+            status = 402
         return _error(status, exc.user_message)
 
     @app.exception_handler(RequestValidationError)

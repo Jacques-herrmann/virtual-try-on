@@ -205,3 +205,24 @@ def test_serves_article_images(api, fake, scened):
 def test_files_refuses_non_images_and_escapes(api, fake, scened, path):
     art = reviewed(api, fake)
     assert api.get(f"/files/articles/{art['id']}/{path}").status_code == 404
+
+
+def test_without_license_generation_is_402_and_reading_still_works(make_api, fake, scened):
+    licensed = [True]
+    api = make_api(lambda key: fake, licensed=lambda: licensed[0])
+    art = reviewed(api, fake)
+    licensed[0] = False
+
+    r = create(api)
+    assert r.status_code == 402
+    assert r.json()["message"] == "Cette action demande un abonnement actif."
+    assert [a.id for a in storage.list_articles()] == [art["id"]]
+
+    r = api.post(f"/api/articles/{art['id']}/generate", json={"listing": True})
+    assert r.status_code == 402
+    assert api.get(f"/api/articles/{art['id']}").json()["status"] == "to_review"
+
+    assert api.get("/api/articles").status_code == 200
+    assert api.get(f"/api/articles/{art['id']}").status_code == 200
+    assert api.get("/api/scenes").status_code == 200
+    assert api.get("/api/settings").status_code == 200

@@ -17,6 +17,7 @@ from playwright.sync_api import Error as PlaywrightError
 
 from vto.core import config, errors, paths, storage
 from vto.core.models import ArticleStatus, VintedResult
+from vto.licensing import LicenseError
 from vto.vinted import browser, filler, remote
 from vto.vinted.catalog import Catalog
 
@@ -82,6 +83,7 @@ class VintedWorker:
         login_poll: float = LOGIN_POLL,
         pause_range: tuple[float, float] = PAUSE_RANGE,
         update_required: Callable[[], bool] = lambda: False,
+        licensed: Callable[[], bool] = lambda: True,
     ):
         self._start_playwright = start_playwright
         self._open_context = open_context
@@ -93,6 +95,7 @@ class VintedWorker:
         self._login_poll = login_poll
         self._pause_range = pause_range
         self._update_required = update_required
+        self._licensed = licensed
 
         self._commands: queue.Queue[tuple] = queue.Queue()
         self._lock = threading.Condition()
@@ -149,6 +152,9 @@ class VintedWorker:
         if self._update_required():
             log.warning("Envoi Vinted refusé : version trop ancienne, mise à jour obligatoire")
             raise UpdateRequired()
+        if not self._licensed():
+            log.warning("Envoi Vinted refusé : pas d'abonnement actif")
+            raise LicenseError()
         with self._lock:
             if self._busy:
                 raise Busy()

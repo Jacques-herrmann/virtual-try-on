@@ -89,6 +89,7 @@ def make_api(data_dir):
         vinted_worker=None,
         update_checker=None,
         installer=None,
+        licensed=None,
     ):
         from fakes import FakeVintedWorker
         from samples import loaded_data
@@ -96,7 +97,7 @@ def make_api(data_dir):
 
         if api_key:
             config.save_settings(config.Settings(gemini_api_key=api_key))
-        queue = GenerationQueue(client_factory)
+        queue = GenerationQueue(client_factory, licensed=licensed or (lambda: True))
         app = create_app(
             client_factory,
             token=API_TOKEN,

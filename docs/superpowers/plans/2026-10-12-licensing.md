@@ -120,9 +120,10 @@ Branche : `main` (travail direct).
 
 ### Tâche 10 — Blocage de la génération et de l'envoi (spec §3.2)
 
-- [ ] Tests : `GenerationQueue.enqueue` lève `LicenseError` « Cette action demande un abonnement actif. » si le prédicat `licensed()` est faux ; régénération aussi ; `VintedWorker.send` idem (après le contrôle de mise à jour obligatoire) ; routes → 402 ; consultation des articles, scènes et réglages inchangée.
-- [ ] Prédicats injectés (`licensed=lambda: True` par défaut) ; câblage dans `desktop.py`.
-- [ ] Commit `require an active license to generate and send`.
+- [x] Tests : `GenerationQueue.enqueue` lève `LicenseError` « Cette action demande un abonnement actif. » si le prédicat `licensed()` est faux ; régénération aussi ; `VintedWorker.send` idem (après le contrôle de mise à jour obligatoire) ; routes → 402 ; consultation des articles, scènes et réglages inchangée.
+- [x] Prédicats injectés (`licensed=lambda: True` par défaut) ; câblage dans `desktop.py`.
+- [x] En plus : la création d'un article (qui le met en file) est refusée avant d'écrire quoi que ce soit ; un article déjà en file quand l'abonnement s'arrête met la file en pause (raison affichée) sans perdre sa place.
+- [x] Commit `require an active license to generate and send`.
 
 ### Tâche 11 — Mises à jour et `vinted.json` via le Worker (spec §3.3)
 

@@ -168,6 +168,43 @@ def test_fatal_error_pauses_then_resume(make_queue, make_article):
     assert q.status()["paused"] is False
 
 
+def test_enqueue_refused_without_license(keyed, make_article):
+    from vto.licensing import LicenseError
+
+    q = GenerationQueue(lambda key: FakeClient(), process=Recorder(), licensed=lambda: False)
+    a = make_article()
+    with pytest.raises(LicenseError) as exc:
+        q.enqueue(a.id)
+    assert exc.value.user_message == "Cette action demande un abonnement actif."
+    with pytest.raises(LicenseError):
+        q.enqueue(a.id, scene_slugs=["cintre"], regenerate_listing=True)
+    assert storage.load(a.id).status != S.QUEUED
+    assert q.status()["pending"] == []
+
+
+def test_license_ended_while_waiting_pauses_without_losing_article(make_queue, make_article):
+    licensed = [True]
+    rec = Recorder()
+    q = GenerationQueue(lambda key: FakeClient(), process=rec, licensed=lambda: licensed[0])
+    a = make_article()
+    q.enqueue(a.id)
+    licensed[0] = False
+    q.start()
+    try:
+        assert q.wait_idle(TIMEOUT)
+        status = q.status()
+        assert status["paused"] is True
+        assert status["reason"] == "Cette action demande un abonnement actif."
+        assert status["pending"] == [a.id]
+        assert rec.calls == []
+        licensed[0] = True
+        q.resume()
+        assert q.wait_idle(TIMEOUT)
+        assert [call[0] for call in rec.calls] == [a.id]
+    finally:
+        q.stop()
+
+
 def test_missing_key_pauses_without_losing_article(make_queue, make_article):
     config.save_settings(config.Settings())
     rec = Recorder()

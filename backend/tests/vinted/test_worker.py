@@ -400,6 +400,28 @@ def test_browser_used_only_from_worker_thread(env, validated):
     assert env.playwright.stopped
 
 
+def test_send_refused_without_license(env, validated, caplog):
+    from vto.licensing import LicenseError
+
+    ids = validated(1)
+    licensed = [False]
+    worker = env.make(licensed=lambda: licensed[0])
+    with pytest.raises(LicenseError) as exc:
+        worker.send(ids)
+    assert exc.value.user_message == "Cette action demande un abonnement actif."
+    assert "pas d'abonnement actif" in caplog.text
+    assert worker.is_busy() is False
+    licensed[0] = True
+    worker.send(ids)
+    assert worker.wait_idle(TIMEOUT)
+
+
+def test_update_required_is_checked_before_license(env, validated):
+    worker = env.make(update_required=lambda: True, licensed=lambda: False)
+    with pytest.raises(UpdateRequired):
+        worker.send(validated(1))
+
+
 def test_send_refused_when_update_required(env, validated, caplog):
     ids = validated(1)
     required = [True]
