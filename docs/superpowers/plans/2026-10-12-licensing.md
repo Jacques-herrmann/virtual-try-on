@@ -85,7 +85,7 @@ Branche : `main` (travail direct).
 
 ### Tâche 7 — Déploiement (spec §5) — **avec l'utilisateur**
 
-- [ ] `.github/workflows/worker.yml` : sur push `main` touchant `worker/**` : tests puis `wrangler d1 migrations apply --remote` et `wrangler deploy` (secret `CLOUDFLARE_API_TOKEN`).
+- [x] `.github/workflows/worker.yml` : sur push `main` touchant `worker/**` ou `docs/aide/**` : tests puis `wrangler d1 migrations apply --remote` et `wrangler deploy` (secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) ; sans jeton, seuls les tests tournent.
 - [ ] L'utilisateur : compte Cloudflare ; jeton API (Workers + D1) ajouté aux secrets GitHub ; `wrangler d1 create vto-licence` (l'identifiant va dans `wrangler.toml`).
 - [ ] Stripe **mode test** (l'utilisateur, guidé) : produit « Virtual Try-On », prix (montant à décider par l'utilisateur), essai 7 jours, Payment Link avec redirection `…/merci?session_id={CHECKOUT_SESSION_ID}`, portail client (résiliation, carte, factures), endpoint webhook `…/stripe/webhook` (événements de la tâche 3), relances de paiement sur 7 jours.
 - [ ] Resend : compte, clé API ; domaine plus tard (en test, Resend n'envoie qu'à l'adresse du compte — suffisant).
