@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
-import Message from 'primevue/message'
 import ProgressBar from 'primevue/progressbar'
 import { computed, ref, watch } from 'vue'
 
+import AppBanner from '@/components/ui/AppBanner.vue'
 import { useNotify } from '@/composables/notify'
 import { useVinted } from '@/stores/vinted'
 import type { Article } from '@/types'
@@ -51,8 +51,8 @@ async function stopBatch() {
 </script>
 
 <template>
-  <Message v-if="batch?.running" severity="info" :closable="false">
-    <div class="stack">
+  <AppBanner v-if="batch?.running" tone="brand" icon="icon-send">
+    <div class="stack grow">
       <strong>Envoi sur Vinted : {{ batch.done }} / {{ batch.total }}</strong>
       <ProgressBar :value="percent" :show-value="false" class="bar" />
       <span v-if="batch.paused_reason === 'login_required'" class="warn">
@@ -61,7 +61,8 @@ async function stopBatch() {
       </span>
       <span v-else-if="current" class="small">En cours : {{ current }}</span>
       <span v-if="stopping" class="small muted">Arrêt après l’article en cours…</span>
-      <div>
+    </div>
+    <template #actions>
         <Button
           label="Arrêter"
           icon="icon-circle-stop"
@@ -70,17 +71,31 @@ async function stopBatch() {
           :disabled="stopping"
           @click="stopBatch"
         />
-      </div>
-    </div>
-  </Message>
-  <Message v-else-if="message" severity="warn" closable @close="dismissed = message">
+    </template>
+  </AppBanner>
+  <AppBanner v-else-if="message" tone="warn">
     {{ message }}
-  </Message>
+    <template #actions>
+      <Button
+        icon="icon-x"
+        size="small"
+        text
+        rounded
+        severity="secondary"
+        aria-label="Fermer"
+        @click="dismissed = message"
+      />
+    </template>
+  </AppBanner>
 </template>
 
 <style scoped>
 .stack {
-  gap: 0.5rem;
+  gap: 0.4rem;
+}
+
+.grow {
+  flex: 1;
 }
 
 .bar {
@@ -93,6 +108,6 @@ async function stopBatch() {
 
 .warn {
   font-size: 0.85rem;
-  color: var(--p-orange-700);
+  font-weight: 600;
 }
 </style>

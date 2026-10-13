@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Card from 'primevue/card'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import KeyForm from '@/components/KeyForm.vue'
 import LicenseForm from '@/components/LicenseForm.vue'
+import AppLogo from '@/components/ui/AppLogo.vue'
 import { useLicense } from '@/stores/license'
 import { useSettings } from '@/stores/settings'
 
@@ -23,12 +23,26 @@ function licenseSaved() {
 
 <template>
   <div class="welcome">
-    <Card v-if="step === 'license'" class="card" data-test="license-step">
-      <template #title>Bienvenue dans Wearo</template>
-      <template #subtitle>
-        Pour commencer, colle la clé de licence reçue par e-mail après ton inscription.
-      </template>
-      <template #content>
+    <div class="column">
+      <AppLogo :height="40" class="logo" />
+
+      <ol class="stepper" aria-label="Étapes">
+        <li :class="{ current: step === 'license', done: step === 'gemini' }">
+          <span class="dot"><i v-if="step === 'gemini'" class="icon-check" /><template v-else>1</template></span>
+          Licence
+        </li>
+        <li class="line" aria-hidden="true" />
+        <li :class="{ current: step === 'gemini' }">
+          <span class="dot">2</span>
+          Clé Gemini
+        </li>
+      </ol>
+
+      <section v-if="step === 'license'" class="card surface" data-test="license-step">
+        <h1>Bienvenue dans Wearo</h1>
+        <p class="lead muted">
+          Pour commencer, colle la clé de licence reçue par e-mail après ton inscription.
+        </p>
         <LicenseForm @saved="licenseSaved" />
         <p class="muted note">
           Pas encore de clé ?
@@ -43,31 +57,39 @@ function licenseSaved() {
             Retrouver ma clé
           </a>
         </p>
-      </template>
-    </Card>
+      </section>
 
-    <Card v-else class="card" data-test="gemini-step">
-      <template #title>Ta clé Gemini</template>
-      <template #subtitle>
-        L'application utilise Gemini, l'IA de Google, pour créer tes photos et tes annonces. Il te
-        faut une clé personnelle, gratuite à créer.
-      </template>
-      <template #content>
-        <ol class="steps">
+      <section v-else class="card surface" data-test="gemini-step">
+        <h1>Ta clé Gemini</h1>
+        <p class="lead muted">
+          Wearo utilise Gemini, l'IA de Google, pour créer tes photos et tes annonces. Il te faut
+          une clé personnelle, gratuite à créer.
+        </p>
+        <ol class="howto">
           <li>
-            Ouvre <a :href="AI_STUDIO" target="_blank" rel="noopener">Google AI Studio</a> et
-            connecte-toi avec ton compte Google.
+            <span class="num">1</span>
+            <span>
+              Ouvre <a :href="AI_STUDIO" target="_blank" rel="noopener">Google AI Studio</a> et
+              connecte-toi avec ton compte Google.
+            </span>
           </li>
-          <li>Clique sur « Créer une clé API », puis copie la clé affichée.</li>
-          <li>Colle-la ci-dessous et clique sur « Vérifier ».</li>
+          <li>
+            <span class="num">2</span>
+            <span>Clique sur « Créer une clé API », puis copie la clé affichée.</span>
+          </li>
+          <li>
+            <span class="num">3</span>
+            <span>Colle-la ci-dessous et clique sur « Vérifier ».</span>
+          </li>
         </ol>
         <KeyForm @saved="router.push('/articles')" />
         <p class="muted note">
+          <i class="icon-key-round" aria-hidden="true" />
           Ta clé reste sur cet ordinateur. Les générations sont facturées par Google sur ton
           compte, selon ton forfait.
         </p>
-      </template>
-    </Card>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -76,22 +98,113 @@ function licenseSaved() {
   min-height: 100%;
   display: grid;
   place-items: center;
-  padding: 2rem;
+  padding: 2.5rem 1.5rem;
+  background:
+    radial-gradient(circle at 15% 10%, var(--p-apricot-50), transparent 45%),
+    var(--w-cream);
+}
+
+.column {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.stepper {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--p-text-muted-color);
+}
+
+.stepper li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stepper .line {
+  width: 3rem;
+  height: 2px;
+  background: var(--p-surface-300);
+}
+
+.dot {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--p-surface-200);
+  color: var(--p-surface-700);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.stepper .current {
+  color: var(--p-text-color);
+}
+
+.current .dot {
+  background: var(--p-apricot-500);
+  color: var(--w-ink);
+}
+
+.done .dot {
+  background: var(--p-green-100);
+  color: var(--p-green-700);
 }
 
 .card {
-  max-width: 560px;
   width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.steps {
-  padding-left: 1.25rem;
-  margin: 0 0 1.5rem;
-  line-height: 1.7;
+.lead {
+  margin: 0 0 0.5rem;
+}
+
+.howto {
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.howto li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.num {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--p-apricot-100);
+  color: var(--p-apricot-800);
+  font-size: 0.8rem;
+  font-weight: 800;
 }
 
 .note {
   font-size: 0.85rem;
-  margin: 1.25rem 0 0;
+  margin: 0.5rem 0 0;
 }
 </style>

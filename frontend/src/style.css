@@ -60,7 +60,9 @@ a:hover {
   color: var(--p-apricot-800);
 }
 
-:focus-visible {
+/* PrimeVue dessine son propre anneau de focus (theme.ts). */
+a:focus-visible,
+button:not(.p-component):focus-visible {
   outline: 2px solid var(--p-apricot-600);
   outline-offset: 2px;
 }

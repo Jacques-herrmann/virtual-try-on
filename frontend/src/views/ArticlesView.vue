@@ -12,9 +12,11 @@ import ArticleProgress from '@/components/ArticleProgress.vue'
 import ArticleReview from '@/components/ArticleReview.vue'
 import QueueBanner from '@/components/QueueBanner.vue'
 import StatusTag from '@/components/StatusTag.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
 import VintedBatchPanel from '@/components/VintedBatchPanel.vue'
 import { useNotify } from '@/composables/notify'
-import { panelFor, useArticles } from '@/stores/articles'
+import { matches, panelFor, useArticles } from '@/stores/articles'
 import { useLicense } from '@/stores/license'
 import { useScenes } from '@/stores/scenes'
 import { useVinted } from '@/stores/vinted'
@@ -30,6 +32,7 @@ const vinted = useVinted()
 const { licensed } = useLicense()
 
 const creating = ref(false)
+const creatingOpen = ref(false)
 const formKey = ref(0) // change pour vider le formulaire après une création
 const editing = ref(false)
 const savingInput = ref(false)
@@ -52,16 +55,36 @@ function select(id: string) {
   router.push({ name: 'articles', params: { id } })
 }
 
-function newArticle() {
+function backToList() {
   router.push({ name: 'articles' })
 }
+
+function newArticle() {
+  backToList()
+  creatingOpen.value = true
+}
+
+const summary = computed(() => {
+  const all = articles.value
+  if (!all.length) return undefined
+  const review = all.filter((a) => matches('review', a)).length
+  const busy = all.filter((a) => matches('busy', a)).length
+  return [
+    `${all.length} article${all.length > 1 ? 's' : ''}`,
+    review ? `${review} à relire` : null,
+    busy ? `${busy} en création` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+})
 
 async function create(input: UserInput, photos: File[]) {
   creating.value = true
   try {
     upsert(await api.createArticle(input, photos))
     formKey.value += 1
-    notify.success('Article ajouté à la file de génération.')
+    creatingOpen.value = false
+    notify.success('Article ajouté : Wearo prépare les photos et l’annonce.')
   } catch (e) {
     notify.error(e)
   } finally {
@@ -115,7 +138,7 @@ function deleteSelected() {
       try {
         await api.deleteArticle(article.id)
         remove(article.id)
-        newArticle()
+        backToList()
       } catch (e) {
         notify.error(e)
       }
@@ -125,26 +148,42 @@ function deleteSelected() {
 </script>
 
 <template>
-  <div class="split">
-    <aside class="left">
+  <div class="page">
+    <template v-if="panel === 'form'">
+      <PageHeader title="Mes articles" :subtitle="summary">
+        <template #actions>
+          <Button label="Nouvel article" icon="icon-plus" @click="newArticle" />
+        </template>
+      </PageHeader>
       <QueueBanner />
       <VintedBatchPanel :articles="articles" />
+
+      <EmptyState
+        v-if="!articles.length"
+        title="Ajoute ton premier vêtement"
+        text="Une photo suffit : Wearo crée les photos portées et rédige l’annonce, tu n’as plus qu’à relire."
+      >
+        <Button label="Ajouter un vêtement" icon="icon-image-plus" @click="newArticle" />
+      </EmptyState>
       <ArticleList
+        v-else
         :articles="articles"
         :selected-id="selectedId"
         :sending="!!vinted.status.value?.batch.running"
         @select="select"
-        @create="newArticle"
         @send="sendToVinted"
       />
-    </aside>
 
-    <section class="right">
-      <template v-if="panel === 'form'">
-        <h1>Nouvel article</h1>
-        <p class="muted">
-          Ajoute les photos et le type. Les autres informations sont facultatives : l'IA les
-          proposera, tu pourras les corriger à la relecture.
+      <Dialog
+        v-model:visible="creatingOpen"
+        header="Nouvel article"
+        modal
+        :style="{ width: '720px' }"
+        :breakpoints="{ '800px': '95vw' }"
+      >
+        <p class="muted intro">
+          Ajoute les photos et le type. Le reste est facultatif : l'IA le proposera, tu pourras
+          le corriger à la relecture.
         </p>
         <ArticleForm
           :key="formKey"
@@ -153,40 +192,47 @@ function deleteSelected() {
           :locked="!licensed"
           @submit="create"
         />
-      </template>
+      </Dialog>
+    </template>
 
-      <template v-else-if="selected">
-        <header class="row header">
-          <h1 class="title">{{ selected.listing?.title ?? label(selected.input.garment_type) }}</h1>
+    <template v-else-if="selected">
+      <PageHeader :title="selected.listing?.title ?? label(selected.input.garment_type)">
+        <template #before>
+          <RouterLink :to="{ name: 'articles' }" class="back">
+            <i class="icon-chevron-left" aria-hidden="true" /> Mes articles
+          </RouterLink>
+        </template>
+        <template #badge>
           <StatusTag :status="selected.status" :article="selected" />
-          <span class="spacer" />
+        </template>
+        <template v-if="panel !== 'progress'" #actions>
           <Button
-            v-if="panel !== 'progress'"
             label="Modifier la saisie"
             icon="icon-pencil"
             severity="secondary"
-            size="small"
-            text
             @click="editing = true"
           />
           <Button
-            v-if="panel !== 'progress'"
             icon="icon-trash-2"
             severity="danger"
-            size="small"
             text
             aria-label="Supprimer"
             @click="deleteSelected"
           />
-        </header>
+        </template>
+      </PageHeader>
+      <QueueBanner />
+      <VintedBatchPanel :articles="articles" />
 
-        <ArticleProgress v-if="panel === 'progress'" :article="selected" />
-        <ArticleReview v-else-if="panel === 'review'" :article="selected" mode="review" />
-        <ArticleReview v-else-if="panel === 'validated'" :article="selected" mode="validated" />
-        <ArticleReview v-else-if="panel === 'error'" :article="selected" mode="error" />
-        <div v-else-if="panel === 'draft'" class="stack">
-          <p class="muted">Génération annulée. Relance-la quand tu veux.</p>
-          <img :src="articleFile(selected, selected.photos[0] ?? '')" alt="" class="draft-photo" />
+      <ArticleProgress v-if="panel === 'progress'" :article="selected" />
+      <ArticleReview v-else-if="panel === 'review'" :article="selected" mode="review" />
+      <ArticleReview v-else-if="panel === 'validated'" :article="selected" mode="validated" />
+      <ArticleReview v-else-if="panel === 'error'" :article="selected" mode="error" />
+      <div v-else-if="panel === 'draft'" class="draft surface">
+        <img :src="articleFile(selected, selected.photos[0] ?? '')" alt="" class="draft-photo" />
+        <div class="stack">
+          <h2>Génération annulée</h2>
+          <p class="muted">Relance-la quand tu veux : tes photos et ta saisie sont conservées.</p>
           <div>
             <Button
               label="Générer"
@@ -197,75 +243,68 @@ function deleteSelected() {
             />
           </div>
         </div>
+      </div>
 
-        <Dialog
-          v-model:visible="editing"
-          header="Modifier la saisie"
-          modal
-          :style="{ width: '640px' }"
-        >
-          <ArticleForm
-            mode="edit"
-            :initial="selected.input"
-            :busy="savingInput"
-            @submit="saveInput"
-            @cancel="editing = false"
-          />
-        </Dialog>
-      </template>
+      <Dialog
+        v-model:visible="editing"
+        header="Modifier la saisie"
+        modal
+        :style="{ width: '720px' }"
+        :breakpoints="{ '800px': '95vw' }"
+      >
+        <ArticleForm
+          mode="edit"
+          :initial="selected.input"
+          :busy="savingInput"
+          @submit="saveInput"
+          @cancel="editing = false"
+        />
+      </Dialog>
+    </template>
 
-      <p v-else class="muted">Article introuvable.</p>
-    </section>
+    <EmptyState v-else title="Article introuvable" text="Il a peut-être été supprimé.">
+      <Button label="Revenir à mes articles" severity="secondary" @click="backToList" />
+    </EmptyState>
   </div>
 </template>
 
 <style scoped>
-.split {
-  display: flex;
-  height: 100%;
-}
-
-.left {
-  width: 330px;
-  flex-shrink: 0;
+.page {
+  max-width: 1240px;
+  padding: 1.75rem var(--w-gutter) 3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
-  overflow-y: auto;
-  border-right: 1px solid var(--p-content-border-color);
+  gap: 1.25rem;
 }
 
-.right {
-  flex: 1;
-  min-width: 0;
-  overflow-y: auto;
-  padding: 1.5rem 2rem 3rem;
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  margin-bottom: 0.25rem;
+}
+
+.intro {
+  margin: 0 0 1.25rem;
+}
+
+.draft {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 980px;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
 }
 
-.header {
-  gap: 0.75rem;
-}
-
-.title {
-  font-size: 1.35rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.spacer {
-  flex: 1;
+.draft p {
+  margin: 0;
 }
 
 .draft-photo {
-  width: 180px;
-  height: 240px;
+  width: 150px;
+  height: 200px;
   object-fit: cover;
-  border-radius: var(--p-border-radius-md);
+  border-radius: 14px;
 }
 </style>
