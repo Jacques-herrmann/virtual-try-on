@@ -55,13 +55,13 @@ Branche : `main` (travail direct).
 
 ### Tâche 4 — Activation (spec §2.3)
 
-- [ ] Tests `activation.test.ts` :
+- [x] Tests `activation.test.ts` :
   - `/api/activate` : clé inconnue → `unknown_key` ; abonnement terminé → `expired` ; 1er et 2ᵉ PC → jeton ; 3ᵉ → `too_many_devices` avec les noms des 2 PC ; un PC vu il y a plus de 30 jours ne compte pas et est supprimé ; même PC réactivé → pas de nouvelle place ;
   - `/api/token` : PC non activé → `not_activated` ; met à jour `last_seen` ; déclenche le recalage ;
   - `/api/deactivate` → place libérée ;
   - corps invalide → 400.
-- [ ] Implémenter dans `src/index.ts` + `src/licenses.ts`.
-- [ ] Commit `add device activation endpoints`.
+- [x] Implémenter dans `src/activation.ts` (routes) + `src/licenses.ts` (D1).
+- [x] Commit `add device activation endpoints`.
 
 ### Tâche 5 — Relais des fichiers et portail (spec §2.3)
 

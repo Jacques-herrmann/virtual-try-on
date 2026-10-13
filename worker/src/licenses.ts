@@ -109,3 +109,81 @@ export async function updateSubscription(
     .run();
   return res.meta.changes > 0;
 }
+
+/** Nombre de PC actifs par clé. */
+export const MAX_DEVICES = 2;
+/** Un PC sans nouvelles depuis 30 jours libère sa place. */
+export const DEVICE_IDLE = 30 * 86400;
+
+export interface Activation {
+  key: string;
+  device_id: string;
+  device_name: string;
+  last_seen: number;
+}
+
+export type ActivationResult = { ok: true } | { ok: false; devices: string[] };
+
+/**
+ * Active un PC : met à jour un PC déjà connu, ou prend une place s'il en reste une. Les PC
+ * inactifs depuis 30 jours sont d'abord retirés.
+ */
+export async function activateDevice(
+  db: D1Database,
+  key: string,
+  deviceId: string,
+  deviceName: string,
+  now: number,
+): Promise<ActivationResult> {
+  // Une seule requête d'insertion : la limite tient même avec deux activations simultanées.
+  const [, , inserted] = await db.batch([
+    db.prepare("DELETE FROM activations WHERE key = ? AND last_seen < ?").bind(key, now - DEVICE_IDLE),
+    db
+      .prepare(
+        "UPDATE activations SET device_name = ?3, last_seen = ?4 WHERE key = ?1 AND device_id = ?2",
+      )
+      .bind(key, deviceId, deviceName, now),
+    db
+      .prepare(
+        `INSERT INTO activations (key, device_id, device_name, last_seen)
+         SELECT ?1, ?2, ?3, ?4
+         WHERE NOT EXISTS (SELECT 1 FROM activations WHERE key = ?1 AND device_id = ?2)
+           AND (SELECT COUNT(*) FROM activations WHERE key = ?1) < ?5`,
+      )
+      .bind(key, deviceId, deviceName, now, MAX_DEVICES),
+  ]);
+  if (inserted!.meta.changes > 0) return { ok: true };
+  if (await getActivation(db, key, deviceId)) return { ok: true };
+  const { results } = await db
+    .prepare("SELECT device_name FROM activations WHERE key = ? ORDER BY last_seen, device_id")
+    .bind(key)
+    .all<{ device_name: string }>();
+  return { ok: false, devices: results.map((r) => r.device_name) };
+}
+
+export async function getActivation(
+  db: D1Database,
+  key: string,
+  deviceId: string,
+): Promise<Activation | null> {
+  return db
+    .prepare("SELECT * FROM activations WHERE key = ? AND device_id = ?")
+    .bind(key, deviceId)
+    .first<Activation>();
+}
+
+export async function touchActivation(
+  db: D1Database,
+  key: string,
+  deviceId: string,
+  now: number,
+): Promise<void> {
+  await db
+    .prepare("UPDATE activations SET last_seen = ? WHERE key = ? AND device_id = ?")
+    .bind(now, key, deviceId)
+    .run();
+}
+
+export async function deactivateDevice(db: D1Database, key: string, deviceId: string): Promise<void> {
+  await db.prepare("DELETE FROM activations WHERE key = ? AND device_id = ?").bind(key, deviceId).run();
+}
