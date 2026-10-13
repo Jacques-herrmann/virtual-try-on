@@ -60,6 +60,7 @@ npm run dev                      # wrangler dev (secrets dans worker/.dev.vars)
 python tools/make_signing_key.py k2  # nouvelle clé de signature des jetons (privée → secret Cloudflare)
 
 vto-tutorial capture             # une fois (GEMINI_API_KEY) : démo tools/tutorial/demo → tools/tutorial/capture
+vto-tutorial capture --from-article mot  # ou : reprend un article déjà généré dans l'app (lecture seule)
 vto-tutorial record              # après npm run build : filme la démo rejouée (sans réseau) → frontend/public/tutorial
                                  # (kaloe.mp4/.vtt/.jpg) ; --short = 2 étapes ; plan final tools/tutorial/vinted-draft.png
 vto-tutorial edit-key f.mp4 --crop x,y,w,h --blur x,y,w,h@début-fin   # vidéo « clé Gemini » filmée à la main

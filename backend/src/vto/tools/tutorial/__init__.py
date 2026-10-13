@@ -1,6 +1,7 @@
 """`vto-tutorial` : vidéos du tutoriel de première ouverture (spec 2026-10-13-tutorial-design).
 
     vto-tutorial capture     une fois, avec GEMINI_API_KEY : génère et enregistre la démo
+                             (--from-article : reprend un article déjà généré dans l'app)
     vto-tutorial record      rejoue la démo dans l'app et filme (sans réseau)
     vto-tutorial edit-key    monte la vidéo « clé Gemini » enregistrée à la main
 
@@ -101,7 +102,9 @@ def main(argv: list[str] | None = None) -> None:
                         help="dossier demo/, capture/, vinted-draft.png")
     parser.add_argument("--out", type=Path, default=Path("frontend/public/tutorial"))
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("capture", help="génère la démo avec le vrai Gemini (une fois)")
+    cap = commands.add_parser("capture", help="génère la démo avec le vrai Gemini (une fois)")
+    cap.add_argument("--from-article", metavar="ID_OU_MOT",
+                     help="reprend un article déjà généré dans l'app (identifiant ou mot du titre)")
     rec = commands.add_parser("record", help="filme la démo dans l'app (sans réseau)")
     rec.add_argument("--short", action="store_true", help="deux étapes seulement (test)")
     rec.add_argument("--price", default="15", help="prix saisi à la relecture")
@@ -115,10 +118,14 @@ def main(argv: list[str] | None = None) -> None:
 
     try:
         if args.command == "capture":
-            from vto.tools.tutorial.capture import capture
+            from vto.tools.tutorial.capture import capture, capture_from_article
 
-            _load_env()
-            print(capture(args.data / "demo", args.data / "capture"))
+            demo, out = args.data / "demo", args.data / "capture"
+            if args.from_article:
+                print(capture_from_article(args.from_article, demo, out))
+            else:
+                _load_env()
+                print(capture(demo, out))
         elif args.command == "record":
             mp4 = record(args.data, args.out, short_version=args.short, price=args.price,
                          delay=args.delay)

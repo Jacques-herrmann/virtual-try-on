@@ -110,3 +110,64 @@ def test_record_short_video(tmp_path):
     vtt = (tmp_path / "out" / "kaloe.vtt").read_text(encoding="utf-8")
     assert vtt.startswith("WEBVTT") and "Nouvel article" in vtt
     assert (tmp_path / "out" / "kaloe.jpg").is_file()
+
+
+def _generated_article(tmp_path):
+    """Article déjà généré dans le dossier de données, comme après un passage dans l'app."""
+    from vto.core import storage
+    from vto.core.models import SceneResult, UserInput
+
+    photo = tmp_path / "robe.jpg"
+    Image.new("RGB", (8, 8), "red").save(photo)
+    article = storage.create_article(UserInput(garment_type="robe", audience="femme"), [photo])
+    folder = storage.paths.article_dir(article.id)
+    for slug in ("mannequin", "cintre"):
+        Image.new("RGB", (8, 8), "blue").save(folder / f"{slug}.png")
+    article.scenes = [
+        SceneResult(scene=s, status="ok", image=f"{s}.png") for s in ("mannequin", "cintre")
+    ]
+    article.listing = Listing(title="Robe longue fleurie", description="Jolie robe", price=15)
+    storage.save(article)
+    return article
+
+
+def test_capture_from_article_replays_in_the_film(data_dir, tmp_path):
+    from vto.core import scenes
+    from vto.tools.tutorial.capture import capture_from_article
+
+    article = _generated_article(tmp_path)
+    base = tmp_path / "tutorial"
+    summary = capture_from_article("fleurie", base / "demo", base / "capture")
+    assert "Robe longue fleurie" in summary
+
+    assert json.loads((base / "demo" / "input.json").read_text(encoding="utf-8")) == {
+        "garment_type": "robe", "audience": "femme",
+    }
+    assert len(list((base / "demo").glob("article-*.jpg"))) == 1
+
+    # Les prompts du film sont ceux du pack par défaut : chaque scène retrouve son image.
+    client = replay.ReplayClient(base / "capture", delay=0)
+    for slug in ("mannequin", "cintre"):
+        prompt = (scenes.default_scenes_source() / slug / "prompt.md").read_text(encoding="utf-8")
+        assert client.generate_image("m", prompt.replace("{garment_type}", "robe"), []).startswith(
+            b"\x89PNG"
+        )
+    assert client.generate_json("m", "p", [], Listing).price == 15
+    # Lecture seule : l'article d'origine est intact.
+    from vto.core import storage
+
+    assert storage.load(article.id) == article
+
+
+def test_capture_from_article_refuses_ambiguous_or_foreign_photos(data_dir, tmp_path):
+    from vto.tools.tutorial.capture import CaptureError, capture_from_article
+
+    _generated_article(tmp_path)
+    base = tmp_path / "tutorial"
+    with pytest.raises(CaptureError, match="Aucun article"):
+        capture_from_article("pantalon", base / "demo", base / "capture")
+
+    (base / "demo").mkdir(parents=True)
+    Image.new("RGB", (4, 4)).save(base / "demo" / "autre.jpg")
+    with pytest.raises(CaptureError, match="autre.jpg"):
+        capture_from_article("fleurie", base / "demo", base / "capture")

@@ -112,6 +112,8 @@ Dans `frontend/public/tutorial/`, versionnés (3 à 6 Mo au total) ; Vite les re
 
 Génère avec le vrai Gemini (`GEMINI_API_KEY`) les photos portées (scènes par défaut) et l'annonce à partir de `demo/`, et les écrit dans `capture/`. L'utilisateur valide le résultat ; on relance jusqu'à en être satisfait.
 
+**Variante retenue : `vto-tutorial capture --from-article <identifiant ou mot du titre>`.** L'utilisateur crée l'article de démo dans le vrai Kaloé et l'envoie en brouillon sur Vinted ; l'outil reprend cet article (lecture seule sur les données de l'app) : images rangées sous les prompts du pack par défaut, annonce telle qu'envoyée, photo d'origine et type recopiés dans `demo/`. Une seule génération, et le film, le brouillon et `vinted-draft.png` montrent le même article.
+
 ### 4.3 `vto-tutorial record` (rejouable, sans réseau)
 
 1. Crée un `VTO_DATA_DIR` temporaire : clé Gemini factice, `tutorial.video_seen = true` et toutes les visites dans `tours_seen` (rien ne doit s'afficher dans le film).

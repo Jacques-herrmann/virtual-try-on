@@ -34,6 +34,20 @@ def _suffix(data: bytes) -> str:
     return ".bin"
 
 
+def save_image(folder: Path, prompt: str, data: bytes) -> Path:
+    target = folder / IMAGES / f"{_key(prompt)}{_suffix(data)}"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(data)
+    return target
+
+
+def save_listing(folder: Path, listing: dict) -> None:
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / LISTING).write_text(
+        json.dumps(listing, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+
 @dataclass
 class RecordingClient:
     """Enveloppe le vrai client et garde ses réponses dans `folder`."""
@@ -43,18 +57,12 @@ class RecordingClient:
 
     def generate_image(self, model: str, prompt: str, images: Sequence) -> bytes:
         data = self.inner.generate_image(model, prompt, images)
-        target = self.folder / IMAGES / f"{_key(prompt)}{_suffix(data)}"
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(data)
+        save_image(self.folder, prompt, data)
         return data
 
     def generate_json(self, model: str, prompt: str, images: Sequence, schema):
         output = self.inner.generate_json(model, prompt, images, schema)
-        self.folder.mkdir(parents=True, exist_ok=True)
-        (self.folder / LISTING).write_text(
-            json.dumps(output.model_dump(mode="json"), ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
+        save_listing(self.folder, output.model_dump(mode="json"))
         return output
 
     def check_models(self, models: Sequence[str]) -> None:
