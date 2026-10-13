@@ -6,11 +6,13 @@ import {
   generateKey,
   getLicense,
   getLicenseByCustomer,
+  getLicenseByHash,
   isValidStatus,
   normalizeKey,
   updateSubscription,
   upsertLicense,
 } from "../src/licenses";
+import { licenseHash } from "../src/tokens";
 
 beforeEach(async () => {
   await env.DB.exec("DELETE FROM licenses; DELETE FROM activations;");
@@ -78,6 +80,8 @@ describe("storage", () => {
     });
     expect(await getLicense(env.DB, lic.key)).toEqual(lic);
     expect(await getLicenseByCustomer(env.DB, "cus_1")).toEqual(lic);
+    expect(lic.key_hash).toBe(await licenseHash(lic.key));
+    expect(await getLicenseByHash(env.DB, lic.key_hash)).toEqual(lic);
   });
 
   it("keeps one license per Stripe customer", async () => {

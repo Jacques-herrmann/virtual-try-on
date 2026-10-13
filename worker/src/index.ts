@@ -1,5 +1,6 @@
 import { handleActivate, handleDeactivate, handleToken } from "./activation";
 import type { Env } from "./env";
+import { handleDownload, handleFile, handlePortal } from "./files";
 import { json, notFound } from "./http";
 import { handleWebhook } from "./stripe";
 
@@ -18,6 +19,11 @@ async function route(request: Request, env: Env, _ctx: ExecutionContext): Promis
   if (method === "POST" && url.pathname === "/api/activate") return handleActivate(request, env);
   if (method === "POST" && url.pathname === "/api/token") return handleToken(request, env);
   if (method === "POST" && url.pathname === "/api/deactivate") return handleDeactivate(request, env);
+  if (method === "GET" && url.pathname === "/api/portal") return handlePortal(request, env);
+  if (method === "GET" && url.pathname === "/telecharger") return handleDownload(url, env);
+  if (method === "GET" && (url.pathname.startsWith("/updates/") || url.pathname.startsWith("/data/"))) {
+    return handleFile(request, env, url.pathname);
+  }
 
   return notFound();
 }

@@ -1,5 +1,6 @@
 CREATE TABLE licenses (
   key TEXT PRIMARY KEY,
+  key_hash TEXT UNIQUE, -- empreinte portée par les jetons (tokens.ts)
   email TEXT,
   stripe_customer TEXT UNIQUE,
   stripe_subscription TEXT,

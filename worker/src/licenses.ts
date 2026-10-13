@@ -1,3 +1,5 @@
+import { licenseHash } from "./tokens";
+
 /** Alphabet de Crockford : sans I, L, O ni U, pour des clés faciles à recopier. */
 export const KEY_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
@@ -5,6 +7,7 @@ const VALID_STATUSES = new Set(["trialing", "active", "past_due"]);
 
 export interface License {
   key: string;
+  key_hash: string;
   email: string | null;
   stripe_customer: string | null;
   stripe_subscription: string | null;
@@ -42,6 +45,10 @@ export async function getLicense(db: D1Database, key: string): Promise<License |
   return db.prepare("SELECT * FROM licenses WHERE key = ?").bind(key).first<License>();
 }
 
+export async function getLicenseByHash(db: D1Database, hash: string): Promise<License | null> {
+  return db.prepare("SELECT * FROM licenses WHERE key_hash = ?").bind(hash).first<License>();
+}
+
 export async function getLicenseByCustomer(
   db: D1Database,
   customer: string,
@@ -70,11 +77,13 @@ export interface LicenseUpsert {
  * clé. Les champs `null` conservent la valeur connue.
  */
 export async function upsertLicense(db: D1Database, u: LicenseUpsert): Promise<License> {
+  const key = generateKey();
   const lic = await db
     .prepare(
       `INSERT INTO licenses
-         (key, email, stripe_customer, stripe_subscription, status, period_end, synced_at, created_at)
-       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?7)
+         (key, key_hash, email, stripe_customer, stripe_subscription, status, period_end,
+          synced_at, created_at)
+       VALUES (?1, ?8, ?2, ?3, ?4, ?5, ?6, ?7, ?7)
        ON CONFLICT (stripe_customer) DO UPDATE SET
          email = COALESCE(excluded.email, email),
          stripe_subscription = COALESCE(excluded.stripe_subscription, stripe_subscription),
@@ -83,7 +92,7 @@ export async function upsertLicense(db: D1Database, u: LicenseUpsert): Promise<L
          synced_at = excluded.synced_at
        RETURNING *`,
     )
-    .bind(generateKey(), u.email, u.customer, u.subscription, u.status, u.periodEnd, u.now)
+    .bind(key, u.email, u.customer, u.subscription, u.status, u.periodEnd, u.now, await licenseHash(key))
     .first<License>();
   return lic!;
 }

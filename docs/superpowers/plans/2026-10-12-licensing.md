@@ -65,15 +65,16 @@ Branche : `main` (travail direct).
 
 ### Tâche 5 — Relais des fichiers et portail (spec §2.3)
 
-- [ ] Tests `files.test.ts` (GitHub simulé) :
+- [x] Tests `files.test.ts` (GitHub simulé) :
   - sans en-tête, jeton faux ou expiré → 401 ;
   - `/updates/latest.json` → asset `latest.json` de la dernière Release publiée (API GitHub `releases/latest`, jeton GitHub) ;
   - `/updates/<installeur>` → l'asset du même nom de cette Release, en flux (pas de mise en mémoire de 60 Mo) ; nom inconnu → 404 ;
   - `/data/vinted-v1.json` → contenu de `main` ; `ETag` / `If-None-Match` transmis (le cache de l'app s'appuie dessus) ;
   - `/telecharger?cle=` → clé valide et abonnement valide → installeur ; sinon page d'erreur ;
   - `/api/portal` (jeton) → redirection vers une session du portail client Stripe.
-- [ ] Implémenter `src/files.ts` ; cache Cloudflare de 5 min sur `latest.json` et `vinted-v1.json`.
-- [ ] Commit `add authenticated file relay and billing portal`.
+- [x] Implémenter `src/files.ts` ; cache Cloudflare de 5 min sur `latest.json` et `vinted-v1.json`.
+- [x] Écart : colonne `key_hash` (empreinte du jeton) ajoutée à `licenses` pour retrouver la licence depuis le jeton de `/api/portal`.
+- [x] Commit `add authenticated file relay and billing portal`.
 
 ### Tâche 6 — Pages (spec §2.3)
 

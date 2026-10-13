@@ -68,10 +68,14 @@ export async function handleDeactivate(request: Request, env: Env): Promise<Resp
 }
 
 async function findLicense(env: Env, rawKey: string, now: number): Promise<License | Response> {
+  return (await lookupLicense(env, rawKey, now)) ?? unknownKey();
+}
+
+/** Licence d'une clé saisie, recalée sur Stripe si besoin ; `null` si la clé n'existe pas. */
+export async function lookupLicense(env: Env, rawKey: string, now: number): Promise<License | null> {
   const key = normalizeKey(rawKey);
   const license = key ? await getLicense(env.DB, key) : null;
-  if (!license) return unknownKey();
-  return syncSubscription(env, license, now);
+  return license && syncSubscription(env, license, now);
 }
 
 async function tokenResponse(
@@ -113,18 +117,15 @@ function badRequest(): Response {
   return error(400, "bad_request", "Requête invalide.");
 }
 
+export const UNKNOWN_KEY_MESSAGE =
+  "Cette clé de licence n'existe pas. Vérifie-la dans l'e-mail reçu après l'achat.";
+export const EXPIRED_MESSAGE =
+  "Ton abonnement est terminé. Renouvelle-le pour continuer à générer et à envoyer sur Vinted.";
+
 function unknownKey(): Response {
-  return error(
-    404,
-    "unknown_key",
-    "Cette clé de licence n'existe pas. Vérifie-la dans l'e-mail reçu après l'achat.",
-  );
+  return error(404, "unknown_key", UNKNOWN_KEY_MESSAGE);
 }
 
 function expired(): Response {
-  return error(
-    403,
-    "expired",
-    "Ton abonnement est terminé. Renouvelle-le pour continuer à générer et à envoyer sur Vinted.",
-  );
+  return error(403, "expired", EXPIRED_MESSAGE);
 }
