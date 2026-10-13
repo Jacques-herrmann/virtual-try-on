@@ -96,3 +96,11 @@ button:not(.p-component):focus-visible {
 .p-button [class*=' icon-'] {
   font-size: 1.1em;
 }
+
+/* Zones de texte : elles s'agrandissent avec leur contenu (WebView2 = Chromium, `field-sizing`) ;
+   `rows` reste la hauteur minimale. */
+textarea.p-textarea {
+  field-sizing: content;
+  min-height: calc(var(--rows, 3) * 1lh + 1.25rem);
+  resize: none;
+}

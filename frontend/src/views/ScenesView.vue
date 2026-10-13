@@ -222,7 +222,7 @@ async function backgroundsChanged(scene: SceneDetail) {
             Envoyées à l'IA avec le décor ([Image A]) et la photo du vêtement ([Image B]).
             <code>{garment_type}</code> est remplacé par le type de vêtement.
           </small>
-          <Textarea id="scene-prompt" v-model="prompt" rows="12" fluid class="mono" />
+          <Textarea id="scene-prompt" v-model="prompt" style="--rows: 12" fluid class="mono" />
           <div>
             <Button
               label="Enregistrer"

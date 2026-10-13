@@ -133,7 +133,7 @@ function submit() {
       </div>
       <div class="field wide">
         <label for="notes">Remarques (défaut, matière, coupe…)</label>
-        <Textarea id="notes" v-model="input.notes" rows="2" auto-resize fluid />
+        <Textarea id="notes" v-model="input.notes" style="--rows: 2" fluid />
       </div>
     </div>
 

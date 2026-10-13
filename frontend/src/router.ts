@@ -22,6 +22,7 @@ export const router = createRouter({
     { path: '/articles/:id?', name: 'articles', component: () => import('./views/ArticlesView.vue') },
     { path: '/scenes/:slug?', name: 'scenes', component: () => import('./views/ScenesView.vue') },
     { path: '/settings', name: 'settings', component: () => import('./views/SettingsView.vue') },
+    { path: '/aide', name: 'help', component: () => import('./views/HelpView.vue') },
     { path: '/:rest(.*)*', redirect: '/articles' },
   ],
 })

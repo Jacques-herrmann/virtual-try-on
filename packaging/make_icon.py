@@ -37,13 +37,16 @@ def main() -> None:
     # Chaque taille est rendue à part : un 16 px rendu directement reste plus net
     # qu'un 256 px réduit.
     images = {size: render(svg, size) for size in ICO_SIZES}
-    images[256].save(
-        Path(__file__).with_name("icon.ico"),
-        sizes=[(s, s) for s in ICO_SIZES],
-        append_images=[images[s] for s in ICO_SIZES if s != 256],
-    )
+    # L'exécutable (PyInstaller) et la fenêtre de l'app (lancée depuis les sources aussi).
+    targets = (Path(__file__).with_name("icon.ico"), ROOT / "backend" / "src" / "vto" / "icon.ico")
+    for target in targets:
+        images[256].save(
+            target,
+            sizes=[(s, s) for s in ICO_SIZES],
+            append_images=[images[s] for s in ICO_SIZES if s != 256],
+        )
     render(svg, 64).save(ROOT / "frontend" / "public" / "favicon.png")
-    print("packaging/icon.ico, frontend/public/favicon.png")
+    print("packaging/icon.ico, backend/src/vto/icon.ico, frontend/public/favicon.png")
 
 
 if __name__ == "__main__":

@@ -19,6 +19,7 @@ const links = [
   { to: '/articles', label: 'Articles', icon: 'icon-shirt' },
   { to: '/scenes', label: 'Scènes', icon: 'icon-image' },
   { to: '/settings', label: 'Réglages', icon: 'icon-settings' },
+  { to: '/aide', label: 'Aide', icon: 'icon-circle-help' },
 ]
 
 const version = ref<string | null>(null)

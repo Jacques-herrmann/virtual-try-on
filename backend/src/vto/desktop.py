@@ -141,7 +141,8 @@ def main(argv: list[str] | None = None) -> None:
     webview.create_window(
         "Kaloé", login_url(port, token), width=1280, height=800, min_size=(1024, 700)
     )
-    webview.start()
+    # Sans icône, la fenêtre prend celle de python.exe quand l'app tourne depuis les sources.
+    webview.start(icon=str(Path(__file__).with_name("icon.ico")))
 
     # Fenêtre fermée : l'article en cours sera repris au prochain lancement.
     queue.stop()

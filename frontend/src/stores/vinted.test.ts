@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { makeArticle } from '@/testing'
 import type { VintedResult, VintedStatus } from '@/types'
 
-import { isActive, pruneSelection, sendable, shouldRefreshArticles, vintedBadge } from './vinted'
+import { isActive, sendable, shouldRefreshArticles, vintedBadge } from './vinted'
 
 function status(changes: { running?: boolean; connecting?: boolean } = {}): VintedStatus {
   return {
@@ -88,14 +88,5 @@ describe('sélection', () => {
     expect(sendable(makeArticle('validated'))).toBe(true)
     expect(sendable(makeArticle('to_review'))).toBe(false)
     expect(sendable(makeArticle('published'))).toBe(false)
-  })
-
-  it('retire de la sélection les articles qui ne sont plus validés', () => {
-    const articles = [
-      makeArticle('validated', { id: 'a' }),
-      makeArticle('published', { id: 'b' }),
-      makeArticle('validated', { id: 'c' }),
-    ]
-    expect(pruneSelection(['a', 'b', 'x', 'c'], articles)).toEqual(['a', 'c'])
   })
 })

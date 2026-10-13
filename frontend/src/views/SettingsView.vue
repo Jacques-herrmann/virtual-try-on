@@ -168,9 +168,9 @@ function keySaved() {
     >
       <div class="stack">
         <label for="signature">Signature ajoutée à la fin de chaque description</label>
-        <Textarea id="signature" v-model="signature" rows="3" auto-resize fluid />
+        <Textarea id="signature" v-model="signature" style="--rows: 3" fluid />
         <label for="listing-prompt">Consignes données à l’IA pour rédiger l’annonce</label>
-        <Textarea id="listing-prompt" v-model="listingPrompt" rows="14" fluid class="mono" />
+        <Textarea id="listing-prompt" v-model="listingPrompt" style="--rows: 14" fluid class="mono" />
         <div class="row">
           <Button
             label="Enregistrer"

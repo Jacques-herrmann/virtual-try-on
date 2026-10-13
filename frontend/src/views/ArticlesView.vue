@@ -126,6 +126,29 @@ async function sendToVinted(ids: string[]) {
   }
 }
 
+function deleteMany(ids: string[]) {
+  const n = ids.length
+  confirm.require({
+    header: n > 1 ? `Supprimer ces ${n} articles ?` : 'Supprimer cet article ?',
+    message: 'Leurs photos, images générées et annonces seront définitivement supprimées.',
+    acceptProps: { label: 'Supprimer', severity: 'danger' },
+    rejectProps: { label: 'Annuler', severity: 'secondary', text: true },
+    accept: async () => {
+      let failure: unknown = null
+      for (const id of ids) {
+        try {
+          await api.deleteArticle(id)
+          remove(id)
+        } catch (e) {
+          failure = e
+        }
+      }
+      if (failure) notify.error(failure)
+      else notify.success(n > 1 ? `${n} articles supprimés.` : 'Article supprimé.')
+    },
+  })
+}
+
 function deleteSelected() {
   const article = selected.value
   if (!article) return
@@ -172,6 +195,7 @@ function deleteSelected() {
         :sending="!!vinted.status.value?.batch.running"
         @select="select"
         @send="sendToVinted"
+        @delete="deleteMany"
       />
 
       <Dialog

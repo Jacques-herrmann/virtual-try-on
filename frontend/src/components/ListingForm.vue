@@ -129,8 +129,7 @@ defineExpose({ dirty, flush })
       <Textarea
         id="description"
         v-model="draft.description"
-        rows="8"
-        auto-resize
+        style="--rows: 8"
         :disabled="readonly"
         fluid
       />

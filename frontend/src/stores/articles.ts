@@ -32,6 +32,17 @@ export function panelFor(article: Article | null | undefined): Panel {
   }
 }
 
+/** L'API refuse de supprimer un article en cours de génération. */
+export function deletable(article: Article): boolean {
+  return !BUSY.includes(article.status)
+}
+
+/** Sélection débarrassée des articles qui n'existent plus. */
+export function pruneSelection(selected: string[], articles: Article[]): string[] {
+  const ids = new Set(articles.map((a) => a.id))
+  return selected.filter((id) => ids.has(id))
+}
+
 export const FILTERS = [
   { key: 'all', label: 'Tous', statuses: null },
   { key: 'busy', label: 'En cours', statuses: BUSY },

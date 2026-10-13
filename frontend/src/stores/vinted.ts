@@ -57,12 +57,6 @@ export function sendable(article: Article): boolean {
   return article.status === 'validated'
 }
 
-/** Sélection débarrassée des articles qui ne sont plus envoyables. */
-export function pruneSelection(selected: string[], articles: Article[]): string[] {
-  const ok = new Set(articles.filter(sendable).map((a) => a.id))
-  return selected.filter((id) => ok.has(id))
-}
-
 // --- État partagé ------------------------------------------------------------------------
 
 const status = ref<VintedStatus | null>(null)

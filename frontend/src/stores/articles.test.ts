@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { makeArticle as article } from '@/testing'
 
-import { createPoller, isBusy, matches, panelFor } from './articles'
+import { createPoller, deletable, isBusy, matches, panelFor, pruneSelection } from './articles'
 
 describe('panelFor', () => {
   it.each([
@@ -31,6 +31,20 @@ describe('isBusy / matches', () => {
     expect(matches('busy', article('generating'))).toBe(true)
     expect(matches('busy', article('to_review'))).toBe(false)
     expect(matches('validated', article('published'))).toBe(true)
+  })
+})
+
+describe('sélection', () => {
+  it('un article en cours de génération ne peut pas être supprimé', () => {
+    expect(deletable(article('to_review'))).toBe(true)
+    expect(deletable(article('published'))).toBe(true)
+    expect(deletable(article('queued'))).toBe(false)
+    expect(deletable(article('generating'))).toBe(false)
+  })
+
+  it('retire de la sélection les articles disparus', () => {
+    const articles = [article('validated', { id: 'a' }), article('to_review', { id: 'b' })]
+    expect(pruneSelection(['a', 'x', 'b'], articles)).toEqual(['a', 'b'])
   })
 })
 

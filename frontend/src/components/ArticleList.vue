@@ -6,9 +6,9 @@ import { computed, ref, watch } from 'vue'
 
 import { articleFile } from '@/api'
 import StatusTag from '@/components/StatusTag.vue'
-import { FILTERS, type FilterKey, matches } from '@/stores/articles'
+import { deletable, FILTERS, type FilterKey, matches, pruneSelection } from '@/stores/articles'
 import { useLicense } from '@/stores/license'
-import { pruneSelection, sendable } from '@/stores/vinted'
+import { sendable } from '@/stores/vinted'
 import { type Article, label } from '@/types'
 
 const props = defineProps<{
@@ -17,16 +17,24 @@ const props = defineProps<{
   /** Un envoi sur Vinted est en cours : pas de nouvel envoi. */
   sending?: boolean
 }>()
-const emit = defineEmits<{ select: [id: string]; send: [ids: string[]] }>()
+const emit = defineEmits<{
+  select: [id: string]
+  send: [ids: string[]]
+  delete: [ids: string[]]
+}>()
 
 const { licensed } = useLicense()
 const filter = ref<FilterKey>('all')
 const checked = ref<string[]>([])
 
-const sendableIds = computed(() => props.articles.filter(sendable).map((a) => a.id))
+const visible = computed(() => props.articles.filter((a) => matches(filter.value, a)))
+const visibleIds = computed(() => visible.value.map((a) => a.id))
 const allChecked = computed(
-  () => sendableIds.value.length > 0 && checked.value.length === sendableIds.value.length,
+  () => visibleIds.value.length > 0 && visibleIds.value.every((id) => checked.value.includes(id)),
 )
+const checkedArticles = computed(() => props.articles.filter((a) => checked.value.includes(a.id)))
+const toSend = computed(() => checkedArticles.value.filter(sendable).map((a) => a.id))
+const toDelete = computed(() => checkedArticles.value.filter(deletable).map((a) => a.id))
 
 watch(
   () => props.articles,
@@ -36,12 +44,17 @@ watch(
 )
 
 function toggleAll() {
-  checked.value = allChecked.value ? [] : [...sendableIds.value]
+  const others = checked.value.filter((id) => !visibleIds.value.includes(id))
+  checked.value = allChecked.value ? others : [...others, ...visibleIds.value]
 }
 
 function send() {
-  emit('send', [...checked.value])
+  emit('send', toSend.value)
   checked.value = []
+}
+
+function remove() {
+  emit('delete', toDelete.value)
 }
 
 const options = computed(() =>
@@ -51,7 +64,6 @@ const options = computed(() =>
   })),
 )
 
-const visible = computed(() => props.articles.filter((a) => matches(filter.value, a)))
 
 /** Vignette : première photo qui partira sur Vinted, sinon la photo d'origine. */
 function thumbnail(article: Article): string {
@@ -72,23 +84,47 @@ function thumbnail(article: Article): string {
         class="filters"
         aria-label="Filtrer les articles"
       />
-      <div v-if="sendableIds.length" class="send">
+      <div v-if="visible.length" class="check-all">
         <Checkbox
           :model-value="allChecked"
           binary
           input-id="check-all"
-          :disabled="sending"
           @update:model-value="toggleAll"
         />
-        <label for="check-all">Tous les validés</label>
+        <label for="check-all">Tout sélectionner</label>
+      </div>
+    </div>
+
+    <div v-if="checked.length" class="selection" data-test="selection-bar">
+      <strong>{{ checked.length }} sélectionné{{ checked.length > 1 ? 's' : '' }}</strong>
+      <span v-if="toSend.length < checked.length" class="muted hint">
+        Seuls les articles validés et pas encore envoyés partent sur Vinted.
+      </span>
+      <span class="actions">
         <Button
-          :label="`Envoyer sur Vinted (${checked.length})`"
+          :label="`Envoyer sur Vinted (${toSend.length})`"
           icon="icon-send"
           size="small"
-          :disabled="!checked.length || sending || !licensed"
+          :disabled="!toSend.length || sending || !licensed"
           @click="send"
         />
-      </div>
+        <Button
+          :label="`Supprimer (${toDelete.length})`"
+          icon="icon-trash-2"
+          size="small"
+          severity="danger"
+          outlined
+          :disabled="!toDelete.length"
+          @click="remove"
+        />
+        <Button
+          label="Annuler"
+          size="small"
+          severity="secondary"
+          text
+          @click="checked = []"
+        />
+      </span>
     </div>
 
     <p v-if="!visible.length" class="muted empty">Aucun article ici.</p>
@@ -119,12 +155,10 @@ function thumbnail(article: Article): string {
           </span>
         </button>
         <Checkbox
-          v-if="sendable(article)"
           v-model="checked"
           :value="article.id"
-          :disabled="sending"
           class="pick"
-          :aria-label="`Sélectionner pour l’envoi sur Vinted`"
+          :aria-label="`Sélectionner ${article.listing?.title ?? label(article.input.garment_type)}`"
         />
       </article>
     </div>
@@ -150,15 +184,37 @@ function thumbnail(article: Article): string {
   flex-wrap: wrap;
 }
 
-.send {
+.check-all {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
 }
 
-.send label {
-  margin-right: 0.5rem;
+.selection {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--w-radius-card);
+  background: var(--p-apricot-50);
+  border: 1px solid var(--p-apricot-200);
+  box-shadow: var(--w-shadow-card);
+}
+
+.hint {
+  font-size: 0.85rem;
+}
+
+.selection .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: auto;
 }
 
 .empty {
