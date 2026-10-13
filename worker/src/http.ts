@@ -10,6 +10,19 @@ export function error(status: number, code: string, message: string, extra: obje
   return json({ code, message, ...extra }, status);
 }
 
+export function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export function nowSeconds(): number {
+  return Math.floor(Date.now() / 1000);
+}
+
 export function notFound(): Response {
   return error(404, "not_found", "Cette page n'existe pas.");
 }

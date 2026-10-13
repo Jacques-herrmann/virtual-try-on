@@ -4,6 +4,7 @@ export interface Env {
   GITHUB_REPO: string;
   PAYMENT_LINK_URL: string;
   TOKEN_KEY_ID: string;
+  EMAIL_FROM: string;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
   TOKEN_PRIVATE_KEY: string;

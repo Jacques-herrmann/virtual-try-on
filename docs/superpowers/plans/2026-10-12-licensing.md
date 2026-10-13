@@ -43,15 +43,15 @@ Branche : `main` (travail direct).
 
 ### Tâche 3 — Webhooks Stripe et e-mail (spec §2.3)
 
-- [ ] Tests `stripe.test.ts` (événements construits et signés en test avec un secret de test) :
+- [x] Tests `stripe.test.ts` (événements construits et signés en test avec un secret de test) :
   - signature absente, fausse ou trop ancienne (> 5 min) → 400 ;
   - `checkout.session.completed` → licence créée, e-mail envoyé (Resend simulé : destinataire, clé, lien `/telecharger?cle=`) ; même client → même clé, e-mail renvoyé ;
   - `customer.subscription.created/updated/deleted` → statut et `period_end` ;
   - même `event.id` deux fois → aucun effet la 2ᵉ fois ;
   - échec de Resend → licence créée quand même (log) ; le client retrouvera sa clé sur `/merci` ou `/retrouver`.
-- [ ] Implémenter `src/stripe.ts` (vérification HMAC-SHA256 de `Stripe-Signature` via WebCrypto, appels API Stripe par `fetch` — pas de SDK) et `src/email.ts` (API Resend par `fetch`, texte + HTML simples).
-- [ ] Recalage (spec §2.3) : `syncSubscription(license)` relit `GET /v1/subscriptions/:id` si `synced_at` > 24 h ; Stripe en erreur → valeurs de D1. Tests.
-- [ ] Commit `add stripe webhooks and license email`.
+- [x] Implémenter `src/stripe.ts` (vérification HMAC-SHA256 de `Stripe-Signature` via WebCrypto, appels API Stripe par `fetch` — pas de SDK) et `src/email.ts` (API Resend par `fetch`, texte + HTML simples).
+- [x] Recalage (spec §2.3) : `syncSubscription(license)` relit `GET /v1/subscriptions/:id` si `synced_at` > 24 h ; Stripe en erreur → valeurs de D1. Tests.
+- [x] Commit `add stripe webhooks and license email`.
 
 ### Tâche 4 — Activation (spec §2.3)
 
