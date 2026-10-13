@@ -84,7 +84,7 @@ async function create(input: UserInput, photos: File[]) {
     upsert(await api.createArticle(input, photos))
     formKey.value += 1
     creatingOpen.value = false
-    notify.success('Article ajouté : Wearo prépare les photos et l’annonce.')
+    notify.success('Article ajouté : Kaloé prépare les photos et l’annonce.')
   } catch (e) {
     notify.error(e)
   } finally {
@@ -161,7 +161,7 @@ function deleteSelected() {
       <EmptyState
         v-if="!articles.length"
         title="Ajoute ton premier vêtement"
-        text="Une photo suffit : Wearo crée les photos portées et rédige l’annonce, tu n’as plus qu’à relire."
+        text="Une photo suffit : Kaloé crée les photos portées et rédige l’annonce, tu n’as plus qu’à relire."
       >
         <Button label="Ajouter un vêtement" icon="icon-image-plus" @click="newArticle" />
       </EmptyState>

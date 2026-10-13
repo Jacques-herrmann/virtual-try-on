@@ -41,7 +41,7 @@ async function cancel() {
     <AppBanner tone="brand" :icon="running ? 'icon-sparkles' : 'icon-clock'">
       <ProgressSpinner v-if="running" style="width: 20px; height: 20px" stroke-width="6" />
       <span v-if="running">
-        <strong>Wearo prépare tes photos et ton annonce…</strong>
+        <strong>Kaloé prépare tes photos et ton annonce…</strong>
         Tu peux ajouter l'article suivant pendant ce temps.
       </span>
       <span v-else-if="position">En attente ({{ position }}ᵉ dans la file).</span>

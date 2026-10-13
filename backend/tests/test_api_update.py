@@ -7,7 +7,7 @@ from vto.updates.manifest import Manifest
 MANIFEST = Manifest(
     version="0.3.0",
     minimum_version="0.2.0",
-    url="https://example.com/Wearo-Setup-0.3.0.exe",
+    url="https://example.com/Kaloe-Setup-0.3.0.exe",
     sha256="a" * 64,
     notes="Nouveautés",
 )

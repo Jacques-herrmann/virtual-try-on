@@ -1,4 +1,4 @@
-# Interface Wearo
+# Interface Kaloé
 
 Vue 3 + Vite + TypeScript + PrimeVue 4 (MIT). Node ≥ 22.12.
 

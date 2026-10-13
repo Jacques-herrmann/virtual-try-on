@@ -8,7 +8,7 @@ export async function sendLicenseEmail(env: Env, to: string, key: string): Promi
   const text = [
     "Bonjour,",
     "",
-    "Merci pour ton abonnement à Wearo !",
+    "Merci pour ton abonnement à Kaloé !",
     "",
     `Ta clé de licence : ${key}`,
     "",
@@ -23,7 +23,7 @@ export async function sendLicenseEmail(env: Env, to: string, key: string): Promi
 <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #E9DFD4;border-radius:18px;padding:28px">
 <p style="margin:0 0 20px;font-size:26px;font-weight:800;letter-spacing:-0.5px">wear<span style="color:#E8774A">o</span></p>
 <p>Bonjour,</p>
-<p>Merci pour ton abonnement à Wearo !</p>
+<p>Merci pour ton abonnement à Kaloé !</p>
 <p>Ta clé de licence :<br><strong style="display:inline-block;margin-top:6px;padding:8px 12px;background:#FDE8DC;border-radius:10px;font-family:Consolas,monospace;font-size:18px">${escapeHtml(key)}</strong></p>
 <p style="margin:24px 0"><a href="${escapeHtml(download)}" style="display:inline-block;background:#E8774A;color:#2E1F2B;font-weight:700;text-decoration:none;padding:12px 22px;border-radius:12px">Télécharger l'application</a></p>
 <p><a href="${escapeHtml(help)}" style="color:#AD4A24">Aide à l'installation</a></p>
@@ -41,7 +41,7 @@ Garde cet e-mail : il te servira si tu réinstalles l'application.</p>
       body: JSON.stringify({
         from: env.EMAIL_FROM,
         to: [to],
-        subject: "Ta clé de licence Wearo",
+        subject: "Ta clé de licence Kaloé",
         text,
         html,
       }),

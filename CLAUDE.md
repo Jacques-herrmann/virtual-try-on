@@ -1,6 +1,6 @@
-# Wearo — CLAUDE.md
+# Kaloé — CLAUDE.md
 
-**Wearo** (anciennement Virtual Try-On ; package Python `vto`) : outil pour vendeurs Vinted : à partir d'une photo de vêtement, génère des photos « portées » (mannequin, cintre…) et une annonce via Gemini, puis crée les brouillons Vinted. Prototype personnel en cours de transformation en produit vendu à des vendeurs non techniques.
+**Kaloé** (anciennement Virtual Try-On ; package Python `vto`) : outil pour vendeurs Vinted : à partir d'une photo de vêtement, génère des photos « portées » (mannequin, cintre…) et une annonce via Gemini, puis crée les brouillons Vinted. Prototype personnel en cours de transformation en produit vendu à des vendeurs non techniques.
 
 ## Roadmap
 
@@ -11,7 +11,7 @@
 | 3 | **Vinted** — profil Chrome persistant (aucun mot de passe stocké), sélecteurs dans un JSON distant, remplissage complet du formulaire | ✅ terminé le 2026-10-12 sur `main` — essai réel fait (brouillons, lot, publication, 3 relances sans reconnexion, `pytest -m live_vinted`) ; catalogue complet relevé (783 feuilles, 26 grilles de tailles) ; `data/vinted.json` publié | `docs/superpowers/specs/2026-10-10-vinted-design.md`, `docs/superpowers/plans/2026-10-10-vinted.md` |
 | 4 | **Distribution** — PyInstaller, installeur Inno Setup, mise à jour en un clic, signature de code (plus tard) | 🟡 implémenté sur `main`, v0.2.2 publiée — mise à jour en un clic et mise à jour obligatoire validées sur le poste le 2026-10-12 ; reste l'essai d'installation chez un ami | `docs/superpowers/specs/2026-10-12-distribution-design.md`, `docs/superpowers/plans/2026-10-12-distribution.md` |
 | 5 | **Licence** — abonnement pour tout le monde (essai 7 jours), Stripe Managed Payments ; clé de licence, 2 PC ; Worker Cloudflare + D1 qui délivre des jetons signés et seul accès aux MAJ et sélecteurs ; dépôt privé | 🟡 code fait sur `main` (tâches 0–6 et 8–13 : Worker testé, app, front) ; Worker déployé le 2026-10-13 (tâche 7, `https://vto-licence.vto-licence.workers.dev`, compte Stripe dédié en mode test) ; essai de bout en bout en mode test validé (14) ; page `/renouveler` (réabonnement, même clé) ajoutée ; reste avec l'utilisateur : mise en production et dépôt privé (15) | `docs/superpowers/specs/2026-10-12-licensing-design.md`, `docs/superpowers/plans/2026-10-12-licensing.md` |
-| 6 | **Marque & UI** — nom **Wearo**, DA chaleureuse (abricot/crème), refonte des écrans, site et e-mails du Worker, renommage complet (exe, installeur, dossiers) avec migration des données | 🟡 spec et plan écrits le 2026-10-13 ; tâches 0–12 faites sur `main` (marque, migration, installeur, CI, thème, écrans, Worker, aide) ; reste l'essai réel (13) : préversion `v0.3.0rc1` puis mise à jour depuis la v0.2.2 du poste, et le déploiement du Worker | `docs/superpowers/specs/2026-10-13-brand-design.md`, `docs/superpowers/plans/2026-10-13-brand.md` |
+| 6 | **Marque & UI** — nom **Kaloé**, DA chaleureuse (abricot/crème), refonte des écrans, site et e-mails du Worker, renommage complet (exe, installeur, dossiers) avec migration des données | 🟡 spec et plan écrits le 2026-10-13 ; tâches 0–12 faites sur `main` (marque, migration, installeur, CI, thème, écrans, Worker, aide) ; reste l'essai réel (13) : préversion `v0.3.0rc1` puis mise à jour depuis la v0.2.2 du poste, et le déploiement du Worker | `docs/superpowers/specs/2026-10-13-brand-design.md`, `docs/superpowers/plans/2026-10-13-brand.md` |
 
 Ordre : 1 → 2 → 3 → 4 → 5 → 6. Chaque sous-projet suit le cycle brainstorming → spec → plan → implémentation. Mettre à jour le statut ci-dessus à chaque étape.
 
@@ -28,7 +28,7 @@ Ordre : 1 → 2 → 3 → 4 → 5 → 6. Chaque sous-projet suit le cycle brains
 ## Règles d'architecture
 
 - `vto.core` n'importe jamais `cli`, `tools`, `api`, `vinted`, `licensing`, `updates`. Dépendances toujours vers `core`.
-- Aucun secret ni chemin absolu dans le code. Chemins utilisateur uniquement via `vto.core.paths` (racine `%LOCALAPPDATA%\Wearo`, surchargeable par `VTO_DATA_DIR` ; l'ancien `%LOCALAPPDATA%\VirtualTryOn` est renommé au premier lancement par `paths.migrate_legacy_data_dir`).
+- Aucun secret ni chemin absolu dans le code. Chemins utilisateur uniquement via `vto.core.paths` (racine `%LOCALAPPDATA%\Kaloe`, surchargeable par `VTO_DATA_DIR` ; l'ancien `%LOCALAPPDATA%\VirtualTryOn` est renommé au premier lancement par `paths.migrate_legacy_data_dir`).
 - Gemini uniquement via le protocole `GenAIClient` ; les tests utilisent `FakeClient`, jamais le réseau (sauf `pytest -m live`).
 - Messages d'erreur destinés au client final : en français, sans jargon ; détails techniques dans le log.
 - Les données du client (articles, scènes) ne sont jamais supprimées implicitement.
@@ -68,9 +68,9 @@ vto-app --dev                    # API seule sur 127.0.0.1:8765, puis `npm run d
 vto-app --self-check --output f  # test de fumée (modules, front, données, scènes, pilote Playwright)
 
 # Empaquetage local (après npm run build) ; Inno Setup 6 : winget install JRSoftware.InnoSetup
-pyinstaller packaging/vto.spec --noconfirm          # → dist/Wearo/ (mode dossier)
+pyinstaller packaging/vto.spec --noconfirm          # → dist/Kaloe/ (mode dossier)
 powershell -File packaging/fetch_redist.ps1         # bootstrapper WebView2 (non versionné)
-iscc /DAppVersion=X.Y.Z packaging/installer.iss     # → packaging/Output/Wearo-Setup-X.Y.Z.exe
+iscc /DAppVersion=X.Y.Z packaging/installer.iss     # → packaging/Output/Kaloe-Setup-X.Y.Z.exe
 ```
 
 ## Publier une version

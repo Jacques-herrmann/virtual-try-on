@@ -1,4 +1,4 @@
-"""Test de fumée de l'exécutable : `Wearo.exe --self-check --output f`.
+"""Test de fumée de l'exécutable : `Kaloe.exe --self-check --output f`.
 
 Vérifie que PyInstaller a tout embarqué (modules et données), sans fenêtre ni réseau.
 """
@@ -94,7 +94,7 @@ CHECKS: list[tuple[str, Callable[[], str]]] = [
 
 
 def run(output: Path | None = None) -> int:
-    lines = [f"Wearo {vto.__version__}"]
+    lines = [f"Kaloé {vto.__version__}"]
     failed = False
     for name, check in CHECKS:
         try:

@@ -13,7 +13,7 @@ def body(**changes) -> dict:
     data = {
         "version": "0.3.0",
         "minimum_version": "0.2.0",
-        "url": "https://github.com/x/y/releases/download/v0.3.0/Wearo-Setup-0.3.0.exe",
+        "url": "https://github.com/x/y/releases/download/v0.3.0/Kaloe-Setup-0.3.0.exe",
         "sha256": SHA,
         "notes": "Nouveautés",
     }
@@ -91,7 +91,7 @@ def test_env_url_wins(monkeypatch):
 
 def test_local_http_url_is_allowed(monkeypatch):
     monkeypatch.setenv("VTO_UPDATE_URL", "http://127.0.0.1:8000/latest.json")
-    local = body(url="http://127.0.0.1:8000/Wearo-Setup-0.3.0.exe")
+    local = body(url="http://127.0.0.1:8000/Kaloe-Setup-0.3.0.exe")
     server = serve(content=json.dumps(local).encode())
     assert manifest.fetch_manifest(transport=server.transport()).url.startswith("http://127")
 

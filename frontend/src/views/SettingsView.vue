@@ -163,7 +163,7 @@ function keySaved() {
 
     <SectionCard
       title="Annonces"
-      subtitle="Ce que l’IA écrit, et ce que Wearo ajoute à chaque description."
+      subtitle="Ce que l’IA écrit, et ce que Kaloé ajoute à chaque description."
       icon="icon-pencil"
     >
       <div class="stack">

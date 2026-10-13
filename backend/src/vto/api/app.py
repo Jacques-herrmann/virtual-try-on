@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 
 STATIC_DIR = Path(__file__).parent / "static"
 
-MISSING_FRONT = """<!doctype html><meta charset="utf-8"><title>Wearo</title>
+MISSING_FRONT = """<!doctype html><meta charset="utf-8"><title>Kaloé</title>
 <p>L'interface n'est pas compilée. Lance <code>npm run build</code> dans <code>frontend/</code>.</p>
 """
 
@@ -91,7 +91,7 @@ def create_app(
     installer: Installer | None = None,
     license_manager: LicenseManager | None = None,
 ) -> FastAPI:
-    app = FastAPI(title="Wearo", docs_url=None, redoc_url=None, openapi_url=None)
+    app = FastAPI(title="Kaloé", docs_url=None, redoc_url=None, openapi_url=None)
     app.state.client_factory = client_factory
     app.state.queue = queue or GenerationQueue(client_factory)
     app.state.vinted = vinted_worker or VintedWorker()

@@ -192,7 +192,7 @@ describe("GET /aide", () => {
     const res = await call("/aide");
     expect(res.status).toBe(200);
     const html = await res.text();
-    expect(html).toContain("<h1>Installer Wearo</h1>");
+    expect(html).toContain("<h1>Installer Kaloé</h1>");
     expect(html).toContain("<strong>Exécuter quand même</strong>");
     expect(html).toContain("<ol>");
     expect(html).toContain("Clé de licence");

@@ -13,10 +13,10 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { fr } from './locale'
 import { router } from './router'
-import { WearoTheme } from './theme'
+import { KaloeTheme } from './theme'
 
 createApp(App)
-  .use(PrimeVue, { theme: { preset: WearoTheme, options: { darkModeSelector: false } }, locale: fr })
+  .use(PrimeVue, { theme: { preset: KaloeTheme, options: { darkModeSelector: false } }, locale: fr })
   .use(ToastService)
   .use(ConfirmationService)
   .use(router)

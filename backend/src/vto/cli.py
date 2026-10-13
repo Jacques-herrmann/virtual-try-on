@@ -13,7 +13,7 @@ from vto.core.images import load_image, save_jpeg
 from vto.core.logging import setup_logging
 from vto.core.models import Article, ArticleStatus, UserInput
 
-app = typer.Typer(no_args_is_help=True, help="Wearo : photos portées et annonces Vinted.")
+app = typer.Typer(no_args_is_help=True, help="Kaloé : photos portées et annonces Vinted.")
 config_app = typer.Typer(no_args_is_help=True, help="Réglages.")
 app.add_typer(config_app, name="config")
 

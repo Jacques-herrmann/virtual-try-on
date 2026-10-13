@@ -20,7 +20,7 @@ def make_manifest():
 
 @pytest.fixture
 def release(tmp_path):
-    installer = tmp_path / "Wearo-Setup-0.3.0.exe"
+    installer = tmp_path / "Kaloe-Setup-0.3.0.exe"
     installer.write_bytes(b"MZ installeur")
     minimum = tmp_path / "minimum_version.txt"
     minimum.write_text(" 0.2.0 \n", encoding="utf-8")
@@ -52,7 +52,7 @@ def test_manifest_is_valid(make_manifest, tmp_path, release):
     assert manifest.sha256 == hashlib.sha256(b"MZ installeur").hexdigest()
     from vto.licensing.client import DEFAULT_URL
 
-    assert manifest.url == f"{DEFAULT_URL}/updates/Wearo-Setup-0.3.0.exe"
+    assert manifest.url == f"{DEFAULT_URL}/updates/Kaloe-Setup-0.3.0.exe"
     assert manifest.notes == "Bandeau de mise à jour."
 
 
@@ -67,7 +67,7 @@ def test_base_url_can_be_overridden(make_manifest, tmp_path, release):
         "--out", str(out),
     ])
     data = json.loads(out.read_text(encoding="utf-8"))
-    assert data["url"] == "https://licence.example/updates/Wearo-Setup-0.3.0.exe"
+    assert data["url"] == "https://licence.example/updates/Kaloe-Setup-0.3.0.exe"
 
 
 def test_notes_are_optional(make_manifest, tmp_path, release):

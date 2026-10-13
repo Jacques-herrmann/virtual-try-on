@@ -57,7 +57,7 @@ describe('UpdateBanner', () => {
 
   it('propose la mise à jour disponible et peut être masqué', async () => {
     const wrapper = await setup(snapshot())
-    expect(wrapper.text()).toContain('Wearo 0.3.0 est disponible')
+    expect(wrapper.text()).toContain('Kaloé 0.3.0 est disponible')
     expect(wrapper.find('.update-banner').classes()).not.toContain('required')
     await wrapper.find('[data-test="dismiss"]').trigger('click')
     expect(wrapper.text()).toBe('')
@@ -109,7 +109,7 @@ describe('UpdateBanner', () => {
     await vi.advanceTimersByTimeAsync(1000)
     expect(wrapper.find('[role="progressbar"]').attributes('aria-valuenow')).toBe('50')
     await vi.advanceTimersByTimeAsync(1000)
-    expect(wrapper.text()).toContain('Wearo va redémarrer')
+    expect(wrapper.text()).toContain('Kaloé va redémarrer')
     await vi.advanceTimersByTimeAsync(5000)
     expect(mocked.updateProgress).toHaveBeenCalledTimes(2)
   })

@@ -22,7 +22,7 @@ export interface StripeSubscription {
   items?: { data?: { current_period_end?: number; price?: { id: string } }[] };
 }
 
-/** Abonnement illisible dans Stripe : impossible de savoir s'il concerne Wearo. */
+/** Abonnement illisible dans Stripe : impossible de savoir s'il concerne Kaloé. */
 export class StripeUnavailable extends Error {}
 
 export interface StripeCheckoutSession {
@@ -84,7 +84,7 @@ export async function handleWebhook(request: Request, env: Env): Promise<Respons
 
 /**
  * Crée ou reprend la licence d'une session de paiement terminée (webhook ou page /merci).
- * `null` si la session n'est pas un abonnement à Wearo (le compte Stripe peut
+ * `null` si la session n'est pas un abonnement à Kaloé (le compte Stripe peut
  * vendre autre chose) ; `StripeUnavailable` si l'abonnement ne peut pas être lu.
  */
 export async function licenseFromSession(
@@ -178,7 +178,7 @@ async function fetchSubscription(env: Env, id: string): Promise<StripeSubscripti
   }
 }
 
-/** L'abonnement porte-t-il un des prix de Wearo (`STRIPE_PRICE_IDS`) ? */
+/** L'abonnement porte-t-il un des prix de Kaloé (`STRIPE_PRICE_IDS`) ? */
 function isOurs(env: Env, sub: StripeSubscription): boolean {
   const prices = new Set(env.STRIPE_PRICE_IDS.split(",").map((p) => p.trim()).filter(Boolean));
   return (sub.items?.data ?? []).some((item) => item.price && prices.has(item.price.id));

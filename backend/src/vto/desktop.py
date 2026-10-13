@@ -69,7 +69,7 @@ def request_shutdown() -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(prog="vto-app", description="Wearo")
+    parser = argparse.ArgumentParser(prog="vto-app", description="Kaloé")
     parser.add_argument("--dev", action="store_true", help="API seule, pour le serveur Vite")
     parser.add_argument("--self-check", action="store_true", help="test de fumée, puis quitte")
     parser.add_argument("--output", type=Path, help="fichier du rapport de --self-check")
@@ -78,7 +78,7 @@ def main(argv: list[str] | None = None) -> None:
     if args.self_check:
         setup_logging(console=args.dev)
         raise SystemExit(self_check.run(args.output))
-    # Avant le log : `logs_dir()` créerait sinon un dossier Wearo vide qui bloquerait la migration.
+    # Avant le log : `logs_dir()` créerait sinon un dossier Kaloe vide qui bloquerait la migration.
     migration = paths.migrate_legacy_data_dir()
     setup_logging(console=args.dev)
     log.info("Dossier de données : %s", migration)
@@ -139,7 +139,7 @@ def main(argv: list[str] | None = None) -> None:
 
     webview.settings["OPEN_EXTERNAL_LINKS_IN_BROWSER"] = True
     webview.create_window(
-        "Wearo", login_url(port, token), width=1280, height=800, min_size=(1024, 700)
+        "Kaloé", login_url(port, token), width=1280, height=800, min_size=(1024, 700)
     )
     webview.start()
 

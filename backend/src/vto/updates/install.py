@@ -125,7 +125,7 @@ class Installer:
 
     def _download(self, manifest: Manifest) -> Path:
         folder = paths.updates_cache_dir()
-        target = folder / f"Wearo-Setup-{manifest.version}.exe"
+        target = folder / f"Kaloe-Setup-{manifest.version}.exe"
         part = target.with_name(target.name + ".part")
         digest = hashlib.sha256()
         try:

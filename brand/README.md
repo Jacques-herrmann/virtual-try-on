@@ -1,4 +1,4 @@
-# Marque Wearo
+# Marque Kaloé
 
 Spec : `docs/superpowers/specs/2026-10-13-brand-design.md` (piste A).
 

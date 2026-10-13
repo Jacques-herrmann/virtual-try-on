@@ -7,7 +7,7 @@ from pathlib import Path
 
 import platformdirs
 
-APP_NAME = "Wearo"
+APP_NAME = "Kaloe"
 # Nom d'avant le sous-projet 6 : son dossier de données est déplacé au premier lancement.
 LEGACY_APP_NAME = "VirtualTryOn"
 
@@ -34,7 +34,7 @@ def data_dir() -> Path:
 
 
 def migrate_legacy_data_dir() -> str:
-    """Déplace `%LOCALAPPDATA%\\VirtualTryOn` vers `%LOCALAPPDATA%\\Wearo` s'il y a lieu.
+    """Déplace `%LOCALAPPDATA%\\VirtualTryOn` vers `%LOCALAPPDATA%\\Kaloe` s'il y a lieu.
 
     Un simple renommage (même volume) : ni copie ni suppression. En cas d'échec
     (fichier verrouillé), `data_dir()` continue sur l'ancien dossier et l'app

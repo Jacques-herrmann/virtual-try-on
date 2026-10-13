@@ -18,7 +18,7 @@ const RECOVER_LIMIT = 3;
 const SESSION_ID = /^cs_[A-Za-z0-9_]{1,200}$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Couleurs Wearo (brand/tokens.json) ; texte prune sur les boutons abricot (5,3:1).
+// Couleurs Kaloé (brand/tokens.json) ; texte prune sur les boutons abricot (5,3:1).
 const STYLE = `
 :root { color-scheme: light dark; --fg:#2E1F2B; --bg:#FBF7F2; --muted:#6E6058; --link:#AD4A24; --accent:#E8774A; --on-accent:#2E1F2B; --card:#fff; --border:#E9DFD4; --soft:#FDE8DC; }
 @media (prefers-color-scheme: dark) { :root { --fg:#FBF7F2; --bg:#1E1520; --muted:#B5A595; --link:#F5AC86; --card:#2E1F2B; --border:#3D3331; --soft:#3D180C; } }
@@ -47,14 +47,14 @@ export function htmlPage(title: string, body: string, status = 200): Response {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(title)} · Wearo</title>
+<title>${escapeHtml(title)} · Kaloé</title>
 <style>${STYLE}</style>
 </head>
 <body>
 <main>
-<a class="brand" href="/" aria-label="Wearo, accueil">${LOGO_SVG}</a>
+<a class="brand" href="/" aria-label="Kaloé, accueil">${LOGO_SVG}</a>
 ${body}
-<footer><a href="/">Wearo</a> · <a href="/aide">Aide</a> · <a href="/retrouver">Retrouver ma clé</a></footer>
+<footer><a href="/">Kaloé</a> · <a href="/aide">Aide</a> · <a href="/retrouver">Retrouver ma clé</a></footer>
 </main>
 </body>
 </html>`;
@@ -80,7 +80,7 @@ export function homePage(env: Env): Response {
   return htmlPage(
     "Photos portées pour Vinted",
     `<h1>Tes vêtements, portés et prêts à vendre.</h1>
-<p>Ajoute une photo de ton vêtement : Wearo crée des photos portées, rédige l'annonce et prépare le brouillon sur Vinted. Tu relis, tu valides, c'est en ligne. Une application Windows, ta clé Gemini, tes décors.</p>
+<p>Ajoute une photo de ton vêtement : Kaloé crée des photos portées, rédige l'annonce et prépare le brouillon sur Vinted. Tu relis, tu valides, c'est en ligne. Une application Windows, ta clé Gemini, tes décors.</p>
 <div class="card">
   <p><strong>7 jours d'essai</strong>, puis abonnement résiliable à tout moment.<br>
   <span class="muted">La carte est demandée au début de l'essai ; rien n'est prélevé avant la fin des 7 jours.</span></p>

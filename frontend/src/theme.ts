@@ -1,5 +1,5 @@
 /**
- * Thème PrimeVue de Wearo (valeurs de `brand/tokens.json`).
+ * Thème PrimeVue de Kaloé (valeurs de `brand/tokens.json`).
  *
  * Les palettes d'Aura utilisées pour les états (green, orange, yellow, amber, red, sky, blue)
  * sont remplacées par celles de la marque : boutons, étiquettes, messages et notifications
@@ -39,7 +39,7 @@ const scale = (name: string) =>
     [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].map((n) => [n, `{${name}.${n}}`]),
   )
 
-export const WearoTheme = definePreset(Aura, {
+export const KaloeTheme = definePreset(Aura, {
   primitive: {
     borderRadius: { none: '0', xs: '4px', sm: '8px', md: '12px', lg: '14px', xl: '18px' },
     apricot,

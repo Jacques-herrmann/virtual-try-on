@@ -13,7 +13,7 @@ def test_data_dir_uses_env_override(data_dir):
 
 def test_data_dir_defaults_to_platform_dir(monkeypatch):
     monkeypatch.delenv("VTO_DATA_DIR", raising=False)
-    expected = Path(platformdirs.user_data_dir("Wearo", appauthor=False))
+    expected = Path(platformdirs.user_data_dir("Kaloe", appauthor=False))
     monkeypatch.setattr(Path, "mkdir", lambda *a, **k: None)
     monkeypatch.setattr(Path, "exists", lambda self: self == expected)
     assert paths.data_dir() == expected
@@ -41,13 +41,13 @@ def _fill_legacy(root: Path) -> Path:
 
 def test_migration_without_legacy_folder_does_nothing(platform_root):
     assert "rien" in paths.migrate_legacy_data_dir()
-    assert not (platform_root / "Wearo").exists()
-    assert paths.data_dir() == platform_root / "Wearo"
+    assert not (platform_root / "Kaloe").exists()
+    assert paths.data_dir() == platform_root / "Kaloe"
 
 
 def test_migration_moves_legacy_folder(platform_root):
     old = _fill_legacy(platform_root)
-    new = platform_root / "Wearo"
+    new = platform_root / "Kaloe"
 
     assert "déplacées" in paths.migrate_legacy_data_dir()
 
@@ -60,12 +60,12 @@ def test_migration_moves_legacy_folder(platform_root):
 
 def test_migration_leaves_both_folders_when_new_exists(platform_root):
     old = _fill_legacy(platform_root)
-    (platform_root / "Wearo").mkdir()
+    (platform_root / "Kaloe").mkdir()
 
     paths.migrate_legacy_data_dir()
 
     assert (old / "license.json").exists()
-    assert paths.data_dir() == platform_root / "Wearo"
+    assert paths.data_dir() == platform_root / "Kaloe"
 
 
 def test_failed_migration_keeps_using_legacy_folder(platform_root, monkeypatch):
@@ -79,7 +79,7 @@ def test_failed_migration_keeps_using_legacy_folder(platform_root, monkeypatch):
     assert "impossible" in paths.migrate_legacy_data_dir()
     assert paths.data_dir() == old
     assert (old / "license.json").exists()
-    assert not (platform_root / "Wearo").exists()
+    assert not (platform_root / "Kaloe").exists()
 
 
 def test_env_override_disables_migration(platform_root, monkeypatch):

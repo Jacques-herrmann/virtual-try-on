@@ -39,13 +39,13 @@ onMounted(async () => {
   <Toast position="bottom-right" />
   <ConfirmDialog />
   <AppBanner v-if="disconnected" tone="danger" icon="icon-wifi-off" class="disconnected">
-    <strong>Wearo ne répond plus.</strong> Ferme l'application et relance-la.
+    <strong>Kaloé ne répond plus.</strong> Ferme l'application et relance-la.
   </AppBanner>
 
   <RouterView v-if="bare" />
   <div v-else class="layout">
     <nav class="sidebar" aria-label="Navigation principale">
-      <RouterLink to="/articles" class="brand" aria-label="Wearo, mes articles">
+      <RouterLink to="/articles" class="brand" aria-label="Kaloé, mes articles">
         <AppLogo :height="30" />
       </RouterLink>
       <RouterLink v-for="link in links" :key="link.to" :to="link.to" class="nav-link">
@@ -58,7 +58,7 @@ onMounted(async () => {
         <strong>Essai gratuit</strong>
         <span>jusqu'au {{ trialEnd }}</span>
       </RouterLink>
-      <div v-if="version" class="version">Wearo {{ version }}</div>
+      <div v-if="version" class="version">Kaloé {{ version }}</div>
     </nav>
     <div class="main">
       <div class="banners">

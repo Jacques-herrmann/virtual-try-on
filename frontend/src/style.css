@@ -1,6 +1,6 @@
 @import './icons.css';
 
-/* Jetons Wearo (brand/tokens.json) ; les couleurs PrimeVue (--p-*) viennent de theme.ts. */
+/* Jetons Kaloé (brand/tokens.json) ; les couleurs PrimeVue (--p-*) viennent de theme.ts. */
 :root {
   --w-cream: #fbf7f2;
   --w-ink: #2e1f2b;

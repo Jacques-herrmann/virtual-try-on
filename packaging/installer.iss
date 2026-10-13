@@ -1,6 +1,6 @@
 ﻿; Installeur Windows : `iscc /DAppVersion=X.Y.Z packaging\installer.iss` depuis la racine,
 ; après `pyinstaller packaging/vto.spec` et `packaging/fetch_redist.ps1`.
-; Installation par utilisateur (aucun UAC) ; les données du client (%LOCALAPPDATA%\Wearo) ne sont
+; Installation par utilisateur (aucun UAC) ; les données du client (%LOCALAPPDATA%\Kaloe) ne sont
 ; jamais touchées, ni à l'installation ni à la désinstallation. L'app déplace elle-même l'ancien
 ; dossier %LOCALAPPDATA%\VirtualTryOn au premier lancement (vto.core.paths).
 
@@ -8,8 +8,8 @@
   #error Passer la version : iscc /DAppVersion=X.Y.Z
 #endif
 
-#define AppName "Wearo"
-#define AppExe "Wearo.exe"
+#define AppName "Kaloé"
+#define AppExe "Kaloe.exe"
 ; Avant le sous-projet 6 : dossier, exe et raccourcis retirés à la mise à jour.
 #define LegacyDir "VirtualTryOn"
 #define LegacyExe "VirtualTryOn.exe"
@@ -28,7 +28,7 @@ AppSupportURL={#HelpUrl}
 VersionInfoTextVersion={#AppVersion}
 VersionInfoProductTextVersion={#AppVersion}
 PrivilegesRequired=lowest
-DefaultDirName={autopf}\Wearo
+DefaultDirName={autopf}\Kaloe
 ; Sinon Inno réinstallerait dans l'ancien dossier, retrouvé grâce à l'AppId.
 UsePreviousAppDir=no
 DisableDirPage=yes
@@ -38,7 +38,7 @@ UninstallDisplayIcon={app}\{#AppExe}
 UninstallDisplayName={#AppName}
 SetupIconFile=icon.ico
 OutputDir=Output
-OutputBaseFilename=Wearo-Setup-{#AppVersion}
+OutputBaseFilename=Kaloe-Setup-{#AppVersion}
 Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
@@ -66,7 +66,7 @@ Type: files; Name: "{autoprograms}\{#LegacyName}.lnk"
 Type: files; Name: "{autodesktop}\{#LegacyName}.lnk"
 
 [Files]
-Source: "..\dist\Wearo\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\Kaloe\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "redist\MicrosoftEdgeWebview2Setup.exe"; Flags: dontcopy
 
 [Icons]

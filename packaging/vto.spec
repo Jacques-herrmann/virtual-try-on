@@ -50,12 +50,12 @@ version_info = VSVersionInfo(
                 StringTable(
                     "040C04B0",
                     [
-                        StringStruct("CompanyName", "Wearo"),
-                        StringStruct("FileDescription", "Wearo"),
+                        StringStruct("CompanyName", "Kaloé"),
+                        StringStruct("FileDescription", "Kaloé"),
                         StringStruct("FileVersion", VERSION),
-                        StringStruct("InternalName", "Wearo"),
-                        StringStruct("OriginalFilename", "Wearo.exe"),
-                        StringStruct("ProductName", "Wearo"),
+                        StringStruct("InternalName", "Kaloe"),
+                        StringStruct("OriginalFilename", "Kaloe.exe"),
+                        StringStruct("ProductName", "Kaloé"),
                         StringStruct("ProductVersion", VERSION),
                     ],
                 )
@@ -83,7 +83,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="Wearo",
+    name="Kaloe",
     icon=str(HERE / "icon.ico"),
     version=version_info,
     console=False,
@@ -96,5 +96,5 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=False,
-    name="Wearo",
+    name="Kaloe",
 )

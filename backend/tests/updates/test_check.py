@@ -11,7 +11,7 @@ def make(version="0.3.0", minimum="0.2.0", notes="Nouveautés") -> Manifest:
     return Manifest(
         version=version,
         minimum_version=minimum,
-        url=f"https://example.com/Wearo-Setup-{version}.exe",
+        url=f"https://example.com/Kaloe-Setup-{version}.exe",
         sha256="a" * 64,
         notes=notes,
     )

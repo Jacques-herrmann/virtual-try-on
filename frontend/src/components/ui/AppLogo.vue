@@ -2,7 +2,7 @@
 import logo from '@/assets/logo.svg'
 import mark from '@/assets/logo-mark.svg'
 
-/** Logo Wearo (fichiers générés par brand/make_logo.py). */
+/** Logo Kaloé (fichiers générés par brand/make_logo.py). */
 withDefaults(defineProps<{ height?: number; markOnly?: boolean }>(), {
   height: 28,
   markOnly: false,
@@ -13,7 +13,7 @@ withDefaults(defineProps<{ height?: number; markOnly?: boolean }>(), {
   <img
     :src="markOnly ? mark : logo"
     :style="{ height: `${height}px` }"
-    alt="Wearo"
+    alt="Kaloé"
     class="app-logo"
     draggable="false"
   />

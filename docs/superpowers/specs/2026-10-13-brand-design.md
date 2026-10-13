@@ -1,4 +1,6 @@
-# Sous-projet 6 — Marque & UI (Wearo) — Design
+# Sous-projet 6 — Marque & UI (Kaloé) — Design
+
+> **Nom final : Kaloé** (« Kaloe » sans accent pour les fichiers : `Kaloe.exe`, `Kaloe-Setup-X.Y.Z.exe`, `%LOCALAPPDATA%\Kaloe`). Le nom « Wearo », utilisé dans la suite du document, a été abandonné le 2026-10-13 : voir §10.
 
 Date : 2026-10-13
 Statut : validé en brainstorming ; **piste A retenue** le 2026-10-13 sur la planche (https://claude.ai/artifact/Ey7VNekjAuGPJexc4mTDRV)
@@ -160,3 +162,14 @@ Piste **A** retenue : *Plus Jakarta Sans* seule (400 à 800), logo « wear » + 
 - liste des articles en grille de cartes avec filtres (Tous, À relire, Prêts à envoyer, Publiés) ; la fiche d'un article s'ouvre en pleine largeur avec un lien « Mes articles » ;
 - relecture en deux colonnes (photos, annonce) avec une barre d'actions collante en bas ;
 - barre latérale sable 100, élément actif sur fond blanc avec une icône abricot.
+
+## 10. Changement de nom : Wearo → Kaloé (2026-10-13)
+
+Avant toute publication, une vérification a montré que « Wearo » était déjà pris dans le même secteur : une app Shopify « Wearo: Virtual Try-On » (essayage virtuel par IA, serveurs en Europe), et wearo.com/.fr/.app/.io ainsi que trywearo.com, getwearo.com et wearoapp.com déposés en 2025-2026. Risque de conflit de marque jugé trop élevé.
+
+Nom retenu : **Kaloé** (du grec *kalos*, beau), mot inventé. Vérifié le 2026-10-13 : kaloe.fr, kaloe.app et getkaloe.com libres (kaloe.com déposé depuis 2003 par un tiers) ; aucun produit ni aucune marque « Kaloé » trouvés (seuls des noms voisins hors secteur : Kaloo, parfums pour enfants). Reste à vérifier sur TMview et à l'INPI (classes 9 et 42) avant de déposer.
+
+Conséquences :
+- affichage « Kaloé » partout ; identifiants techniques « Kaloe » (exe, installeur, dossiers d'installation et de données, `APP_NAME`) ;
+- logo : « kal » + « o » cintre + « é », même géométrie et mêmes couleurs ; icône inchangée ;
+- Wearo n'a jamais été publié : seule la migration depuis `%LOCALAPPDATA%\VirtualTryOn` existe, vers `%LOCALAPPDATA%\Kaloe`.

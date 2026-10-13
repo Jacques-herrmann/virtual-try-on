@@ -39,7 +39,7 @@ function licenseSaved() {
       </ol>
 
       <section v-if="step === 'license'" class="card surface" data-test="license-step">
-        <h1>Bienvenue dans Wearo</h1>
+        <h1>Bienvenue dans Kaloé</h1>
         <p class="lead muted">
           Pour commencer, colle la clé de licence reçue par e-mail après ton inscription.
         </p>
@@ -62,7 +62,7 @@ function licenseSaved() {
       <section v-else class="card surface" data-test="gemini-step">
         <h1>Ta clé Gemini</h1>
         <p class="lead muted">
-          Wearo utilise Gemini, l'IA de Google, pour créer tes photos et tes annonces. Il te faut
+          Kaloé utilise Gemini, l'IA de Google, pour créer tes photos et tes annonces. Il te faut
           une clé personnelle, gratuite à créer.
         </p>
         <ol class="howto">

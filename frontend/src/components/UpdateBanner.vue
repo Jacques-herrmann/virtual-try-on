@@ -99,9 +99,9 @@ onUnmounted(() => {
     icon="icon-download"
   >
     <strong v-if="required">
-      Cette version ne fonctionne plus avec Vinted. Mets Wearo à jour pour envoyer tes annonces.
+      Cette version ne fonctionne plus avec Vinted. Mets Kaloé à jour pour envoyer tes annonces.
     </strong>
-    <strong v-else>Wearo {{ snapshot.latest }} est disponible.</strong>
+    <strong v-else>Kaloé {{ snapshot.latest }} est disponible.</strong>
 
     <template v-if="progress?.state === 'downloading'">
       <span>Téléchargement de la mise à jour…</span>
@@ -113,7 +113,7 @@ onUnmounted(() => {
       />
     </template>
     <span v-else-if="progress?.state === 'launching'">
-      Installation… Wearo va redémarrer.
+      Installation… Kaloé va redémarrer.
     </span>
     <span v-else-if="!snapshot.can_install" class="hint">
       Mise à jour possible uniquement depuis l'application installée.
@@ -160,7 +160,7 @@ onUnmounted(() => {
     <Dialog
       v-model:visible="showNotes"
       modal
-      :header="`Nouveautés de Wearo ${snapshot.latest}`"
+      :header="`Nouveautés de Kaloé ${snapshot.latest}`"
       :style="{ width: '32rem' }"
     >
       <p class="notes">{{ snapshot.notes }}</p>

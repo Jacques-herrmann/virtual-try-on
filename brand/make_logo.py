@@ -1,4 +1,4 @@
-"""Génère les SVG de la marque Wearo à partir de Plus Jakarta Sans 800.
+"""Génère les SVG de la marque Kaloé (« kal » + « o » cintre + « é ») en Plus Jakarta Sans 800.
 
 Les lettres sont converties en chemins : les SVG n'ont besoin d'aucune police.
 À relancer seulement si le dessin du logo change :
@@ -36,12 +36,11 @@ NECK = 0.045
 TRACKING = -0.04
 
 
-def word_paths(font: TTFont, text: str) -> tuple[str, float]:
-    """Chemin SVG (y vers le bas, ligne de base à 0) et largeur d'avance du mot."""
+def word_paths(font: TTFont, text: str, x: float = 0.0) -> tuple[str, float]:
+    """Chemin SVG (y vers le bas, ligne de base à 0) du mot commencé en `x`, et x de fin."""
     glyphs = font.getGlyphSet()
     cmap = font.getBestCmap()
     upm = font["head"].unitsPerEm
-    x = 0.0
     parts = []
     for char in text:
         name = cmap[ord(char)]
@@ -106,26 +105,28 @@ def svg(view: tuple[float, float, float, float], body: str, label: str) -> str:
 
 def main() -> None:
     font = TTFont(FONT)
-    letters, advance = word_paths(font, "wear")
+    # « kal » + « o » cintre + « é ».
+    before, advance = word_paths(font, "kal")
     o_cx = advance + 0.02 + O_RADIUS + O_STROKE / 2
-    _, y0, x1, _ = o_bounds()
-    right = o_cx + x1
-    top = min(y0, -0.76)  # le crochet ou les hampes des lettres
-    bottom = 0.02  # « wear » et le « o » reposent sur la ligne de base
+    after, right = word_paths(font, "é", o_cx + O_RADIUS + O_STROKE / 2 + 0.03)
+    letters = f"{before} {after}"
+    _, y0, _, _ = o_bounds()
+    top = min(y0, -0.80)  # le crochet, les hampes ou l'accent
+    bottom = 0.02  # les lettres et le « o » reposent sur la ligne de base
     pad = 0.04
     view = (-pad, top - pad, right + 2 * pad, bottom - top + 2 * pad)
 
     outputs = {
-        "logo.svg": svg(view, f'<path d="{letters}" fill="{INK}"/>' + o_hanger(o_cx, APRICOT), "Wearo"),
-        "logo-light.svg": svg(view, f'<path d="{letters}" fill="#FBF7F2"/>' + o_hanger(o_cx, "#EF8D5D"), "Wearo"),
+        "logo.svg": svg(view, f'<path d="{letters}" fill="{INK}"/>' + o_hanger(o_cx, APRICOT), "Kaloé"),
+        "logo-light.svg": svg(view, f'<path d="{letters}" fill="#FBF7F2"/>' + o_hanger(o_cx, "#EF8D5D"), "Kaloé"),
     }
 
     # Pictogramme seul et icône d'app : le « o » cintre centré dans un carré unité.
-    outputs["logo-mark.svg"] = svg((0, 0, 1, 1), centered_o(0.86, APRICOT), "Wearo")
+    outputs["logo-mark.svg"] = svg((0, 0, 1, 1), centered_o(0.86, APRICOT), "Kaloé")
     outputs["app-icon.svg"] = svg(
         (0, 0, 1, 1),
         f'<rect width="1" height="1" rx="0.23" fill="{APRICOT}"/>' + centered_o(0.66, INK),
-        "Wearo",
+        "Kaloé",
     )
 
     assets = ROOT / "frontend/src/assets"
