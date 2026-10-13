@@ -19,7 +19,8 @@ S'y ajoute une **vidéo « créer sa clé Gemini »** (~30 s) accessible depuis 
 | Enchaînement | Vidéo à l'arrivée sur Articles après l'accueil, puis bulles contextuelles, une visite par écran à sa première visite |
 | Contenu de la vidéo | Kaloé seul ; envoi Vinted **simulé** côté Kaloé ; plan final = capture fixe d'un brouillon Vinted |
 | Données de tournage | Un vrai passage Gemini, fait une fois sur un vêtement de démo, enregistré puis rejoué |
-| Sous-titres | Fichier WebVTT rendu par l'app par-dessus la vidéo (pas incrustés) ; pas de voix off |
+| Sous-titres | Fichier WebVTT rendu par l'app par-dessus la vidéo (pas incrustés) |
+| Son (ajouté le 2026-10-13) | Voix off ElevenLabs (texte des sous-titres), bruitages d'interface synthétisés, musique de fond fournie par l'utilisateur ; voir §4.8 |
 | Visite guidée | **driver.js** (MIT), habillé aux couleurs Kaloé |
 | Mémoire « déjà vu » | Dans `settings.json` (backend) : pywebview tourne en `private_mode`, le `localStorage` ne survit pas à un redémarrage |
 | Vidéo clé Gemini | Enregistrée par l'utilisateur (Outil Capture Windows) d'après un script de tournage fourni ; montage par un outil ffmpeg |
@@ -28,7 +29,7 @@ Approches écartées : visite linéaire unique juste après la vidéo (ne couvre
 
 ### 1.2 Hors périmètre
 
-- Voix off, traduction, statistiques de visionnage.
+- Traduction, statistiques de visionnage.
 - **Abonnement « IA incluse »** (l'utilisateur paie Gemini pour le vendeur) : sous-projet 8, à brainstormer séparément. Il remet en cause la décision BYOK et pose les questions de coût, de quota par licence et des conditions d'utilisation de Google. S'il est fait, le lien vers la vidéo de la clé Gemini sera masqué pour les abonnés concernés.
 
 ## 2. Comportement côté vendeur
@@ -144,6 +145,14 @@ Coupe des premières images blanches (décalage appliqué au `.vtt`), encodage w
 - `docs/tutorial/cle-gemini-script.md` : script de tournage pour l'utilisateur (préparation de l'écran, chaque clic, durée par écran, ce qu'il ne faut pas montrer : adresse e-mail, clé, autres onglets).
 - `vto-tutorial edit-key <fichier> [--crop x,y,w,h] [--blur x,y,w,h[@début-fin]]…` : recadre, floute les zones indiquées, compresse comme en 4.6 et écrit `cle-gemini.mp4`.
 - `cle-gemini.vtt` rédigé à la main d'après la vidéo montée.
+
+### 4.8 Son (ajouté le 2026-10-13)
+
+- **Voix off** : chaque sous-titre est lu par une voix ElevenLabs (`ELEVENLABS_API_KEY` et `ELEVENLABS_VOICE_ID` dans `.env`, jamais commités ; modèle multilingue). Les fichiers sont mis en cache dans `tools/tutorial/voice/` sous l'empreinte du texte et de la voix, et commités : un nouveau tournage ne rappelle ElevenLabs que pour un texte modifié, et `record` reste possible sans réseau si le cache est complet. Les voix sont générées **avant** le tournage : chaque étape dure au moins le temps de sa phrase (+0,4 s).
+- **Bruitages** : clic (à chaque clic du faux curseur), frappe (saisie), « ding » (article prêt, brouillon envoyé), synthétisés en code (aucun droit). Instants relevés par le `Director`.
+- **Musique** : `tools/tutorial/music.mp3`, morceau libre de droits choisi par l'utilisateur ; bouclé ou coupé à la durée, volume bas, baissé sous la voix (compression en side-chain), fondu de 2 s en fin. Facultative : sans fichier, pas de musique.
+- **Mixage** ffmpeg, audio AAC 128 kb/s dans le mp4. `record --mute` garde la vidéo muette.
+- **Lecteur** : lecture automatique avec le son ; si la fenêtre la refuse, lecture muette et bouton « Activer le son ». Bouton couper/remettre le son dans les commandes.
 
 ## 5. Erreurs
 
