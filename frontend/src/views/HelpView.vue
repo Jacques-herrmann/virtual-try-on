@@ -62,7 +62,7 @@ const site = computed(() => license.value?.site_url ?? 'https://kaloe.fr')
         <li>
           Dans <strong>Articles</strong>, coche les articles voulus (ou <em>Tout
           sélectionner</em>), puis clique sur <strong>Envoyer sur Vinted</strong>. Seuls les
-          articles validés partent.
+          articles validés et pas encore envoyés partent.
         </li>
         <li>
           Kaloé remplit le formulaire Vinted à ta place, article par article. Selon ton réglage,
