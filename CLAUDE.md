@@ -10,7 +10,7 @@ Outil pour vendeurs Vinted : à partir d'une photo de vêtement, génère des ph
 | 2 | **App** — API FastAPI + UI Vue/Vite dans une fenêtre `pywebview` ; saisie article par article, écran de relecture | ✅ terminé le 2026-10-12 sur `main` — validé de bout en bout par l'essai réel du sous-projet 3 | `docs/superpowers/specs/2026-10-10-app-design.md`, `docs/superpowers/plans/2026-10-10-app.md` |
 | 3 | **Vinted** — profil Chrome persistant (aucun mot de passe stocké), sélecteurs dans un JSON distant, remplissage complet du formulaire | ✅ terminé le 2026-10-12 sur `main` — essai réel fait (brouillons, lot, publication, 3 relances sans reconnexion, `pytest -m live_vinted`) ; catalogue complet relevé (783 feuilles, 26 grilles de tailles) ; `data/vinted.json` publié | `docs/superpowers/specs/2026-10-10-vinted-design.md`, `docs/superpowers/plans/2026-10-10-vinted.md` |
 | 4 | **Distribution** — PyInstaller, installeur Inno Setup, mise à jour en un clic, signature de code (plus tard) | 🟡 implémenté sur `main`, v0.2.2 publiée — mise à jour en un clic et mise à jour obligatoire validées sur le poste le 2026-10-12 ; reste l'essai d'installation chez un ami | `docs/superpowers/specs/2026-10-12-distribution-design.md`, `docs/superpowers/plans/2026-10-12-distribution.md` |
-| 5 | **Licence** — abonnement pour tout le monde (essai 7 jours), Stripe Managed Payments ; clé de licence, 2 PC ; Worker Cloudflare + D1 qui délivre des jetons signés et seul accès aux MAJ et sélecteurs ; dépôt privé | 🟡 spec et plan écrits — implémentation à faire sur `main` | `docs/superpowers/specs/2026-10-12-licensing-design.md`, `docs/superpowers/plans/2026-10-12-licensing.md` |
+| 5 | **Licence** — abonnement pour tout le monde (essai 7 jours), Stripe Managed Payments ; clé de licence, 2 PC ; Worker Cloudflare + D1 qui délivre des jetons signés et seul accès aux MAJ et sélecteurs ; dépôt privé | 🟡 code fait sur `main` (tâches 0–6 et 8–13 : Worker testé, app, front) ; reste avec l'utilisateur : déploiement (tâche 7), essai de bout en bout en mode test Stripe (14), mise en production et dépôt privé (15). **Ne pas publier de version avant la tâche 7** : l'app pointe vers le Worker | `docs/superpowers/specs/2026-10-12-licensing-design.md`, `docs/superpowers/plans/2026-10-12-licensing.md` |
 
 Ordre : 1 → 2 → 3 → 4 → 5. Chaque sous-projet suit le cycle brainstorming → spec → plan → implémentation. Mettre à jour le statut ci-dessus à chaque étape.
 
@@ -49,9 +49,17 @@ cd frontend && npm ci            # Node ≥ 22.12 (nvm-windows sur le poste de d
 npm test                         # Vitest
 npm run build                    # compile dans backend/src/vto/api/static (ignoré par git)
 
+cd worker && npm ci              # Worker de licence (Cloudflare) ; Node ≥ 22.12
+npm test                         # Vitest dans workerd, D1 locale, Stripe/Resend/GitHub simulés
+npm run typecheck
+npm run dev                      # wrangler dev (secrets dans worker/.dev.vars)
+python tools/make_signing_key.py k2  # nouvelle clé de signature des jetons (privée → secret Cloudflare)
+
 vto-app                          # application complète (fenêtre pywebview)
 vto-app --dev                    # API seule sur 127.0.0.1:8765, puis `npm run dev` et
                                  # http://localhost:5173/api/session?token=dev
+                                 # VTO_DEV_LICENSE=1 : licence « active » hors exécutable ;
+                                 # VTO_LICENSE_URL : autre Worker (ex. http://127.0.0.1:8787)
 vto-app --self-check --output f  # test de fumée (modules, front, données, scènes, pilote Playwright)
 
 # Empaquetage local (après npm run build) ; Inno Setup 6 : winget install JRSoftware.InnoSetup
