@@ -90,6 +90,7 @@ def make_api(data_dir):
         update_checker=None,
         installer=None,
         licensed=None,
+        license_manager=None,
     ):
         from fakes import FakeVintedWorker
         from samples import loaded_data
@@ -107,6 +108,7 @@ def make_api(data_dir):
             vinted_worker=vinted_worker or FakeVintedWorker(loaded_data()),
             update_checker=update_checker,
             installer=installer,
+            license_manager=license_manager,
         )
         client = TestClient(
             app, base_url=f"http://127.0.0.1:{API_PORT}", raise_server_exceptions=False

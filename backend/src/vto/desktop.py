@@ -109,6 +109,7 @@ def main(argv: list[str] | None = None) -> None:
         vinted_worker=vinted,
         update_checker=updates,
         installer=Installer(on_launched=request_shutdown, token=license_token),
+        license_manager=license_manager,
     )
     server = uvicorn.Server(
         uvicorn.Config(app, host="127.0.0.1", port=port, log_config=None, access_log=False)

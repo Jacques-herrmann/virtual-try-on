@@ -3,6 +3,7 @@
 Vérifie que PyInstaller a tout embarqué (modules et données), sans fenêtre ni réseau.
 """
 
+import base64
 import importlib
 import logging
 import pkgutil
@@ -45,6 +46,18 @@ def _vinted_data() -> str:
     return f"révision {VintedData.model_validate_json(remote.bundled_text()).revision}"
 
 
+def _license_keys() -> str:
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+    from vto.licensing import token
+
+    if not token.PUBLIC_KEYS:
+        raise ValueError("aucune clé publique de licence")
+    for raw in token.PUBLIC_KEYS.values():
+        Ed25519PublicKey.from_public_bytes(base64.b64decode(raw))
+    return ", ".join(sorted(token.PUBLIC_KEYS))
+
+
 def _scenes() -> str:
     source = scenes.default_scenes_source()
     found = [d.name for d in source.iterdir() if (d / "prompt.md").is_file()] if (
@@ -75,6 +88,7 @@ CHECKS: list[tuple[str, Callable[[], str]]] = [
     ("interface", _front),
     ("données Vinted", _vinted_data),
     ("scènes", _scenes),
+    ("clés de licence", _license_keys),
     ("pilote Playwright", _playwright),
 ]
 

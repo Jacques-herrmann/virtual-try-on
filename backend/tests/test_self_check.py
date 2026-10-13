@@ -66,3 +66,18 @@ def test_request_shutdown_destroys_windows(monkeypatch):
 def test_request_shutdown_without_window(monkeypatch):
     monkeypatch.setitem(sys.modules, "webview", types.SimpleNamespace(windows=[]))
     desktop.request_shutdown()
+
+
+def test_license_keys_check():
+    from vto import self_check
+
+    assert "k1" in self_check._license_keys()
+
+
+def test_license_keys_check_fails_without_keys(monkeypatch):
+    from vto import self_check
+    from vto.licensing import token
+
+    monkeypatch.setattr(token, "PUBLIC_KEYS", {})
+    with pytest.raises(ValueError):
+        self_check._license_keys()

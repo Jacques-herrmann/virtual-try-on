@@ -134,10 +134,11 @@ Branche : `main` (travail direct).
 
 ### Tâche 12 — API (spec §3.4)
 
-- [ ] Tests `test_api_license.py` : `GET /api/license` (indice de clé `VTO-…-WXYZ`, jamais la clé entière) ; `POST` clé valide / mal formée / refusée ; `DELETE` ; `GET /api/license/portal` → URL ; sans gestionnaire → état `none`.
-- [ ] `routes/license.py` ; `create_app(..., license_manager=...)`.
-- [ ] `--self-check` : clé publique de production présente et valide.
-- [ ] Commit `add license routes`.
+- [x] Tests `test_api_license.py` : `GET /api/license` (indice de clé `VTO-…-WXYZ`, jamais la clé entière) ; `POST` clé valide / mal formée / refusée ; `DELETE` ; `GET /api/license/portal` → URL ; sans gestionnaire → état `none`.
+- [x] `routes/license.py` ; `create_app(..., license_manager=...)`.
+- [x] `--self-check` : clé publique de production présente et valide.
+- [x] Erreurs : refus → 400, Worker injoignable → 503 (le 402 reste pour les actions bloquées). Essai de fumée `vto-app --dev` avec Worker injoignable : OK.
+- [x] Commit `add license routes`.
 
 ### Tâche 13 — Front (spec §3.4)
 

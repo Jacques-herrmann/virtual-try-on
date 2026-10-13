@@ -9,11 +9,12 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
 from vto.api import security
 from vto.api.queue import GenerationQueue
-from vto.api.routes import articles, files, scenes, settings, system, update, vinted
+from vto.api.routes import articles, files, license, scenes, settings, system, update, vinted
 from vto.api.routes import queue as queue_routes
 from vto.core import errors, paths
 from vto.core.pipeline import ClientFactory
 from vto.licensing import LicenseError
+from vto.licensing.state import LicenseManager
 from vto.updates.check import UpdateChecker
 from vto.updates.install import Installer
 from vto.vinted.worker import Busy, UpdateRequired, VintedWorker
@@ -88,6 +89,7 @@ def create_app(
     vinted_worker: VintedWorker | None = None,
     update_checker: UpdateChecker | None = None,
     installer: Installer | None = None,
+    license_manager: LicenseManager | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Virtual Try-On", docs_url=None, redoc_url=None, openapi_url=None)
     app.state.client_factory = client_factory
@@ -97,6 +99,8 @@ def create_app(
     # Sans vérificateur démarré, l'état reste « inconnu » : aucun bandeau.
     app.state.updates = update_checker or UpdateChecker()
     app.state.installer = installer or Installer()
+    # Sans gestionnaire (tests, outils), la licence est « absente » et non modifiable.
+    app.state.license = license_manager
     app.middleware("http")(security.make_middleware(token, port))
     _add_error_handlers(app)
 
@@ -104,7 +108,8 @@ def create_app(
     def health() -> dict:
         return {"ok": True}
 
-    for module in (articles, files, queue_routes, scenes, settings, system, update, vinted):
+    routers = (articles, files, license, queue_routes, scenes, settings, system, update, vinted)
+    for module in routers:
         app.include_router(module.router)
     _add_front(app, static_dir or STATIC_DIR)
     return app
