@@ -1,4 +1,4 @@
-# Interface Virtual Try-On
+# Interface Wearo
 
 Vue 3 + Vite + TypeScript + PrimeVue 4 (MIT). Node ≥ 22.12.
 

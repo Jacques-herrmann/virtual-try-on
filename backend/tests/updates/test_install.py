@@ -16,7 +16,7 @@ def make(content=CONTENT, version="0.3.0") -> Manifest:
     return Manifest(
         version=version,
         minimum_version="0.2.0",
-        url=f"https://example.com/VirtualTryOn-Setup-{version}.exe",
+        url=f"https://example.com/Wearo-Setup-{version}.exe",
         sha256=hashlib.sha256(content).hexdigest(),
     )
 
@@ -56,7 +56,7 @@ def test_success_downloads_verifies_launches_then_shuts_down(data_dir):
     launcher, shutdown = Launcher(), Shutdown()
     installer = make_installer(launcher=launcher, shutdown=shutdown)
     installer.run(make())
-    target = paths.updates_cache_dir() / "VirtualTryOn-Setup-0.3.0.exe"
+    target = paths.updates_cache_dir() / "Wearo-Setup-0.3.0.exe"
     assert target.read_bytes() == CONTENT
     assert launcher.calls == [installer_args(target, "0.3.0")]
     assert shutdown.called.is_set()
@@ -66,7 +66,7 @@ def test_success_downloads_verifies_launches_then_shuts_down(data_dir):
 
 
 def test_installer_args(data_dir):
-    target = paths.updates_cache_dir() / "VirtualTryOn-Setup-0.3.0.exe"
+    target = paths.updates_cache_dir() / "Wearo-Setup-0.3.0.exe"
     assert installer_args(target, "0.3.0") == [
         str(target),
         "/VERYSILENT",
@@ -161,8 +161,8 @@ def test_restart_after_error(data_dir):
 
 def test_clean_old_installers_only_removes_installers(data_dir):
     folder = paths.updates_cache_dir()
-    (folder / "VirtualTryOn-Setup-0.2.0.exe").write_bytes(b"x")
-    (folder / "VirtualTryOn-Setup-0.3.0.exe.part").write_bytes(b"x")
+    (folder / "Wearo-Setup-0.2.0.exe").write_bytes(b"x")
+    (folder / "Wearo-Setup-0.3.0.exe.part").write_bytes(b"x")
     keep = folder / "lisez-moi.txt"
     keep.write_text("x", encoding="utf-8")
     clean_old_installers()

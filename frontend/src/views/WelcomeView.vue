@@ -24,7 +24,7 @@ function licenseSaved() {
 <template>
   <div class="welcome">
     <Card v-if="step === 'license'" class="card" data-test="license-step">
-      <template #title>Bienvenue dans Virtual Try-On</template>
+      <template #title>Bienvenue dans Wearo</template>
       <template #subtitle>
         Pour commencer, colle la clé de licence reçue par e-mail après ton inscription.
       </template>

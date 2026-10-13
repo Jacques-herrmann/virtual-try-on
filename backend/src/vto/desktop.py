@@ -69,7 +69,7 @@ def request_shutdown() -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(prog="vto-app", description="Virtual Try-On")
+    parser = argparse.ArgumentParser(prog="vto-app", description="Wearo")
     parser.add_argument("--dev", action="store_true", help="API seule, pour le serveur Vite")
     parser.add_argument("--self-check", action="store_true", help="test de fumée, puis quitte")
     parser.add_argument("--output", type=Path, help="fichier du rapport de --self-check")
@@ -139,7 +139,7 @@ def main(argv: list[str] | None = None) -> None:
 
     webview.settings["OPEN_EXTERNAL_LINKS_IN_BROWSER"] = True
     webview.create_window(
-        "Virtual Try-On", login_url(port, token), width=1280, height=800, min_size=(1024, 700)
+        "Wearo", login_url(port, token), width=1280, height=800, min_size=(1024, 700)
     )
     webview.start()
 

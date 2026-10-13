@@ -29,7 +29,7 @@ const links = [
   <RouterView v-if="bare" />
   <div v-else class="layout">
     <nav class="sidebar">
-      <div class="brand">Virtual Try-On</div>
+      <div class="brand">Wearo</div>
       <RouterLink v-for="link in links" :key="link.to" :to="link.to" class="nav-link">
         <i :class="link.icon" />
         <span>{{ link.label }}</span>

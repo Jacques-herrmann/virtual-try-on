@@ -1,6 +1,6 @@
 """Génère `latest.json` pour une Release (appelé par la CI).
 
-    python packaging/make_manifest.py --installer packaging/Output/VirtualTryOn-Setup-X.Y.Z.exe \
+    python packaging/make_manifest.py --installer packaging/Output/Wearo-Setup-X.Y.Z.exe \
         --version X.Y.Z [--notes-file notes.txt] --out latest.json
 """
 
