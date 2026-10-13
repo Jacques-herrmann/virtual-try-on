@@ -8,11 +8,13 @@
   },
   "scripts": {
     "build:aide": "node scripts/build-aide.mjs",
-    "dev": "npm run build:aide && wrangler dev",
-    "deploy": "npm run build:aide && wrangler deploy",
-    "pretest": "npm run build:aide",
+    "build:logo": "node scripts/build-logo.mjs",
+    "build:generated": "npm run build:aide && npm run build:logo",
+    "dev": "npm run build:generated && wrangler dev",
+    "deploy": "npm run build:generated && wrangler deploy",
+    "pretest": "npm run build:generated",
     "test": "vitest run",
-    "pretypecheck": "npm run build:aide",
+    "pretypecheck": "npm run build:generated",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

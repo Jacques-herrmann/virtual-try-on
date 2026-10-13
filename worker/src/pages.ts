@@ -3,6 +3,7 @@ import { AIDE_HTML } from "./aide.generated";
 import { sendLicenseEmail } from "./email";
 import type { Env } from "./env";
 import { escapeHtml, nowSeconds } from "./http";
+import { LOGO_SVG } from "./logo.generated";
 import { getLicenseByEmail, isValidStatus, type License } from "./licenses";
 import {
   licenseFromSession,
@@ -17,22 +18,25 @@ const RECOVER_LIMIT = 3;
 const SESSION_ID = /^cs_[A-Za-z0-9_]{1,200}$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Couleurs Wearo (brand/tokens.json) ; texte prune sur les boutons abricot (5,3:1).
 const STYLE = `
-:root { color-scheme: light dark; --fg:#1d1d1f; --bg:#fafaf9; --muted:#6b6b70; --accent:#0d7a5f; --card:#fff; --border:#e4e4e7; }
-@media (prefers-color-scheme: dark) { :root { --fg:#ececee; --bg:#141416; --muted:#a1a1aa; --accent:#3ccf9f; --card:#1e1e21; --border:#2e2e33; } }
+:root { color-scheme: light dark; --fg:#2E1F2B; --bg:#FBF7F2; --muted:#6E6058; --link:#AD4A24; --accent:#E8774A; --on-accent:#2E1F2B; --card:#fff; --border:#E9DFD4; --soft:#FDE8DC; }
+@media (prefers-color-scheme: dark) { :root { --fg:#FBF7F2; --bg:#1E1520; --muted:#B5A595; --link:#F5AC86; --card:#2E1F2B; --border:#3D3331; --soft:#3D180C; } }
 * { box-sizing: border-box; }
-body { margin:0; font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--fg); background:var(--bg); }
-main { max-width: 640px; margin: 0 auto; padding: 32px 16px 64px; }
-h1 { font-size: 1.6rem; line-height:1.25; margin: 0 0 16px; }
+body { margin:0; font:16px/1.6 "Plus Jakarta Sans","Segoe UI",system-ui,-apple-system,sans-serif; color:var(--fg); background:var(--bg); }
+main { max-width: 640px; margin: 0 auto; padding: 28px 16px 64px; }
+.brand { display:inline-block; color: var(--fg); margin-bottom: 32px; }
+.logo { display:block; height: 30px; width: auto; }
+h1 { font-size: 1.75rem; line-height:1.2; letter-spacing: -0.02em; margin: 0 0 16px; }
 h2 { font-size: 1.15rem; margin: 28px 0 8px; }
 p, li { color: var(--fg); }
 .muted { color: var(--muted); }
-.card { background: var(--card); border:1px solid var(--border); border-radius: 12px; padding: 20px; margin: 20px 0; }
-.key { font: 600 1.25rem/1.4 ui-monospace,Consolas,monospace; letter-spacing: .04em; word-break: break-all; }
-a { color: var(--accent); }
-.button { display:inline-block; background: var(--accent); color:#fff; text-decoration:none; font-weight:600; padding: 12px 20px; border-radius: 10px; border:0; font-size:1rem; cursor:pointer; }
-input[type=email] { width:100%; padding: 12px; font-size:1rem; border:1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--fg); margin: 8px 0 16px; }
-footer { margin-top: 40px; font-size: .9rem; color: var(--muted); }
+.card { background: var(--card); border:1px solid var(--border); border-radius: 18px; padding: 22px; margin: 20px 0; box-shadow: 0 2px 8px rgba(46,31,43,.05); }
+.key { font: 600 1.25rem/1.4 ui-monospace,Consolas,monospace; letter-spacing: .04em; word-break: break-all; background: var(--soft); padding: 10px 14px; border-radius: 12px; }
+a { color: var(--link); font-weight: 600; }
+.button { display:inline-block; background: var(--accent); color: var(--on-accent); text-decoration:none; font-weight:700; padding: 12px 22px; border-radius: 12px; border:0; font-size:1rem; cursor:pointer; }
+input[type=email] { width:100%; padding: 12px 14px; font-size:1rem; border:1.5px solid var(--border); border-radius: 12px; background: var(--card); color: var(--fg); margin: 8px 0 16px; }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); font-size: .9rem; color: var(--muted); }
 img { max-width: 100%; }
 `;
 
@@ -43,13 +47,14 @@ export function htmlPage(title: string, body: string, status = 200): Response {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(title)} · Virtual Try-On</title>
+<title>${escapeHtml(title)} · Wearo</title>
 <style>${STYLE}</style>
 </head>
 <body>
 <main>
+<a class="brand" href="/" aria-label="Wearo, accueil">${LOGO_SVG}</a>
 ${body}
-<footer><a href="/">Virtual Try-On</a> · <a href="/aide">Aide</a> · <a href="/retrouver">Retrouver ma clé</a></footer>
+<footer><a href="/">Wearo</a> · <a href="/aide">Aide</a> · <a href="/retrouver">Retrouver ma clé</a></footer>
 </main>
 </body>
 </html>`;
@@ -74,8 +79,8 @@ export function errorPage(status: number, message: string): Response {
 export function homePage(env: Env): Response {
   return htmlPage(
     "Photos portées pour Vinted",
-    `<h1>Virtual Try-On</h1>
-<p>Des photos « portées » de tes vêtements et une annonce prête à relire, envoyées en brouillon sur Vinted. Une application Windows, ta clé Gemini, tes décors.</p>
+    `<h1>Tes vêtements, portés et prêts à vendre.</h1>
+<p>Ajoute une photo de ton vêtement : Wearo crée des photos portées, rédige l'annonce et prépare le brouillon sur Vinted. Tu relis, tu valides, c'est en ligne. Une application Windows, ta clé Gemini, tes décors.</p>
 <div class="card">
   <p><strong>7 jours d'essai</strong>, puis abonnement résiliable à tout moment.<br>
   <span class="muted">La carte est demandée au début de l'essai ; rien n'est prélevé avant la fin des 7 jours.</span></p>

@@ -3,7 +3,7 @@ export interface Env {
   PUBLIC_BASE_URL: string;
   GITHUB_REPO: string;
   PAYMENT_LINK_URL: string;
-  /** Prix Stripe de Virtual Try-On, séparés par des virgules ; les autres sont ignorés. */
+  /** Prix Stripe de Wearo, séparés par des virgules ; les autres sont ignorés. */
   STRIPE_PRICE_IDS: string;
   TOKEN_KEY_ID: string;
   EMAIL_FROM: string;

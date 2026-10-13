@@ -1,8 +1,10 @@
-# Installer Virtual Try-On
+# Installer Wearo
+
+*Virtual Try-On s'appelle maintenant Wearo. Si tu avais l'ancienne version, la mise à jour s'occupe de tout : tes articles, tes scènes, ta licence et ta connexion Vinted sont repris automatiquement.*
 
 ## Télécharger
 
-Télécharge `VirtualTryOn-Setup-X.Y.Z.exe` depuis le lien reçu à l'achat, puis double-clique dessus. L'installation ne demande pas de mot de passe administrateur et prend moins d'une minute.
+Télécharge `Wearo-Setup-X.Y.Z.exe` depuis le lien reçu à l'achat, puis double-clique dessus. L'installation ne demande pas de mot de passe administrateur et prend moins d'une minute.
 
 ## Clé de licence
 
@@ -21,15 +23,15 @@ Le même message peut apparaître si Windows bloque une mise à jour lancée dep
 
 ## Antivirus
 
-Certains antivirus se méfient des applications récentes. Si le tien bloque ou met en quarantaine `VirtualTryOn.exe` :
+Certains antivirus se méfient des applications récentes. Si le tien bloque ou met en quarantaine `Wearo.exe` :
 
 - restaure le fichier depuis la quarantaine ;
-- ajoute une exception pour le dossier `%LOCALAPPDATA%\Programs\VirtualTryOn` ;
+- ajoute une exception pour le dossier `%LOCALAPPDATA%\Programs\Wearo` ;
 - relance l'installation.
 
 ## « Un composant Windows (WebView2) n'a pas pu être installé »
 
-L'application s'affiche grâce à WebView2, un composant de Microsoft déjà présent sur Windows 11 et sur la plupart des Windows 10. S'il manque et que l'installation automatique échoue, installe-le depuis le site de Microsoft (« Microsoft Edge WebView2 Runtime », version *Evergreen Bootstrapper*), puis relance Virtual Try-On.
+L'application s'affiche grâce à WebView2, un composant de Microsoft déjà présent sur Windows 11 et sur la plupart des Windows 10. S'il manque et que l'installation automatique échoue, installe-le depuis le site de Microsoft (« Microsoft Edge WebView2 Runtime », version *Evergreen Bootstrapper*), puis relance Wearo.
 
 ## Mises à jour
 
@@ -39,10 +41,10 @@ Si le bandeau est rouge, ta version ne fonctionne plus avec Vinted : l'envoi des
 
 ## Où sont mes données ?
 
-Tes articles, tes scènes, tes réglages et ta connexion Vinted sont dans `%LOCALAPPDATA%\VirtualTryOn` (colle ce chemin dans la barre d'adresse de l'Explorateur). L'application elle-même est dans `%LOCALAPPDATA%\Programs\VirtualTryOn`.
+Tes articles, tes scènes, tes réglages et ta connexion Vinted sont dans `%LOCALAPPDATA%\Wearo` (colle ce chemin dans la barre d'adresse de l'Explorateur). L'application elle-même est dans `%LOCALAPPDATA%\Programs\Wearo`.
 
 ## Désinstaller
 
-Paramètres Windows → **Applications** → **Applications installées** → Virtual Try-On → **Désinstaller**.
+Paramètres Windows → **Applications** → **Applications installées** → Wearo → **Désinstaller**.
 
-La désinstallation retire l'application mais **garde tes données** : si tu réinstalles, tu retrouves tout. Pour tout effacer, supprime aussi le dossier `%LOCALAPPDATA%\VirtualTryOn`.
+La désinstallation retire l'application mais **garde tes données** : si tu réinstalles, tu retrouves tout. Pour tout effacer, supprime aussi le dossier `%LOCALAPPDATA%\Wearo`.

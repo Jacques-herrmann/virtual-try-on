@@ -6,7 +6,7 @@ import { signToken } from "../src/tokens";
 import { call, jsonResponse, mockFetch, now, resetDb, type Recorded } from "./helpers";
 
 const API = "https://api.github.com/repos/Jacques-herrmann/virtual-try-on";
-const INSTALLER = "VirtualTryOn-Setup-0.3.0.exe";
+const INSTALLER = "Wearo-Setup-0.3.0.exe";
 const MANIFEST = JSON.stringify({ version: "0.3.0", url: "x", sha256: "0".repeat(64) });
 
 let license: License;
