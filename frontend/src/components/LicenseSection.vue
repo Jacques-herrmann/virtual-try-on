@@ -15,7 +15,7 @@ const confirm = useConfirm()
 const router = useRouter()
 
 const changing = ref(false)
-const working = ref<'portal' | 'deactivate' | null>(null)
+const working = ref<'portal' | 'renew' | 'deactivate' | null>(null)
 
 const summary = computed(() => {
   const l = license.value
@@ -39,10 +39,10 @@ const dateLine = computed(() => {
   return l.status === 'trialing' ? `Fin de l'essai le ${date}.` : `Renouvellement le ${date}.`
 })
 
-async function openPortal() {
-  working.value = 'portal'
+async function openPage(kind: 'portal' | 'renew') {
+  working.value = kind
   try {
-    const { url } = await api.licensePortal()
+    const { url } = await (kind === 'portal' ? api.licensePortal() : api.licenseRenew())
     window.open(url, '_blank', 'noopener')
   } catch (e) {
     notify.error(e)
@@ -97,16 +97,16 @@ function saved() {
         label="Gérer mon abonnement"
         icon="pi pi-credit-card"
         :loading="working === 'portal'"
-        @click="openPortal"
+        @click="openPage('portal')"
       />
-      <a
+      <Button
         v-if="license.state === 'expired'"
         data-test="renew"
-        class="p-button p-component renew"
-        :href="`${license.site_url}/`"
-        target="_blank"
-        rel="noopener"
-      >Renouveler</a>
+        label="Renouveler"
+        icon="pi pi-refresh"
+        :loading="working === 'renew'"
+        @click="openPage('renew')"
+      />
       <Button
         data-test="change"
         label="Changer de clé"
@@ -134,9 +134,5 @@ function saved() {
 
 .wrap {
   flex-wrap: wrap;
-}
-
-.renew {
-  text-decoration: none;
 }
 </style>

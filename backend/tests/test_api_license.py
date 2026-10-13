@@ -42,6 +42,11 @@ class FakeManager:
         self._maybe_fail()
         return "https://billing.stripe.test/s"
 
+    def renew_url(self):
+        self.calls.append(("renew",))
+        self._maybe_fail()
+        return f"https://licence.test/renouveler?cle={KEY}"
+
 
 @pytest.fixture
 def manager():
@@ -117,6 +122,19 @@ def test_portal_without_active_license(lapi, manager):
     r = lapi.get("/api/license/portal")
     assert r.status_code == 400
     assert r.json()["message"] == "Cette action demande un abonnement actif."
+
+
+def test_renew(lapi, manager):
+    r = lapi.get("/api/license/renew")
+    assert r.status_code == 200
+    assert r.json() == {"url": f"https://licence.test/renouveler?cle={KEY}"}
+
+
+def test_renew_without_license(lapi, manager):
+    manager.fail = LicenseError("Aucune licence sur ce PC.")
+    r = lapi.get("/api/license/renew")
+    assert r.status_code == 400
+    assert r.json()["message"] == "Aucune licence sur ce PC."
 
 
 def test_without_manager_state_is_none(api):

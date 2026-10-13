@@ -1,7 +1,15 @@
 import { handleActivate, handleDeactivate, handleToken } from "./activation";
 import type { Env } from "./env";
 import { handleDownload, handleFile, handlePortal } from "./files";
-import { handleRecover, helpPage, homePage, recoverForm, thanksPage } from "./pages";
+import {
+  handleRecover,
+  handleRenew,
+  helpPage,
+  homePage,
+  recoverForm,
+  renewPage,
+  thanksPage,
+} from "./pages";
 import { json, notFound } from "./http";
 import { handleWebhook } from "./stripe";
 
@@ -21,6 +29,8 @@ async function route(request: Request, env: Env, _ctx: ExecutionContext): Promis
   if (method === "GET" && url.pathname === "/retrouver") return recoverForm();
   if (method === "POST" && url.pathname === "/retrouver") return handleRecover(request, env);
   if (method === "GET" && url.pathname === "/aide") return helpPage();
+  if (method === "GET" && url.pathname === "/renouveler") return renewPage(url, env);
+  if (method === "POST" && url.pathname === "/renouveler") return handleRenew(request, env);
   if (method === "POST" && url.pathname === "/stripe/webhook") return handleWebhook(request, env);
   if (method === "POST" && url.pathname === "/api/activate") return handleActivate(request, env);
   if (method === "POST" && url.pathname === "/api/token") return handleToken(request, env);

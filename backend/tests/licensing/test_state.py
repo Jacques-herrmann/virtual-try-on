@@ -382,3 +382,16 @@ def test_dev_bypass_outside_the_executable(make_manager, monkeypatch):
 def test_dev_bypass_is_ignored_by_the_executable(make_manager, monkeypatch):
     monkeypatch.setenv("VTO_DEV_LICENSE", "1")
     assert make_manager(frozen=lambda: True).state() == "none"
+
+
+def test_renew_url_carries_the_key(make_manager, monkeypatch):
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://licence.test/")
+    manager = make_manager()
+    manager.activate(KEY)
+    assert manager.renew_url() == f"https://licence.test/renouveler?cle={KEY}"
+
+
+def test_renew_url_without_key_raises(make_manager):
+    with pytest.raises(LicenseError) as exc:
+        make_manager().renew_url()
+    assert exc.value.user_message == "Aucune licence sur ce PC."

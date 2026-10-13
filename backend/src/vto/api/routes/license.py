@@ -69,3 +69,9 @@ def deactivate(request: Request) -> dict:
 def portal(request: Request) -> dict:
     manager = _manager(request)
     return {"url": _call(manager.portal_url)}
+
+
+@router.get("/renew")
+def renew(request: Request) -> dict:
+    manager = _manager(request)
+    return {"url": _call(manager.renew_url)}

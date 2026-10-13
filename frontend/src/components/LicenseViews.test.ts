@@ -25,6 +25,7 @@ vi.mock('@/api', async (importOriginal) => {
       activateLicense: vi.fn(),
       deactivateLicense: vi.fn(),
       licensePortal: vi.fn(),
+      licenseRenew: vi.fn(),
       checkKey: vi.fn(),
     },
   }
@@ -47,6 +48,7 @@ const push = vi.fn()
 vi.mock('vue-router', () => ({ useRouter: () => ({ push }) }))
 
 const mocked = vi.mocked(api)
+const RENEW_URL = 'https://licence.test/renouveler?cle=VTO-ABCD-EFGH-JKMN-WXYZ'
 
 function snapshot(changes: Partial<LicenseSnapshot> = {}): LicenseSnapshot {
   return {
@@ -179,12 +181,16 @@ describe('LicenseSection', () => {
     expect(wrapper.find('#license-key').exists()).toBe(true)
   })
 
-  it('propose de renouveler un abonnement terminé', () => {
+  it('propose de renouveler un abonnement terminé', async () => {
     useLicense().set(snapshot({ state: 'expired', status: 'canceled' }))
+    mocked.licenseRenew.mockResolvedValue({ url: RENEW_URL })
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null)
     const wrapper = mountWith(LicenseSection)
     expect(wrapper.find('[data-test="license-summary"]').text()).toContain('terminé')
-    expect(wrapper.find('[data-test="renew"]').attributes('href')).toBe('https://licence.test/')
     expect(wrapper.find('[data-test="portal"]').exists()).toBe(false)
+    await wrapper.find('[data-test="renew"]').trigger('click')
+    await flushPromises()
+    expect(open).toHaveBeenCalledWith(RENEW_URL, '_blank', 'noopener')
   })
 })
 
@@ -194,12 +200,16 @@ describe('LicenseBanner', () => {
     expect(mountWith(LicenseBanner).find('[data-test="license-banner"]').exists()).toBe(false)
   })
 
-  it('annonce un abonnement terminé avec un lien de renouvellement', () => {
+  it('annonce un abonnement terminé avec un lien de renouvellement', async () => {
     useLicense().set(snapshot({ state: 'expired' }))
+    mocked.licenseRenew.mockResolvedValue({ url: RENEW_URL })
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null)
     const banner = mountWith(LicenseBanner).find('[data-test="license-banner"]')
     expect(banner.text()).toContain('Ton abonnement est terminé')
     expect(banner.text()).toContain('Cette action demande un abonnement actif.')
-    expect(banner.find('[data-test="renew"]').attributes('href')).toBe('https://licence.test/')
+    await banner.find('[data-test="renew"]').trigger('click')
+    await flushPromises()
+    expect(open).toHaveBeenCalledWith(RENEW_URL, '_blank', 'noopener')
   })
 
   it('annonce un abonnement non vérifié', () => {

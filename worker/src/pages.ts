@@ -1,8 +1,9 @@
+import { lookupLicense, UNKNOWN_KEY_MESSAGE } from "./activation";
 import { AIDE_HTML } from "./aide.generated";
 import { sendLicenseEmail } from "./email";
 import type { Env } from "./env";
 import { escapeHtml, nowSeconds } from "./http";
-import { getLicenseByEmail, type License } from "./licenses";
+import { getLicenseByEmail, isValidStatus, type License } from "./licenses";
 import {
   licenseFromSession,
   stripeApi,
@@ -186,4 +187,73 @@ export async function handleRecover(request: Request, env: Env): Promise<Respons
 
 export function helpPage(): Response {
   return htmlPage("Aide à l'installation", AIDE_HTML);
+}
+
+/** `/renouveler?cle=` : reprise d'un abonnement terminé, sur le même client Stripe (même clé). */
+export async function renewPage(url: URL, env: Env): Promise<Response> {
+  const license = await lookupLicense(env, url.searchParams.get("cle") ?? "", nowSeconds());
+  if (!license) return renewUnknownKey();
+  if (isValidStatus(license.status)) return renewStillRunning();
+  return htmlPage(
+    "Reprendre mon abonnement",
+    `<h1>Reprendre mon abonnement</h1>
+<p>Ton abonnement est terminé. Reprends-le pour générer et envoyer à nouveau sur Vinted : tu gardes la même clé, rien à changer dans l'application.</p>
+<form method="post" action="/renouveler">
+  <input type="hidden" name="cle" value="${escapeHtml(license.key)}">
+  <button class="button" type="submit">Reprendre mon abonnement</button>
+</form>
+<p class="muted">Le paiement se fait sur la page sécurisée de Stripe.</p>`,
+  );
+}
+
+export async function handleRenew(request: Request, env: Env): Promise<Response> {
+  let key = "";
+  try {
+    key = String((await request.formData()).get("cle") ?? "");
+  } catch {
+    // Formulaire illisible : traité comme une clé vide.
+  }
+  const license = await lookupLicense(env, key, nowSeconds());
+  if (!license?.stripe_customer) return renewUnknownKey();
+  if (isValidStatus(license.status)) return renewStillRunning();
+
+  const price = env.STRIPE_PRICE_IDS.split(",")[0]!.trim();
+  try {
+    const res = await stripeApi(env, "/checkout/sessions", {
+      mode: "subscription",
+      customer: license.stripe_customer,
+      "line_items[0][price]": price,
+      "line_items[0][quantity]": "1",
+      success_url: `${env.PUBLIC_BASE_URL}/merci?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.PUBLIC_BASE_URL}/renouveler?cle=${encodeURIComponent(license.key)}`,
+      allow_promotion_codes: "true",
+    });
+    if (res.ok) {
+      const { url } = (await res.json()) as { url: string };
+      return Response.redirect(url, 303);
+    }
+    console.error("stripe: session de réabonnement refusée", res.status, await res.text());
+  } catch (e) {
+    console.error("stripe: injoignable", e);
+  }
+  return errorPage(502, "Le paiement est momentanément indisponible. Réessaie dans quelques minutes.");
+}
+
+function renewUnknownKey(): Response {
+  return htmlPage(
+    "Clé inconnue",
+    `<h1>Clé inconnue</h1>
+<p>${escapeHtml(UNKNOWN_KEY_MESSAGE)}</p>
+<p><a href="/retrouver">Retrouver ma clé</a></p>`,
+    404,
+  );
+}
+
+function renewStillRunning(): Response {
+  return htmlPage(
+    "Abonnement actif",
+    `<h1>Ton abonnement est déjà actif</h1>
+<p>Rien à faire : tu peux continuer à utiliser l'application. Pour changer de carte ou voir tes factures, utilise « Gérer mon abonnement » dans l'application.</p>
+<p><a href="/">Revenir à l'accueil</a></p>`,
+  );
 }

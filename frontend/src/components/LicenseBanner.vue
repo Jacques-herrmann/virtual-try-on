@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue'
 
+import { api } from '@/api'
+import { useNotify } from '@/composables/notify'
 import { BLOCKED, useLicense } from '@/stores/license'
 
 const CHECK_EVERY = 10 * 60 * 1000
 
 const { license, load } = useLicense()
+const notify = useNotify()
 let timer: ReturnType<typeof setInterval> | undefined
 
 const state = computed(() => license.value?.state)
@@ -15,6 +18,15 @@ async function refresh() {
     await load()
   } catch {
     // API injoignable : le bandeau « déconnecté » s'en charge.
+  }
+}
+
+async function renew() {
+  try {
+    const { url } = await api.licenseRenew()
+    window.open(url, '_blank', 'noopener')
+  } catch (e) {
+    notify.error(e)
   }
 }
 
@@ -35,9 +47,7 @@ onUnmounted(() => clearInterval(timer))
     <template v-if="state === 'expired'">
       <strong>Ton abonnement est terminé.</strong>
       <span>{{ BLOCKED }} Tes articles restent consultables.</span>
-      <a :href="`${license.site_url}/`" target="_blank" rel="noopener" data-test="renew">
-        Renouveler
-      </a>
+      <a href="#" data-test="renew" @click.prevent="renew">Renouveler</a>
     </template>
     <template v-else>
       <strong>

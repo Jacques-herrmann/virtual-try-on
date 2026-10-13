@@ -125,6 +125,7 @@ export const api = {
   activateLicense: (key: string) => request<LicenseSnapshot>('POST', '/api/license', { key }),
   deactivateLicense: () => request<LicenseSnapshot>('DELETE', '/api/license'),
   licensePortal: () => request<{ url: string }>('GET', '/api/license/portal'),
+  licenseRenew: () => request<{ url: string }>('GET', '/api/license/renew'),
 
   // Mises à jour
   update: () => request<UpdateSnapshot>('GET', '/api/update'),

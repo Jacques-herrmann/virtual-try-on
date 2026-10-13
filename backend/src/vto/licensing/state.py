@@ -9,10 +9,17 @@ import time
 import uuid
 from collections.abc import Callable
 from typing import Literal, Protocol
+from urllib.parse import urlencode
 
 from vto.core import paths
 from vto.licensing import LicenseError
-from vto.licensing.client import MAX_DEVICES, LicenseClient, LicenseRefused, LicenseUnreachable
+from vto.licensing.client import (
+    MAX_DEVICES,
+    LicenseClient,
+    LicenseRefused,
+    LicenseUnreachable,
+    license_url,
+)
 from vto.licensing.key import key_hint, license_hash, normalize_key
 from vto.licensing.token import InvalidToken, TokenClaims, verify_token
 
@@ -20,6 +27,7 @@ log = logging.getLogger(__name__)
 
 INTERVAL = 24 * 3600.0
 BAD_FORMAT = "Cette clé n'a pas le bon format. Elle ressemble à VTO-XXXX-XXXX-XXXX-XXXX."
+NO_KEY = "Aucune licence sur ce PC."
 
 State = Literal["none", "active", "expired", "unverified"]
 
@@ -193,6 +201,14 @@ class LicenseManager:
         if token is None:
             raise LicenseError()
         return self._client.portal_url(token)
+
+    def renew_url(self) -> str:
+        """Page du Worker qui reprend l'abonnement sur le même client Stripe (même clé)."""
+        with self._lock:
+            key = self._data.get("key")
+        if not key:
+            raise LicenseError(NO_KEY)
+        return f"{license_url()}/renouveler?{urlencode({'cle': key})}"
 
     def refresh_now(self) -> None:
         with self._lock:
