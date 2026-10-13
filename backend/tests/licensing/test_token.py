@@ -85,7 +85,7 @@ def test_other_device_is_not_usable():
 
 def test_other_key_is_not_usable():
     c = verify_token(FIXTURE["token"], public_keys=KEYS)
-    assert not c.usable(key="VTO-0000-0000-0000-0000", device_id=DEV, now=IAT)
+    assert not c.usable(key="KAL-0000-0000-0000-0000", device_id=DEV, now=IAT)
 
 
 def test_expired_token_is_not_usable():

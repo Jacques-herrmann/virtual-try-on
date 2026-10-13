@@ -1,14 +1,12 @@
 # Installer Kaloé
 
-*Virtual Try-On s'appelle maintenant Kaloé. Si tu avais l'ancienne version, la mise à jour s'occupe de tout : tes articles, tes scènes, ta licence et ta connexion Vinted sont repris automatiquement.*
-
 ## Télécharger
 
 Télécharge `Kaloe-Setup-X.Y.Z.exe` depuis le lien reçu à l'achat, puis double-clique dessus. L'installation ne demande pas de mot de passe administrateur et prend moins d'une minute.
 
 ## Clé de licence
 
-Ta clé (`VTO-XXXX-XXXX-XXXX-XXXX`) s'affiche juste après le paiement et t'est aussi envoyée par e-mail. Au premier lancement, colle-la dans l'application. Elle fonctionne sur 2 PC ; un PC inutilisé pendant 30 jours libère sa place, et tu peux aussi désactiver un PC depuis les réglages de l'application.
+Ta clé (`KAL-XXXX-XXXX-XXXX-XXXX`) s'affiche juste après le paiement et t'est aussi envoyée par e-mail. Au premier lancement, colle-la dans l'application. Elle fonctionne sur 2 PC ; un PC inutilisé pendant 30 jours libère sa place, et tu peux aussi désactiver un PC depuis les réglages de l'application.
 
 Clé perdue ? Va sur la page « Retrouver ma clé » et indique l'adresse e-mail utilisée pour l'achat.
 

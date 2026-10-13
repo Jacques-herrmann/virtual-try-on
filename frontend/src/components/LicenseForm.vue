@@ -38,7 +38,7 @@ async function activate() {
       id="license-key"
       v-model="key"
       fluid
-      placeholder="VTO-XXXX-XXXX-XXXX-XXXX"
+      placeholder="KAL-XXXX-XXXX-XXXX-XXXX"
       autocomplete="off"
       spellcheck="false"
       :invalid="!!error"

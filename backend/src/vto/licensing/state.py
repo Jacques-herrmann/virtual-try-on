@@ -26,7 +26,7 @@ from vto.licensing.token import InvalidToken, TokenClaims, verify_token
 log = logging.getLogger(__name__)
 
 INTERVAL = 24 * 3600.0
-BAD_FORMAT = "Cette clé n'a pas le bon format. Elle ressemble à VTO-XXXX-XXXX-XXXX-XXXX."
+BAD_FORMAT = "Cette clé n'a pas le bon format. Elle ressemble à KAL-XXXX-XXXX-XXXX-XXXX."
 NO_KEY = "Aucune licence sur ce PC."
 
 State = Literal["none", "active", "expired", "unverified"]
@@ -90,7 +90,12 @@ class LicenseManager:
             return {}
         if not isinstance(data, dict):
             return {}
-        return {k: v for k, v in data.items() if k in ("key", "device_id", "token") and v}
+        data = {k: v for k, v in data.items() if k in ("key", "device_id", "token") and v}
+        # Clé VTO-… d'avant le nom Kaloé : reprise en KAL-…, le Worker la renomme aussi
+        # (le jeton, émis pour l'ancienne forme, est remplacé au prochain rafraîchissement).
+        if isinstance(data.get("key"), str) and (key := normalize_key(data["key"])):
+            data["key"] = key
+        return data
 
     def _save(self) -> None:
         file = paths.license_file()

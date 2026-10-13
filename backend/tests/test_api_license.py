@@ -4,7 +4,7 @@ from vto.licensing import LicenseError
 from vto.licensing.client import LicenseRefused, LicenseUnreachable
 from vto.licensing.state import BAD_FORMAT
 
-KEY = "VTO-ABCD-EFGH-JKMN-WXYZ"
+KEY = "KAL-ABCD-EFGH-JKMN-WXYZ"
 
 
 class FakeManager:
@@ -16,7 +16,7 @@ class FakeManager:
     def snapshot(self):
         return {
             "state": "active" if self.key else "none",
-            "key_hint": f"VTO-…-{self.key[-4:]}" if self.key else None,
+            "key_hint": f"KAL-…-{self.key[-4:]}" if self.key else None,
             "status": "active" if self.key else None,
             "period_end": 1_800_000_000 if self.key else None,
             "devices_max": 2,
@@ -71,7 +71,7 @@ def test_activate_returns_the_state_with_a_hint_only(lapi, manager):
     assert r.status_code == 200
     body = r.json()
     assert body["state"] == "active"
-    assert body["key_hint"] == "VTO-…-WXYZ"
+    assert body["key_hint"] == "KAL-…-WXYZ"
     assert KEY not in r.text
     assert manager.calls == [("activate", "vto abcd efgh jkmn wxyz")]
     assert KEY not in lapi.get("/api/license").text

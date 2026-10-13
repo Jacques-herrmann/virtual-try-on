@@ -19,10 +19,10 @@ beforeEach(async () => {
 });
 
 describe("keys", () => {
-  it("generates VTO-XXXX-XXXX-XXXX-XXXX from the Crockford alphabet", () => {
+  it("generates KAL-XXXX-XXXX-XXXX-XXXX from the Crockford alphabet", () => {
     for (let i = 0; i < 200; i++) {
       const key = generateKey();
-      expect(key).toMatch(/^VTO-[0-9A-HJKMNP-TV-Z]{4}(-[0-9A-HJKMNP-TV-Z]{4}){3}$/);
+      expect(key).toMatch(/^KAL-[0-9A-HJKMNP-TV-Z]{4}(-[0-9A-HJKMNP-TV-Z]{4}){3}$/);
     }
     expect(KEY_ALPHABET).toHaveLength(32);
     expect(KEY_ALPHABET).not.toMatch(/[ILOU]/);
@@ -68,7 +68,7 @@ describe("storage", () => {
 
   it("creates a license", async () => {
     const lic = await upsertLicense(env.DB, base);
-    expect(lic.key).toMatch(/^VTO-/);
+    expect(lic.key).toMatch(/^KAL-/);
     expect(lic).toMatchObject({
       email: "marie@example.com",
       stripe_customer: "cus_1",
@@ -146,6 +146,26 @@ describe("storage", () => {
   });
 
   it("returns null for an unknown key", async () => {
-    expect(await getLicense(env.DB, "VTO-0000-0000-0000-0000")).toBeNull();
+    expect(await getLicense(env.DB, "KAL-0000-0000-0000-0000")).toBeNull();
+  });
+
+  it("renames a key issued before Kaloé (VTO-…) on first use, with its devices", async () => {
+    const old = "VTO-ABCD-EFGH-JKMN-PQRS";
+    await env.DB.batch([
+      env.DB.prepare(
+        `INSERT INTO licenses (key, key_hash, email, stripe_customer, status, created_at)
+         VALUES (?, ?, 'marie@example.com', 'cus_1', 'active', 1)`,
+      ).bind(old, await licenseHash(old)),
+      env.DB.prepare(
+        "INSERT INTO activations (key, device_id, device_name, last_seen) VALUES (?, 'dev-a', 'Bureau', 1)",
+      ).bind(old),
+    ]);
+
+    const lic = await getLicense(env.DB, "KAL-ABCD-EFGH-JKMN-PQRS");
+    expect(lic).toMatchObject({ key: "KAL-ABCD-EFGH-JKMN-PQRS", stripe_customer: "cus_1" });
+    expect(lic!.key_hash).toBe(await licenseHash("KAL-ABCD-EFGH-JKMN-PQRS"));
+    expect(await getLicense(env.DB, old)).toBeNull();
+    const { results } = await env.DB.prepare("SELECT key FROM activations").all<{ key: string }>();
+    expect(results).toEqual([{ key: "KAL-ABCD-EFGH-JKMN-PQRS" }]);
   });
 });

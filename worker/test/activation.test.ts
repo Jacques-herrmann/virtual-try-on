@@ -61,7 +61,7 @@ describe("POST /api/activate", () => {
   });
 
   it("refuses an unknown key", async () => {
-    const res = await activate("dev-a", "Bureau", "VTO-0000-0000-0000-0000");
+    const res = await activate("dev-a", "Bureau", "KAL-0000-0000-0000-0000");
     expect(res.status).toBe(404);
     const body = await res.json<{ code: string; message: string }>();
     expect(body.code).toBe("unknown_key");
@@ -132,10 +132,10 @@ describe("POST /api/activate", () => {
 
   it.each([
     ["not json", "{"],
-    ["no device", { key: "VTO-0000-0000-0000-0000" }],
+    ["no device", { key: "KAL-0000-0000-0000-0000" }],
     ["no key", { device_id: "dev-a", device_name: "x" }],
     ["wrong types", { key: 1, device_id: 2, device_name: 3 }],
-    ["huge device id", { key: "VTO-0000-0000-0000-0000", device_id: "x".repeat(200), device_name: "x" }],
+    ["huge device id", { key: "KAL-0000-0000-0000-0000", device_id: "x".repeat(200), device_name: "x" }],
   ])("refuses an invalid body (%s)", async (_name, body) => {
     const res = await post("/api/activate", body);
     expect(res.status).toBe(400);
@@ -162,7 +162,7 @@ describe("POST /api/token", () => {
   });
 
   it("refuses an unknown key", async () => {
-    const res = await post("/api/token", { key: "VTO-0000-0000-0000-0000", device_id: "dev-a" });
+    const res = await post("/api/token", { key: "KAL-0000-0000-0000-0000", device_id: "dev-a" });
     expect((await res.json<{ code: string }>()).code).toBe("unknown_key");
   });
 
@@ -208,7 +208,7 @@ describe("POST /api/deactivate", () => {
   });
 
   it("refuses an unknown key", async () => {
-    const res = await post("/api/deactivate", { key: "VTO-0000-0000-0000-0000", device_id: "a" });
+    const res = await post("/api/deactivate", { key: "KAL-0000-0000-0000-0000", device_id: "a" });
     expect(res.status).toBe(404);
   });
 

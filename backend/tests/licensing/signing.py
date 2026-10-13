@@ -10,7 +10,7 @@ from vto.licensing.key import license_hash
 PRIVATE = Ed25519PrivateKey.from_private_bytes(bytes(range(1, 33)))
 PUBLIC_KEYS = {"test": "ebVWLo/mVPlAeLES6KmLp5AfhTrmlb7X4OORC60ElmQ="}
 NOW = 1_800_000_000
-KEY = "VTO-ABCD-EFGH-JKMN-PQRS"
+KEY = "KAL-ABCD-EFGH-JKMN-PQRS"
 
 
 def _b64url(data: bytes) -> str:

@@ -224,7 +224,7 @@ describe("/telecharger", () => {
 
   it("shows an error page for an unknown key", async () => {
     mockFetch(github());
-    const res = await call("/telecharger?cle=VTO-0000-0000-0000-0000");
+    const res = await call("/telecharger?cle=KAL-0000-0000-0000-0000");
     expect(res.status).toBe(404);
     expect(res.headers.get("content-type")).toContain("text/html");
     expect(await res.text()).toContain("existe pas");

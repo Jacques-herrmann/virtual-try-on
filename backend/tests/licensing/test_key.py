@@ -19,7 +19,7 @@ def test_normalize_key_matches_worker(case):
 
 
 def test_key_hint_shows_only_the_last_group():
-    assert key_hint("VTO-ABCD-EFGH-JKMN-WXYZ") == "VTO-…-WXYZ"
+    assert key_hint("KAL-ABCD-EFGH-JKMN-WXYZ") == "KAL-…-WXYZ"
 
 
 def test_license_hash_matches_token_vector():

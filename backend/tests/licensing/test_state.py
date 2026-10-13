@@ -117,6 +117,13 @@ def test_license_file_is_written_atomically(make_manager, monkeypatch):
     assert not list(paths.data_dir().glob("*.tmp"))
 
 
+def test_key_issued_before_kaloe_is_read_as_kal(make_manager):
+    write({"key": "VTO" + KEY[3:], "device_id": "dev-1"})
+    manager = make_manager()
+    assert manager.snapshot()["key_hint"] == f"KAL-…-{KEY[-4:]}"
+    assert "cle=" + KEY in manager.renew_url()
+
+
 def test_unreadable_license_file_starts_fresh(make_manager):
     (paths.data_dir() / "license.json").write_text("{pas du json", encoding="utf-8")
     manager = make_manager()
@@ -148,7 +155,7 @@ def test_activate_refuses_a_malformed_key_without_calling(make_manager, worker):
     with pytest.raises(LicenseError) as info:
         make_manager().activate("n'importe quoi")
     assert info.value.user_message == (
-        "Cette clé n'a pas le bon format. Elle ressemble à VTO-XXXX-XXXX-XXXX-XXXX."
+        "Cette clé n'a pas le bon format. Elle ressemble à KAL-XXXX-XXXX-XXXX-XXXX."
     )
     assert worker.calls == []
 
@@ -361,7 +368,7 @@ def test_snapshot(make_manager):
     manager.activate(KEY)
     assert manager.snapshot() == {
         "state": "active",
-        "key_hint": "VTO-…-PQRS",
+        "key_hint": "KAL-…-PQRS",
         "status": "active",
         "period_end": NOW + 30 * 86400,
         "devices_max": 2,

@@ -26,7 +26,8 @@ export function generateKey(): string {
 /** Rend la forme canonique d'une clé saisie à la main, ou `null` si elle est mal formée. */
 export function normalizeKey(input: string): string | null {
   let raw = input.toUpperCase().replace(/[\s\-_]/g, "");
-  if (raw.length === 19 && (raw.startsWith("VTO") || raw.startsWith("VT0"))) raw = raw.slice(3);
+  // VTO : préfixe des clés émises avant le nom Kaloé, toujours accepté.
+  if (raw.length === 19 && /^(KAL|VTO|VT0)/.test(raw)) raw = raw.slice(3);
   if (raw.length !== 16) return null;
   raw = raw.replace(/O/g, "0").replace(/[IL]/g, "1");
   for (const c of raw) if (!KEY_ALPHABET.includes(c)) return null;
@@ -34,7 +35,7 @@ export function normalizeKey(input: string): string | null {
 }
 
 function formatKey(body: string): string {
-  return `VTO-${body.match(/.{4}/g)!.join("-")}`;
+  return `KAL-${body.match(/.{4}/g)!.join("-")}`;
 }
 
 export function isValidStatus(status: string | null | undefined): boolean {
@@ -42,7 +43,17 @@ export function isValidStatus(status: string | null | undefined): boolean {
 }
 
 export async function getLicense(db: D1Database, key: string): Promise<License | null> {
-  return db.prepare("SELECT * FROM licenses WHERE key = ?").bind(key).first<License>();
+  const found = await db.prepare("SELECT * FROM licenses WHERE key = ?").bind(key).first<License>();
+  if (found || !key.startsWith("KAL-")) return found;
+  // Clé émise avant le nom Kaloé (VTO-…) : renommée à sa première utilisation, avec ses PC.
+  const legacy = `VTO-${key.slice(4)}`;
+  const [renamed] = await db.batch<License>([
+    db
+      .prepare("UPDATE licenses SET key = ?2, key_hash = ?3 WHERE key = ?1 RETURNING *")
+      .bind(legacy, key, await licenseHash(key)),
+    db.prepare("UPDATE activations SET key = ?2 WHERE key = ?1").bind(legacy, key),
+  ]);
+  return renamed!.results[0] ?? null;
 }
 
 export async function getLicenseByHash(db: D1Database, hash: string): Promise<License | null> {

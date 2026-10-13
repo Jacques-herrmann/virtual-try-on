@@ -1,4 +1,4 @@
-"""Clé de licence `VTO-XXXX-XXXX-XXXX-XXXX` (alphabet de Crockford, comme le Worker)."""
+"""Clé de licence `KAL-XXXX-XXXX-XXXX-XXXX` (alphabet de Crockford, comme le Worker)."""
 
 import hashlib
 import re
@@ -13,19 +13,20 @@ def normalize_key(text: str) -> str | None:
     Tolère minuscules, espaces, tirets manquants, et la confusion 0/O, 1/I/L.
     """
     raw = _SEPARATORS.sub("", text.upper())
-    if len(raw) == 19 and raw.startswith(("VTO", "VT0")):
+    # VTO : préfixe des clés émises avant le nom Kaloé, toujours accepté.
+    if len(raw) == 19 and raw.startswith(("KAL", "VTO", "VT0")):
         raw = raw[3:]
     if len(raw) != 16:
         return None
     raw = raw.replace("O", "0").replace("I", "1").replace("L", "1")
     if any(c not in ALPHABET for c in raw):
         return None
-    return "VTO-" + "-".join(raw[i : i + 4] for i in range(0, 16, 4))
+    return "KAL-" + "-".join(raw[i : i + 4] for i in range(0, 16, 4))
 
 
 def key_hint(key: str) -> str:
     """Indice affichable : jamais la clé entière."""
-    return f"VTO-…-{key[-4:]}"
+    return f"KAL-…-{key[-4:]}"
 
 
 def license_hash(key: str) -> str:

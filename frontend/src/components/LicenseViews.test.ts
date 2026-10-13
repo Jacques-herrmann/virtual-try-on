@@ -48,12 +48,12 @@ const push = vi.fn()
 vi.mock('vue-router', () => ({ useRouter: () => ({ push }) }))
 
 const mocked = vi.mocked(api)
-const RENEW_URL = 'https://licence.test/renouveler?cle=VTO-ABCD-EFGH-JKMN-WXYZ'
+const RENEW_URL = 'https://licence.test/renouveler?cle=KAL-ABCD-EFGH-JKMN-WXYZ'
 
 function snapshot(changes: Partial<LicenseSnapshot> = {}): LicenseSnapshot {
   return {
     state: 'active',
-    key_hint: 'VTO-…-WXYZ',
+    key_hint: 'KAL-…-WXYZ',
     status: 'active',
     period_end: Date.UTC(2026, 10, 12, 12) / 1000,
     devices_max: 2,
@@ -109,7 +109,7 @@ describe('WelcomeView', () => {
     useSettings().set({ has_key: true } as never)
     mocked.activateLicense.mockResolvedValue(snapshot())
     const wrapper = mountWith(WelcomeView)
-    await wrapper.find('#license-key').setValue('VTO-ABCD-EFGH-JKMN-WXYZ')
+    await wrapper.find('#license-key').setValue('KAL-ABCD-EFGH-JKMN-WXYZ')
     await wrapper.find('form').trigger('submit')
     await flushPromises()
     expect(push).toHaveBeenCalledWith('/articles')
@@ -121,7 +121,7 @@ describe('WelcomeView', () => {
       new ApiError('Ta clé est déjà utilisée sur 2 PC (A, B).', 400),
     )
     const wrapper = mountWith(WelcomeView)
-    await wrapper.find('#license-key').setValue('VTO-ABCD-EFGH-JKMN-WXYZ')
+    await wrapper.find('#license-key').setValue('KAL-ABCD-EFGH-JKMN-WXYZ')
     await wrapper.find('form').trigger('submit')
     await flushPromises()
     expect(wrapper.find('[data-test="license-error"]').text()).toContain('2 PC (A, B)')
@@ -137,7 +137,7 @@ describe('LicenseSection', () => {
     expect(wrapper.find('[data-test="license-date"]').text()).toBe(
       'Renouvellement le 12 novembre 2026.',
     )
-    expect(wrapper.text()).toContain('VTO-…-WXYZ')
+    expect(wrapper.text()).toContain('KAL-…-WXYZ')
   })
 
   it("annonce la fin de l'essai", () => {

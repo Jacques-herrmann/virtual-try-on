@@ -33,13 +33,13 @@ def refused(code, **extra):
 
 def test_activate_sends_key_device_and_name():
     server = answer(body={"token": "jeton"})
-    token = server.client().activate("VTO-ABCD-EFGH-JKMN-PQRS", "dev-1", "Bureau")
+    token = server.client().activate("KAL-ABCD-EFGH-JKMN-PQRS", "dev-1", "Bureau")
     assert token == "jeton"
     req = server.requests[0]
     assert req.method == "POST"
     assert str(req.url) == f"{BASE}/api/activate"
     assert json.loads(req.content) == {
-        "key": "VTO-ABCD-EFGH-JKMN-PQRS",
+        "key": "KAL-ABCD-EFGH-JKMN-PQRS",
         "device_id": "dev-1",
         "device_name": "Bureau",
     }
@@ -47,17 +47,17 @@ def test_activate_sends_key_device_and_name():
 
 def test_refresh_sends_key_and_device():
     server = answer(body={"token": "jeton2"})
-    assert server.client().refresh("VTO-ABCD-EFGH-JKMN-PQRS", "dev-1") == "jeton2"
+    assert server.client().refresh("KAL-ABCD-EFGH-JKMN-PQRS", "dev-1") == "jeton2"
     assert str(server.requests[0].url) == f"{BASE}/api/token"
     assert json.loads(server.requests[0].content) == {
-        "key": "VTO-ABCD-EFGH-JKMN-PQRS",
+        "key": "KAL-ABCD-EFGH-JKMN-PQRS",
         "device_id": "dev-1",
     }
 
 
 def test_deactivate():
     server = answer(body={"ok": True})
-    server.client().deactivate("VTO-ABCD-EFGH-JKMN-PQRS", "dev-1")
+    server.client().deactivate("KAL-ABCD-EFGH-JKMN-PQRS", "dev-1")
     assert str(server.requests[0].url) == f"{BASE}/api/deactivate"
 
 

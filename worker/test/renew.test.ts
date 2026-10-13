@@ -54,7 +54,7 @@ describe("GET /renouveler", () => {
     expect(html).not.toContain('action="/renouveler"');
   });
 
-  it.each(["", "?cle=", "?cle=VTO-AAAA-AAAA-AAAA-AAAA"])("refuses an unknown key (%s)", async (q) => {
+  it.each(["", "?cle=", "?cle=KAL-AAAA-AAAA-AAAA-AAAA"])("refuses an unknown key (%s)", async (q) => {
     mockFetch();
     const res = await call(`/renouveler${q}`);
     expect(res.status).toBe(404);
@@ -98,7 +98,7 @@ describe("POST /renouveler", () => {
 
   it("refuses an unknown key", async () => {
     const { calls } = mockFetch();
-    expect((await post("VTO-AAAA-AAAA-AAAA-AAAA")).status).toBe(404);
+    expect((await post("KAL-AAAA-AAAA-AAAA-AAAA")).status).toBe(404);
     expect(calls).toHaveLength(0);
   });
 
