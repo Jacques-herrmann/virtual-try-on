@@ -63,3 +63,4 @@ packaging/redist/
 worker/node_modules/
 worker/.wrangler/
 worker/.dev.vars
+worker/src/aide.generated.ts

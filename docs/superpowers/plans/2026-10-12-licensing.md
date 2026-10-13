@@ -78,9 +78,10 @@ Branche : `main` (travail direct).
 
 ### Tâche 6 — Pages (spec §2.3)
 
-- [ ] Tests `pages.test.ts` : `/` contient le lien d'essai (`PAYMENT_LINK_URL`) et « Retrouver ma clé » ; `/merci?session_id=` affiche la clé (et la crée si le webhook n'est pas arrivé) ; session inconnue → page d'erreur ; `/retrouver` POST → même page de réponse que l'e-mail existe ou non, e-mail envoyé seulement s'il existe, 4ᵉ demande dans l'heure → pas d'e-mail ; `/aide` reprend la page d'aide.
-- [ ] Implémenter `src/pages.ts` (gabarit HTML commun, CSS en ligne, échappement systématique). `/aide` : contenu de `docs/aide/installation.md` converti au build (script `npm run build:aide`) et mis à jour (téléchargement via `/telecharger`).
-- [ ] Commit `add worker pages`.
+- [x] Tests `pages.test.ts` : `/` contient le lien d'essai (`PAYMENT_LINK_URL`) et « Retrouver ma clé » ; `/merci?session_id=` affiche la clé (et la crée si le webhook n'est pas arrivé) ; session inconnue → page d'erreur ; `/retrouver` POST → même page de réponse que l'e-mail existe ou non, e-mail envoyé seulement s'il existe, 4ᵉ demande dans l'heure → pas d'e-mail ; `/aide` reprend la page d'aide.
+- [x] Implémenter `src/pages.ts` (gabarit HTML commun, CSS en ligne, échappement systématique). `/aide` : contenu de `docs/aide/installation.md` converti au build (script `npm run build:aide`) et mis à jour (téléchargement via `/telecharger`).
+- [x] Écarts : limite de `/retrouver` comptée par adresse e-mail seule (une rotation d'IP ne permet pas d'inonder une boîte) ; `src/aide.generated.ts` généré par `pretest` / `pretypecheck` / `deploy`, ignoré par git ; section « Clé de licence » ajoutée à la page d'aide.
+- [x] Commit `add worker pages`.
 
 ### Tâche 7 — Déploiement (spec §5) — **avec l'utilisateur**
 

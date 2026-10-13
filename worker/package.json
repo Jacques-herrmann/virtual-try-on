@@ -7,9 +7,12 @@
     "node": ">=22.12"
   },
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "build:aide": "node scripts/build-aide.mjs",
+    "dev": "npm run build:aide && wrangler dev",
+    "deploy": "npm run build:aide && wrangler deploy",
+    "pretest": "npm run build:aide",
     "test": "vitest run",
+    "pretypecheck": "npm run build:aide",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
