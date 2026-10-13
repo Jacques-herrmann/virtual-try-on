@@ -154,8 +154,9 @@ async function backgroundsChanged(scene: SceneDetail) {
 <template>
   <div class="split">
     <aside class="left">
+      <h1>Scènes</h1>
+      <p class="muted hint">Chaque scène active produit une photo par article.</p>
       <Button label="Nouvelle scène" icon="icon-plus" fluid @click="creatingOpen = true" />
-      <p class="muted hint">Chaque scène active produit une image par article.</p>
       <div
         v-for="(scene, i) in scenes"
         :key="scene.slug"
@@ -270,24 +271,24 @@ async function backgroundsChanged(scene: SceneDetail) {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 1.75rem 1.25rem 2rem var(--w-gutter);
   overflow-y: auto;
-  border-right: 1px solid var(--p-content-border-color);
 }
 
 .hint {
-  font-size: 0.85rem;
-  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
 }
 
 .item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.6rem;
-  border: 1px solid transparent;
-  border-radius: var(--p-border-radius-md);
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--p-surface-200);
+  border-radius: 14px;
   background: var(--p-surface-0);
+  box-shadow: var(--w-shadow-card);
   cursor: pointer;
 }
 
@@ -295,9 +296,13 @@ async function backgroundsChanged(scene: SceneDetail) {
   border-color: var(--p-surface-300);
 }
 
+.item:first-of-type {
+  margin-top: 0.5rem;
+}
+
 .item.selected {
-  border-color: var(--p-primary-400);
-  background: var(--p-primary-50);
+  border-color: var(--p-apricot-400);
+  box-shadow: 0 0 0 2px var(--p-apricot-200);
 }
 
 .text {
@@ -310,7 +315,7 @@ async function backgroundsChanged(scene: SceneDetail) {
 }
 
 .title {
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .problem {
@@ -325,7 +330,7 @@ async function backgroundsChanged(scene: SceneDetail) {
   flex: 1;
   min-width: 0;
   overflow-y: auto;
-  padding: 1.5rem 2rem 3rem;
+  padding: 1.75rem var(--w-gutter) 3rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -337,8 +342,7 @@ async function backgroundsChanged(scene: SceneDetail) {
 }
 
 label {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .mono {

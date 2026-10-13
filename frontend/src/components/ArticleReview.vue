@@ -147,104 +147,118 @@ async function validate() {
       {{ article.error ?? 'La génération a échoué.' }}
     </Message>
 
-    <section class="stack">
-      <div class="row between">
-        <h3>Images</h3>
-        <Button
-          v-if="mode !== 'validated'"
-          :label="mode === 'error' ? 'Réessayer' : 'Tout régénérer'"
-          icon="icon-refresh-cw"
-          severity="secondary"
-          size="small"
-          :loading="working === 'all'"
-          :disabled="!licensed"
-          @click="mode === 'error' ? run('all', () => api.generate(id)) : regenerateAll()"
-        />
-      </div>
-      <div class="tiles">
-        <figure class="tile">
-          <img :src="articleFile(article, article.photos[0] ?? '')" alt="" />
-          <figcaption>Photo d'origine</figcaption>
-        </figure>
-        <figure
-          v-for="scene in article.scenes"
-          :key="scene.scene"
-          class="tile"
-          :class="{ excluded: scene.excluded }"
-        >
-          <div class="frame">
-            <img
-              v-if="scene.status === 'ok' && scene.image"
-              :src="articleFile(article, scene.image, version)"
-              alt=""
-            />
-            <div v-else class="placeholder">{{ scene.error ?? 'Pas d’image' }}</div>
-            <span v-if="scene.excluded" class="badge">Écartée</span>
-          </div>
-          <figcaption>{{ nameOf(scene.scene) }}</figcaption>
-          <div v-if="editable" class="row actions">
+    <div class="columns">
+      <div class="col">
+        <section class="panel surface stack">
+          <div class="row between">
+            <h2>Photos</h2>
             <Button
+              v-if="mode !== 'validated'"
+              :label="mode === 'error' ? 'Réessayer' : 'Tout régénérer'"
               icon="icon-refresh-cw"
-              label="Régénérer"
-              size="small"
-              text
-              :loading="working === `scene:${scene.scene}`"
-              :disabled="!licensed"
-              @click="regenerateScene(scene.scene)"
-            />
-            <Button
-              v-if="scene.status === 'ok'"
-              :icon="scene.excluded ? 'icon-eye' : 'icon-eye-off'"
-              :label="scene.excluded ? 'Reprendre' : 'Écarter'"
-              size="small"
-              text
               severity="secondary"
-              :loading="working === `exclude:${scene.scene}`"
-              @click="toggleExcluded(scene.scene, !scene.excluded)"
+              size="small"
+              :loading="working === 'all'"
+              :disabled="!licensed"
+              @click="mode === 'error' ? run('all', () => api.generate(id)) : regenerateAll()"
             />
           </div>
-        </figure>
+          <div class="tiles">
+            <figure class="tile">
+              <div class="frame">
+                <img :src="articleFile(article, article.photos[0] ?? '')" alt="" />
+              </div>
+              <figcaption>Photo d'origine</figcaption>
+            </figure>
+            <figure
+              v-for="scene in article.scenes"
+              :key="scene.scene"
+              class="tile"
+              :class="{ excluded: scene.excluded, kept: scene.status === 'ok' && !scene.excluded }"
+            >
+              <div class="frame">
+                <img
+                  v-if="scene.status === 'ok' && scene.image"
+                  :src="articleFile(article, scene.image, version)"
+                  alt=""
+                />
+                <div v-else class="placeholder">{{ scene.error ?? 'Pas d’image' }}</div>
+                <span v-if="scene.excluded" class="badge">Écartée</span>
+              </div>
+              <figcaption>{{ nameOf(scene.scene) }}</figcaption>
+              <div v-if="editable" class="actions">
+                <Button
+                  icon="icon-refresh-cw"
+                  label="Régénérer"
+                  size="small"
+                  text
+                  :loading="working === `scene:${scene.scene}`"
+                  :disabled="!licensed"
+                  @click="regenerateScene(scene.scene)"
+                />
+                <Button
+                  v-if="scene.status === 'ok'"
+                  :icon="scene.excluded ? 'icon-eye' : 'icon-eye-off'"
+                  :label="scene.excluded ? 'Reprendre' : 'Écarter'"
+                  size="small"
+                  text
+                  severity="secondary"
+                  :loading="working === `exclude:${scene.scene}`"
+                  @click="toggleExcluded(scene.scene, !scene.excluded)"
+                />
+              </div>
+            </figure>
+          </div>
+          <small v-if="editable && keptImages === 0" class="warn">
+            Aucune image retenue : ajoute une photo d'origine à l'annonce ci-dessous.
+          </small>
+        </section>
+
+        <section v-if="galleryEditable" class="panel surface stack">
+          <div class="stack tight">
+            <h2>Photos de l'annonce Vinted</h2>
+            <p class="muted">L'ordre ci-dessous est celui de l'annonce ; la première sert de couverture.</p>
+          </div>
+          <GalleryEditor
+            :article="article"
+            :version="version"
+            :saving="working === 'gallery'"
+            @save="saveGallery"
+          />
+        </section>
       </div>
-      <small v-if="editable && keptImages === 0" class="warn">
-        Aucune image retenue : ajoute une photo d'origine à l'annonce ci-dessous.
-      </small>
-    </section>
 
-    <section v-if="galleryEditable" class="stack">
-      <h3>Photos de l'annonce Vinted</h3>
-      <GalleryEditor
-        :article="article"
-        :version="version"
-        :saving="working === 'gallery'"
-        @save="saveGallery"
-      />
-    </section>
-
-    <section v-if="article.listing" class="stack">
-      <div class="row between">
-        <h3>Annonce</h3>
-        <Button
-          v-if="editable"
-          label="Régénérer l'annonce"
-          icon="icon-refresh-cw"
-          severity="secondary"
-          size="small"
-          :loading="working === 'listing'"
-          :disabled="!licensed"
-          @click="regenerateListing"
+      <section v-if="article.listing" class="panel surface stack col">
+        <div class="row between">
+          <h2>Annonce</h2>
+          <Button
+            v-if="editable"
+            label="Régénérer l'annonce"
+            icon="icon-refresh-cw"
+            severity="secondary"
+            size="small"
+            :loading="working === 'listing'"
+            :disabled="!licensed"
+            @click="regenerateListing"
+          />
+        </div>
+        <ListingForm
+          :key="article.id"
+          ref="listingForm"
+          :listing="article.listing"
+          :catalog="vinted.catalog.value"
+          :readonly="!editable"
+          :save="listingSaver(article.id)"
         />
-      </div>
-      <ListingForm
-        :key="article.id"
-        ref="listingForm"
-        :listing="article.listing"
-        :catalog="vinted.catalog.value"
-        :readonly="!editable"
-        :save="listingSaver(article.id)"
-      />
-    </section>
+      </section>
+    </div>
 
-    <div v-if="mode === 'review'" class="footer row">
+    <div v-if="mode === 'review'" class="action-bar">
+      <i class="icon-circle-check lead" aria-hidden="true" />
+      <span class="hint">
+        {{ keptImages }} photo{{ keptImages > 1 ? 's' : '' }} retenue{{ keptImages > 1 ? 's' : '' }}.
+        Rien ne part sur Vinted sans ta validation.
+      </span>
       <Button
         label="Valider l'article"
         icon="icon-check"
@@ -253,46 +267,44 @@ async function validate() {
       />
     </div>
 
-    <div v-else-if="mode === 'validated'" class="footer stack">
+    <div v-else-if="mode === 'validated'" class="action-bar">
       <template v-if="article.status === 'published' && sent">
-        <Message v-if="sent.status === 'partial'" severity="warn" :closable="false">
+        <Message v-if="sent.status === 'partial'" severity="warn" :closable="false" class="grow">
           Brouillon enregistré sur Vinted. À compléter sur Vinted :
           {{ sent.missing_fields.join(', ') }}.
         </Message>
-        <Message v-else severity="success" :closable="false">
+        <Message v-else severity="success" :closable="false" class="grow">
           {{ sent.mode === 'publish' ? 'Annonce publiée sur Vinted.' : 'Brouillon enregistré sur Vinted.' }}
         </Message>
-        <div v-if="sent.url" class="row">
-          <Button
-            label="Ouvrir sur Vinted"
-            icon="icon-external-link"
-            :loading="working === 'open'"
-            :disabled="batchRunning"
-            @click="openOnVinted"
-          />
-        </div>
+        <Button
+          v-if="sent.url"
+          label="Ouvrir sur Vinted"
+          icon="icon-external-link"
+          :loading="working === 'open'"
+          :disabled="batchRunning"
+          @click="openOnVinted"
+        />
       </template>
       <template v-else>
-        <Message v-if="sent?.status === 'error'" severity="error" :closable="false">
+        <Message v-if="sent?.status === 'error'" severity="error" :closable="false" class="grow">
           Échec de l'envoi sur Vinted : {{ sent.error }}
         </Message>
-        <div class="row">
-          <Button
-            :label="sent?.status === 'error' ? 'Réessayer' : 'Envoyer sur Vinted'"
-            :icon="sent?.status === 'error' ? 'icon-refresh-cw' : 'icon-send'"
-            :loading="working === 'send'"
-            :disabled="batchRunning || !licensed"
-            @click="sendToVinted"
-          />
-          <Button
-            label="Repasser en relecture"
-            icon="icon-undo-2"
-            severity="secondary"
-            :loading="working === 'unvalidate'"
-            :disabled="batchRunning"
-            @click="run('unvalidate', () => api.unvalidate(id))"
-          />
-        </div>
+        <span v-else class="hint">Article validé : il est prêt à partir sur Vinted.</span>
+        <Button
+          label="Repasser en relecture"
+          icon="icon-undo-2"
+          severity="secondary"
+          :loading="working === 'unvalidate'"
+          :disabled="batchRunning"
+          @click="run('unvalidate', () => api.unvalidate(id))"
+        />
+        <Button
+          :label="sent?.status === 'error' ? 'Réessayer' : 'Envoyer sur Vinted'"
+          :icon="sent?.status === 'error' ? 'icon-refresh-cw' : 'icon-send'"
+          :loading="working === 'send'"
+          :disabled="batchRunning || !licensed"
+          @click="sendToVinted"
+        />
       </template>
     </div>
   </div>
@@ -302,7 +314,40 @@ async function validate() {
 .review {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.25rem;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 1180px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.panel {
+  padding: 1.25rem 1.375rem 1.375rem;
+  gap: 1rem;
+}
+
+.tight {
+  gap: 0.25rem;
+}
+
+.tight p {
+  margin: 0;
 }
 
 .between {
@@ -310,28 +355,34 @@ async function validate() {
 }
 
 .tiles {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
 }
 
 .tile {
   margin: 0;
-  width: 200px;
+  min-width: 0;
 }
 
 .frame {
   position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: var(--p-surface-100);
+}
+
+.tile.kept .frame {
+  border-color: var(--p-apricot-400);
 }
 
 .tile img,
 .placeholder {
   display: block;
-  width: 200px;
-  height: 266px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
-  border-radius: var(--p-border-radius-md);
-  background: var(--p-surface-100);
 }
 
 .placeholder {
@@ -340,7 +391,7 @@ async function validate() {
   padding: 0.75rem;
   text-align: center;
   font-size: 0.85rem;
-  color: var(--p-red-600);
+  color: var(--p-red-700);
 }
 
 .tile.excluded img {
@@ -353,29 +404,60 @@ async function validate() {
   top: 8px;
   left: 8px;
   font-size: 0.75rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: var(--p-border-radius-sm);
-  background: var(--p-surface-700);
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--p-surface-800);
   color: white;
 }
 
 figcaption {
   font-size: 0.85rem;
-  margin-top: 0.25rem;
-  color: var(--p-text-muted-color);
+  font-weight: 600;
+  margin-top: 0.4rem;
 }
 
 .actions {
-  gap: 0;
+  display: flex;
   flex-wrap: wrap;
+  margin-left: -0.5rem;
 }
 
 .warn {
-  color: var(--p-orange-600);
+  color: var(--p-orange-700);
+  font-weight: 600;
 }
 
-.footer {
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--p-content-border-color);
+/* Collée en bas de la zone de défilement, sur toute la largeur du contenu. */
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 0 calc(-1 * var(--w-gutter)) -3rem;
+  padding: 0.875rem var(--w-gutter);
+  background: color-mix(in srgb, var(--p-surface-0), transparent 4%);
+  border-top: 1px solid var(--p-surface-200);
+  box-shadow: 0 -6px 18px rgba(46, 31, 43, 0.06);
+  backdrop-filter: blur(6px);
+}
+
+.lead {
+  font-size: 1.2rem;
+  color: var(--p-green-700);
+}
+
+.hint {
+  flex: 1;
+  min-width: 14rem;
+  color: var(--p-surface-700);
+}
+
+.grow {
+  flex: 1;
+  min-width: 14rem;
 }
 </style>

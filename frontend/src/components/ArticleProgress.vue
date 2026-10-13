@@ -4,6 +4,7 @@ import ProgressSpinner from 'primevue/progressspinner'
 import { computed, ref } from 'vue'
 
 import { api, articleFile } from '@/api'
+import AppBanner from '@/components/ui/AppBanner.vue'
 import { useNotify } from '@/composables/notify'
 import { useArticles } from '@/stores/articles'
 import { useScenes } from '@/stores/scenes'
@@ -36,22 +37,27 @@ async function cancel() {
 </script>
 
 <template>
-  <div class="stack">
-    <div class="row status">
-      <ProgressSpinner v-if="running" style="width: 22px; height: 22px" stroke-width="6" />
-      <span v-if="running">Génération en cours… Tu peux saisir l'article suivant pendant ce temps.</span>
+  <div class="progress">
+    <AppBanner tone="brand" :icon="running ? 'icon-sparkles' : 'icon-clock'">
+      <ProgressSpinner v-if="running" style="width: 20px; height: 20px" stroke-width="6" />
+      <span v-if="running">
+        <strong>Wearo prépare tes photos et ton annonce…</strong>
+        Tu peux ajouter l'article suivant pendant ce temps.
+      </span>
       <span v-else-if="position">En attente ({{ position }}ᵉ dans la file).</span>
       <span v-else>En attente…</span>
-      <Button
-        label="Annuler"
-        severity="secondary"
-        size="small"
-        text
-        :loading="cancelling"
-        @click="cancel"
-      />
-    </div>
-    <div class="tiles">
+      <template #actions>
+        <Button
+          label="Annuler"
+          severity="secondary"
+          size="small"
+          text
+          :loading="cancelling"
+          @click="cancel"
+        />
+      </template>
+    </AppBanner>
+    <div class="tiles surface">
       <figure class="tile">
         <img :src="articleFile(article, article.photos[0] ?? '')" alt="" />
         <figcaption>Photo d'origine</figcaption>
@@ -65,7 +71,9 @@ async function cancel() {
         <div v-else-if="scene.status === 'error'" class="placeholder error">
           {{ scene.error }}
         </div>
-        <div v-else class="placeholder"><i class="icon-clock" /></div>
+        <div v-else class="placeholder pending" :aria-label="`${nameOf(scene.scene)} en préparation`">
+          <i class="icon-sparkles" aria-hidden="true" />
+        </div>
         <figcaption>{{ nameOf(scene.scene) }}</figcaption>
       </figure>
     </div>
@@ -73,27 +81,31 @@ async function cancel() {
 </template>
 
 <style scoped>
-.status {
-  min-height: 2.25rem;
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .tiles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 1rem;
+  padding: 1.25rem;
 }
 
 .tile {
   margin: 0;
-  width: 180px;
+  min-width: 0;
 }
 
 .tile img,
 .placeholder {
-  width: 180px;
-  height: 240px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
-  border-radius: var(--p-border-radius-md);
+  border-radius: 14px;
   background: var(--p-surface-100);
 }
 
@@ -106,13 +118,38 @@ async function cancel() {
   font-size: 0.85rem;
 }
 
+.placeholder.pending {
+  font-size: 1.75rem;
+  color: var(--p-apricot-400);
+  background: linear-gradient(
+    110deg,
+    var(--p-surface-100) 30%,
+    var(--p-apricot-50) 50%,
+    var(--p-surface-100) 70%
+  );
+  background-size: 250% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -150% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placeholder.pending {
+    animation: none;
+  }
+}
+
 .placeholder.error {
-  color: var(--p-red-600);
+  color: var(--p-red-700);
 }
 
 figcaption {
   font-size: 0.85rem;
-  margin-top: 0.25rem;
-  color: var(--p-text-muted-color);
+  font-weight: 600;
+  margin-top: 0.4rem;
 }
 </style>

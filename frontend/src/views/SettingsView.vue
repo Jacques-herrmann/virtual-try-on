@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
-import Panel from 'primevue/panel'
 import SelectButton from 'primevue/selectbutton'
 import Textarea from 'primevue/textarea'
 import { useConfirm } from 'primevue/useconfirm'
@@ -10,12 +9,15 @@ import { computed, onMounted, ref } from 'vue'
 import { api } from '@/api'
 import KeyForm from '@/components/KeyForm.vue'
 import LicenseSection from '@/components/LicenseSection.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
+import SectionCard from '@/components/ui/SectionCard.vue'
 import { useNotify } from '@/composables/notify'
 import { useSettings } from '@/stores/settings'
 import { useVinted } from '@/stores/vinted'
 import type { VintedMode, VintedStatus } from '@/types'
 
 const { settings, load, set } = useSettings()
+const showAdvanced = ref(false)
 const vinted = useVinted()
 const notify = useNotify()
 const confirm = useConfirm()
@@ -141,21 +143,29 @@ function keySaved() {
 
 <template>
   <div class="page stack">
-    <h1>Réglages</h1>
+    <PageHeader title="Réglages" subtitle="Ton abonnement, ta clé Gemini, tes annonces et ta connexion Vinted." />
 
-    <Panel header="Licence">
+    <SectionCard title="Abonnement" icon="icon-credit-card">
       <LicenseSection />
-    </Panel>
+    </SectionCard>
 
-    <Panel header="Clé Gemini">
+    <SectionCard
+      title="Clé Gemini"
+      subtitle="L’IA de Google qui crée tes photos et tes annonces."
+      icon="icon-key-round"
+    >
       <div v-if="!changingKey" class="row">
         <span>Clé enregistrée : <code>••••{{ settings?.key_hint }}</code></span>
         <Button label="Changer" severity="secondary" size="small" @click="changingKey = true" />
       </div>
       <KeyForm v-else cancellable @saved="keySaved" @cancel="changingKey = false" />
-    </Panel>
+    </SectionCard>
 
-    <Panel header="Annonces">
+    <SectionCard
+      title="Annonces"
+      subtitle="Ce que l’IA écrit, et ce que Wearo ajoute à chaque description."
+      icon="icon-pencil"
+    >
       <div class="stack">
         <label for="signature">Signature ajoutée à la fin de chaque description</label>
         <Textarea id="signature" v-model="signature" rows="3" auto-resize fluid />
@@ -176,9 +186,9 @@ function keySaved() {
           />
         </div>
       </div>
-    </Panel>
+    </SectionCard>
 
-    <Panel header="Vinted">
+    <SectionCard title="Vinted" icon="icon-send">
       <div class="stack">
         <div class="row">
           <i v-if="vinted.status.value?.connecting" class="icon-loader-circle icon-spin" />
@@ -219,10 +229,19 @@ function keySaved() {
         <small class="muted">Une annonce incomplète est toujours enregistrée en brouillon.</small>
         <small class="muted">{{ dataInfo }}</small>
       </div>
-    </Panel>
+    </SectionCard>
 
-    <Panel header="Avancé" toggleable collapsed>
-      <div class="stack">
+    <SectionCard title="Avancé" icon="icon-settings">
+      <template #header>
+        <Button
+          :label="showAdvanced ? 'Masquer' : 'Afficher'"
+          severity="secondary"
+          size="small"
+          text
+          @click="showAdvanced = !showAdvanced"
+        />
+      </template>
+      <div v-if="showAdvanced" class="stack">
         <p class="muted">Modèles Gemini utilisés. Ne change ces valeurs que si on te le demande.</p>
         <label for="image-model">Modèle pour les images</label>
         <InputText id="image-model" v-model="imageModel" fluid />
@@ -237,9 +256,9 @@ function keySaved() {
           />
         </div>
       </div>
-    </Panel>
+    </SectionCard>
 
-    <Panel header="Assistance">
+    <SectionCard title="Assistance" icon="icon-info">
       <div class="row">
         <Button
           label="Ouvrir le dossier des logs"
@@ -249,15 +268,19 @@ function keySaved() {
         />
         <span class="muted">À joindre à ta demande si quelque chose ne fonctionne pas.</span>
       </div>
-    </Panel>
+    </SectionCard>
   </div>
 </template>
 
 <style scoped>
 .page {
-  max-width: 820px;
-  padding: 1.5rem 2rem 3rem;
+  max-width: 900px;
+  padding: 1.75rem var(--w-gutter) 3rem;
   gap: 1.25rem;
+}
+
+label {
+  font-weight: 600;
 }
 
 .mono {
