@@ -48,7 +48,7 @@ async function activate() {
       <Button
         type="submit"
         label="Activer"
-        icon="pi pi-check"
+        icon="icon-check"
         :loading="checking"
         :disabled="!key.trim()"
       />

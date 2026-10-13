@@ -1,7 +1,20 @@
+@import './icons.css';
+
+/* Jetons Wearo (brand/tokens.json) ; les couleurs PrimeVue (--p-*) viennent de theme.ts. */
 :root {
-  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --w-cream: #fbf7f2;
+  --w-ink: #2e1f2b;
+  --w-radius-control: 12px;
+  --w-radius-card: 18px;
+  --w-shadow-card: 0 2px 8px rgba(46, 31, 43, 0.05);
+  --w-shadow-raised: 0 8px 24px rgba(46, 31, 43, 0.1);
+  --w-gutter: 2.5rem;
+
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
   color: var(--p-text-color);
-  background: var(--p-surface-50);
+  background: var(--w-cream);
 }
 
 html,
@@ -19,7 +32,37 @@ h1,
 h2,
 h3 {
   margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 1.9rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--p-apricot-700);
   font-weight: 600;
+}
+
+a:hover {
+  color: var(--p-apricot-800);
+}
+
+:focus-visible {
+  outline: 2px solid var(--p-apricot-600);
+  outline-offset: 2px;
 }
 
 .muted {
@@ -36,4 +79,18 @@ h3 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+/* Surface blanche arrondie : cartes, panneaux, formulaires. */
+.surface {
+  background: var(--p-surface-0);
+  border: 1px solid var(--p-surface-200);
+  border-radius: var(--w-radius-card);
+  box-shadow: var(--w-shadow-card);
+}
+
+/* Les icônes Lucide s'alignent sur le texte voisin. */
+.p-button [class^='icon-'],
+.p-button [class*=' icon-'] {
+  font-size: 1.1em;
 }

@@ -164,7 +164,7 @@ function keySaved() {
         <div class="row">
           <Button
             label="Enregistrer"
-            icon="pi pi-save"
+            icon="icon-save"
             :loading="saving"
             @click="save({ signature, listing_prompt: listingPrompt })"
           />
@@ -181,7 +181,7 @@ function keySaved() {
     <Panel header="Vinted">
       <div class="stack">
         <div class="row">
-          <i v-if="vinted.status.value?.connecting" class="pi pi-spin pi-spinner" />
+          <i v-if="vinted.status.value?.connecting" class="icon-loader-circle icon-spin" />
           <span>{{ connection }}</span>
         </div>
         <p class="muted">
@@ -191,14 +191,14 @@ function keySaved() {
         <div class="row">
           <Button
             label="Connecter mon compte"
-            icon="pi pi-sign-in"
+            icon="icon-log-in"
             :loading="vintedWorking || !!vinted.status.value?.connecting"
             :disabled="!!vinted.status.value?.batch.running"
             @click="vintedAction(vinted.connect)"
           />
           <Button
             label="Déconnecter"
-            icon="pi pi-sign-out"
+            icon="icon-log-out"
             severity="secondary"
             text
             :disabled="vintedWorking || isBusyVinted"
@@ -231,7 +231,7 @@ function keySaved() {
         <div>
           <Button
             label="Enregistrer"
-            icon="pi pi-save"
+            icon="icon-save"
             :loading="saving"
             @click="save({ image_model: imageModel, text_model: textModel })"
           />
@@ -243,7 +243,7 @@ function keySaved() {
       <div class="row">
         <Button
           label="Ouvrir le dossier des logs"
-          icon="pi pi-folder-open"
+          icon="icon-folder-open"
           severity="secondary"
           @click="openLogs"
         />

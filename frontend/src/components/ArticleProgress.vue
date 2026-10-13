@@ -65,7 +65,7 @@ async function cancel() {
         <div v-else-if="scene.status === 'error'" class="placeholder error">
           {{ scene.error }}
         </div>
-        <div v-else class="placeholder"><i class="pi pi-clock" /></div>
+        <div v-else class="placeholder"><i class="icon-clock" /></div>
         <figcaption>{{ nameOf(scene.scene) }}</figcaption>
       </figure>
     </div>

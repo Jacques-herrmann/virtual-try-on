@@ -10,10 +10,10 @@ const props = defineProps<{ status: ArticleStatus; article?: Article }>()
 
 const LOOK: Record<ArticleStatus, { label: string; severity: string; icon?: string }> = {
   draft: { label: 'Brouillon', severity: 'secondary' },
-  queued: { label: 'En attente', severity: 'info', icon: 'pi pi-clock' },
-  generating: { label: 'En cours', severity: 'info', icon: 'pi pi-spin pi-spinner' },
+  queued: { label: 'En attente', severity: 'info', icon: 'icon-clock' },
+  generating: { label: 'En cours', severity: 'info', icon: 'icon-loader-circle icon-spin' },
   to_review: { label: 'À relire', severity: 'warn' },
-  validated: { label: 'Validé', severity: 'success', icon: 'pi pi-check' },
+  validated: { label: 'Validé', severity: 'success', icon: 'icon-check' },
   published: { label: 'Publié', severity: 'success' },
   error: { label: 'Erreur', severity: 'danger' },
 }

@@ -238,7 +238,7 @@ defineExpose({ dirty, flush })
     </div>
     <div v-if="!readonly" class="autosave">
       <small v-if="status === 'saving'" class="muted">
-        <i class="pi pi-spin pi-spinner" /> Enregistrement…
+        <i class="icon-loader-circle icon-spin" /> Enregistrement…
       </small>
       <small v-else-if="dirty && invalidReason" class="warn">
         Modifications non enregistrées : {{ invalidReason }}.
@@ -248,7 +248,7 @@ defineExpose({ dirty, flush })
         <a href="#" @click.prevent="flush()">Réessayer</a>
       </small>
       <small v-else-if="status === 'saved' && !dirty" class="muted">
-        <i class="pi pi-check" /> Modifications enregistrées
+        <i class="icon-check" /> Modifications enregistrées
       </small>
     </div>
   </form>

@@ -154,7 +154,7 @@ async function backgroundsChanged(scene: SceneDetail) {
 <template>
   <div class="split">
     <aside class="left">
-      <Button label="Nouvelle scène" icon="pi pi-plus" fluid @click="creatingOpen = true" />
+      <Button label="Nouvelle scène" icon="icon-plus" fluid @click="creatingOpen = true" />
       <p class="muted hint">Chaque scène active produit une image par article.</p>
       <div
         v-for="(scene, i) in scenes"
@@ -172,7 +172,7 @@ async function backgroundsChanged(scene: SceneDetail) {
         </div>
         <div class="row controls" @click.stop>
           <Button
-            icon="pi pi-arrow-up"
+            icon="icon-arrow-up"
             text
             rounded
             size="small"
@@ -181,7 +181,7 @@ async function backgroundsChanged(scene: SceneDetail) {
             @click="move(i, -1)"
           />
           <Button
-            icon="pi pi-arrow-down"
+            icon="icon-arrow-down"
             text
             rounded
             size="small"
@@ -205,7 +205,7 @@ async function backgroundsChanged(scene: SceneDetail) {
           <span class="spacer" />
           <Button
             label="Supprimer la scène"
-            icon="pi pi-trash"
+            icon="icon-trash-2"
             severity="danger"
             text
             size="small"
@@ -225,7 +225,7 @@ async function backgroundsChanged(scene: SceneDetail) {
           <div>
             <Button
               label="Enregistrer"
-              icon="pi pi-save"
+              icon="icon-save"
               :disabled="!dirty"
               :loading="saving"
               @click="save"

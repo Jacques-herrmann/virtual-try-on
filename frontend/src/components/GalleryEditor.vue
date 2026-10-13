@@ -70,7 +70,7 @@ defineExpose({ dirty })
         <span v-if="isOriginal(path)" class="tag">Photo d’origine</span>
         <div class="tools">
           <Button
-            icon="pi pi-arrow-left"
+            icon="icon-arrow-left"
             size="small"
             text
             rounded
@@ -79,7 +79,7 @@ defineExpose({ dirty })
             @click="order = move(order, index, index - 1)"
           />
           <Button
-            icon="pi pi-times"
+            icon="icon-x"
             size="small"
             text
             rounded
@@ -89,7 +89,7 @@ defineExpose({ dirty })
             @click="order = remove(order, path)"
           />
           <Button
-            icon="pi pi-arrow-right"
+            icon="icon-arrow-right"
             size="small"
             text
             rounded
@@ -141,7 +141,7 @@ defineExpose({ dirty })
       />
       <Button
         label="Enregistrer l’ordre"
-        icon="pi pi-save"
+        icon="icon-save"
         size="small"
         :disabled="!dirty"
         :loading="saving"

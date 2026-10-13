@@ -56,7 +56,7 @@ const visible = computed(() => props.articles.filter((a) => matches(filter.value
 
 <template>
   <div class="list">
-    <Button label="Nouvel article" icon="pi pi-plus" fluid @click="emit('create')" />
+    <Button label="Nouvel article" icon="icon-plus" fluid @click="emit('create')" />
     <SelectButton
       v-model="filter"
       :options="options"
@@ -78,7 +78,7 @@ const visible = computed(() => props.articles.filter((a) => matches(filter.value
       <span class="spacer" />
       <Button
         :label="`Envoyer sur Vinted (${checked.length})`"
-        icon="pi pi-send"
+        icon="icon-send"
         size="small"
         :disabled="!checked.length || sending || !licensed"
         @click="send"

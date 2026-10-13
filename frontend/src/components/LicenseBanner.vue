@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted } from 'vue'
 
 import { api } from '@/api'
+import AppBanner from '@/components/ui/AppBanner.vue'
 import { useNotify } from '@/composables/notify'
 import { BLOCKED, useLicense } from '@/stores/license'
 
@@ -38,16 +39,16 @@ onUnmounted(() => clearInterval(timer))
 </script>
 
 <template>
-  <div
+  <AppBanner
     v-if="license && (state === 'expired' || state === 'unverified')"
-    class="license-banner"
+    :tone="state === 'expired' ? 'danger' : 'warn'"
+    :icon="state === 'expired' ? 'icon-credit-card' : 'icon-wifi-off'"
     :class="state"
     data-test="license-banner"
   >
     <template v-if="state === 'expired'">
       <strong>Ton abonnement est terminé.</strong>
       <span>{{ BLOCKED }} Tes articles restent consultables.</span>
-      <a href="#" data-test="renew" @click.prevent="renew">Renouveler</a>
     </template>
     <template v-else>
       <strong>
@@ -55,29 +56,15 @@ onUnmounted(() => clearInterval(timer))
       </strong>
       <span>La génération et l'envoi sur Vinted reprendront dès la vérification.</span>
     </template>
-  </div>
+    <template v-if="state === 'expired'" #actions>
+      <a href="#" class="renew" data-test="renew" @click.prevent="renew">Renouveler</a>
+    </template>
+  </AppBanner>
 </template>
 
 <style scoped>
-.license-banner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 0.75rem;
-  padding: 0.6rem 1rem;
-  background: var(--p-amber-50);
-  border-bottom: 1px solid var(--p-amber-200);
-  color: var(--p-amber-900);
-}
-
-.license-banner.expired {
-  background: var(--p-red-50);
-  border-bottom-color: var(--p-red-200);
-  color: var(--p-red-800);
-}
-
-a {
-  color: inherit;
-  font-weight: 600;
+.renew {
+  font-weight: 700;
+  white-space: nowrap;
 }
 </style>

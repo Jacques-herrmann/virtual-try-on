@@ -13,9 +13,9 @@ const route = useRoute()
 const bare = computed(() => route.meta.bare === true)
 
 const links = [
-  { to: '/articles', label: 'Articles', icon: 'pi pi-images' },
-  { to: '/scenes', label: 'Scènes', icon: 'pi pi-palette' },
-  { to: '/settings', label: 'Réglages', icon: 'pi pi-cog' },
+  { to: '/articles', label: 'Articles', icon: 'icon-shirt' },
+  { to: '/scenes', label: 'Scènes', icon: 'icon-image' },
+  { to: '/settings', label: 'Réglages', icon: 'icon-settings' },
 ]
 </script>
 

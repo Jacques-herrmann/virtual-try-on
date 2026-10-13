@@ -59,7 +59,7 @@ function removeAt(index: number) {
       @dragleave="over = false"
       @drop.prevent="onDrop"
     >
-      <i class="pi pi-cloud-upload icon" />
+      <i class="icon-cloud-upload icon" />
       <span>Glisse tes photos ici ou <u>clique pour choisir</u></span>
       <small class="muted">{{ hint ?? 'JPG, PNG, WEBP ou AVIF' }}</small>
       <input ref="input" type="file" multiple :accept="ACCEPT" hidden @change="onPick" />
@@ -69,7 +69,7 @@ function removeAt(index: number) {
         <img :src="url" :alt="files[i]?.name" />
         <span v-if="i === 0" class="badge">Principale</span>
         <Button
-          icon="pi pi-times"
+          icon="icon-x"
           rounded
           size="small"
           severity="secondary"

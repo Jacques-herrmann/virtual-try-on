@@ -90,7 +90,7 @@ function remove(path: string) {
         <div v-for="path in group.paths" :key="path" class="bg">
           <img :src="sceneFile(scene.slug, path)" :alt="path" loading="lazy" />
           <Button
-            icon="pi pi-trash"
+            icon="icon-trash-2"
             rounded
             size="small"
             severity="danger"
@@ -115,7 +115,7 @@ function remove(path: string) {
         />
         <Button
           :label="`Ajouter ${files.length} décor${files.length > 1 ? 's' : ''}`"
-          icon="pi pi-upload"
+          icon="icon-upload"
           :loading="uploading"
           @click="upload"
         />

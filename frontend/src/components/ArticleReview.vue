@@ -153,7 +153,7 @@ async function validate() {
         <Button
           v-if="mode !== 'validated'"
           :label="mode === 'error' ? 'Réessayer' : 'Tout régénérer'"
-          icon="pi pi-refresh"
+          icon="icon-refresh-cw"
           severity="secondary"
           size="small"
           :loading="working === 'all'"
@@ -184,7 +184,7 @@ async function validate() {
           <figcaption>{{ nameOf(scene.scene) }}</figcaption>
           <div v-if="editable" class="row actions">
             <Button
-              icon="pi pi-refresh"
+              icon="icon-refresh-cw"
               label="Régénérer"
               size="small"
               text
@@ -194,7 +194,7 @@ async function validate() {
             />
             <Button
               v-if="scene.status === 'ok'"
-              :icon="scene.excluded ? 'pi pi-eye' : 'pi pi-eye-slash'"
+              :icon="scene.excluded ? 'icon-eye' : 'icon-eye-off'"
               :label="scene.excluded ? 'Reprendre' : 'Écarter'"
               size="small"
               text
@@ -226,7 +226,7 @@ async function validate() {
         <Button
           v-if="editable"
           label="Régénérer l'annonce"
-          icon="pi pi-refresh"
+          icon="icon-refresh-cw"
           severity="secondary"
           size="small"
           :loading="working === 'listing'"
@@ -247,7 +247,7 @@ async function validate() {
     <div v-if="mode === 'review'" class="footer row">
       <Button
         label="Valider l'article"
-        icon="pi pi-check"
+        icon="icon-check"
         :loading="working === 'validate'"
         @click="validate"
       />
@@ -265,7 +265,7 @@ async function validate() {
         <div v-if="sent.url" class="row">
           <Button
             label="Ouvrir sur Vinted"
-            icon="pi pi-external-link"
+            icon="icon-external-link"
             :loading="working === 'open'"
             :disabled="batchRunning"
             @click="openOnVinted"
@@ -279,14 +279,14 @@ async function validate() {
         <div class="row">
           <Button
             :label="sent?.status === 'error' ? 'Réessayer' : 'Envoyer sur Vinted'"
-            :icon="sent?.status === 'error' ? 'pi pi-refresh' : 'pi pi-send'"
+            :icon="sent?.status === 'error' ? 'icon-refresh-cw' : 'icon-send'"
             :loading="working === 'send'"
             :disabled="batchRunning || !licensed"
             @click="sendToVinted"
           />
           <Button
             label="Repasser en relecture"
-            icon="pi pi-undo"
+            icon="icon-undo-2"
             severity="secondary"
             :loading="working === 'unvalidate'"
             :disabled="batchRunning"

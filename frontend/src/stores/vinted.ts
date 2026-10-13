@@ -36,7 +36,7 @@ export function vintedBadge(article: Article): Badge | null {
       return {
         label: 'Échec de l’envoi',
         severity: 'danger',
-        icon: 'pi pi-exclamation-triangle',
+        icon: 'icon-triangle-alert',
         detail: result.error ?? undefined,
       }
     case 'partial':
@@ -47,7 +47,7 @@ export function vintedBadge(article: Article): Badge | null {
       }
     case 'ok':
       return result.mode === 'publish'
-        ? { label: 'Publié sur Vinted', severity: 'success', icon: 'pi pi-check-circle' }
+        ? { label: 'Publié sur Vinted', severity: 'success', icon: 'icon-circle-check' }
         : { label: 'Brouillon Vinted', severity: 'info' }
   }
 }

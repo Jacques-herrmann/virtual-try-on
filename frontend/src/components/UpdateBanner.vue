@@ -5,6 +5,7 @@ import ProgressBar from 'primevue/progressbar'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 import { api, ApiError } from '@/api'
+import AppBanner from '@/components/ui/AppBanner.vue'
 import { useLicense } from '@/stores/license'
 import type { UpdateProgress, UpdateSnapshot } from '@/types'
 
@@ -90,43 +91,48 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="visible && snapshot" class="update-banner" :class="{ required }">
-    <div class="text">
-      <strong v-if="required">
-        Cette version ne fonctionne plus avec Vinted. Mets l'application à jour pour envoyer tes
-        annonces.
-      </strong>
-      <strong v-else>Nouvelle version {{ snapshot.latest }} disponible.</strong>
+  <AppBanner
+    v-if="visible && snapshot"
+    class="update-banner"
+    :class="{ required }"
+    :tone="required ? 'danger' : 'brand'"
+    icon="icon-download"
+  >
+    <strong v-if="required">
+      Cette version ne fonctionne plus avec Vinted. Mets Wearo à jour pour envoyer tes annonces.
+    </strong>
+    <strong v-else>Wearo {{ snapshot.latest }} est disponible.</strong>
 
-      <template v-if="progress?.state === 'downloading'">
-        <span>Téléchargement de la mise à jour…</span>
-        <ProgressBar
-          :value="percent ?? undefined"
-          :mode="percent === null ? 'indeterminate' : 'determinate'"
-          :show-value="false"
-          class="bar"
-        />
-      </template>
-      <span v-else-if="progress?.state === 'launching'">
-        Installation… l'application va redémarrer.
-      </span>
-      <span v-else-if="!snapshot.can_install" class="hint">
-        Mise à jour possible uniquement depuis l'application installée.
-      </span>
+    <template v-if="progress?.state === 'downloading'">
+      <span>Téléchargement de la mise à jour…</span>
+      <ProgressBar
+        :value="percent ?? undefined"
+        :mode="percent === null ? 'indeterminate' : 'determinate'"
+        :show-value="false"
+        class="bar"
+      />
+    </template>
+    <span v-else-if="progress?.state === 'launching'">
+      Installation… Wearo va redémarrer.
+    </span>
+    <span v-else-if="!snapshot.can_install" class="hint">
+      Mise à jour possible uniquement depuis l'application installée.
+    </span>
+    <span v-else-if="!required && !error">La mise à jour prend moins d'une minute.</span>
 
-      <span v-if="error" class="error">
-        {{ error }}
-        <a data-test="help" :href="helpUrl" target="_blank" rel="noopener">Aide</a>
-      </span>
-    </div>
+    <span v-if="error" class="error">
+      {{ error }}
+      <a data-test="help" :href="helpUrl" target="_blank" rel="noopener">Aide</a>
+    </span>
 
-    <div class="actions">
+    <template #actions>
       <Button
         v-if="snapshot.notes"
         data-test="notes"
         label="Nouveautés"
         size="small"
         text
+        severity="secondary"
         @click="showNotes = true"
       />
       <Button
@@ -141,52 +147,28 @@ onUnmounted(() => {
       <Button
         v-if="!required && !working"
         data-test="dismiss"
-        icon="pi pi-times"
+        icon="icon-x"
         size="small"
         text
         rounded
+        severity="secondary"
         aria-label="Plus tard"
         @click="dismissed = true"
       />
-    </div>
+    </template>
 
     <Dialog
       v-model:visible="showNotes"
       modal
-      :header="`Nouveautés de la version ${snapshot.latest}`"
+      :header="`Nouveautés de Wearo ${snapshot.latest}`"
       :style="{ width: '32rem' }"
     >
       <p class="notes">{{ snapshot.notes }}</p>
     </Dialog>
-  </div>
+  </AppBanner>
 </template>
 
 <style scoped>
-.update-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.6rem 1rem;
-  background: var(--p-primary-50);
-  border-bottom: 1px solid var(--p-primary-200);
-  color: var(--p-primary-800);
-}
-
-.update-banner.required {
-  background: var(--p-red-50);
-  border-bottom-color: var(--p-red-200);
-  color: var(--p-red-800);
-}
-
-.text {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 0.75rem;
-  min-width: 0;
-}
-
 .bar {
   width: 12rem;
   height: 0.5rem;
@@ -198,14 +180,7 @@ onUnmounted(() => {
 }
 
 .error {
-  color: var(--p-red-700);
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  flex-shrink: 0;
+  font-weight: 600;
 }
 
 .notes {

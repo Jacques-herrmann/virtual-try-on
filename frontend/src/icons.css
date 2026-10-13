@@ -1,0 +1,66 @@
+/* Généré par scripts/icons.mjs — ne pas modifier à la main. Icônes Lucide (ISC). */
+@font-face {
+  font-family: 'lucide';
+  src: url('../node_modules/lucide-static/font/lucide.woff2') format('woff2');
+  font-display: block;
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  font-family: 'lucide' !important;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon-spin {
+  animation: icon-spin 1s linear infinite;
+}
+
+@keyframes icon-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-arrow-down::before { content: "\e042"; }
+.icon-arrow-left::before { content: "\e048"; }
+.icon-arrow-right::before { content: "\e049"; }
+.icon-arrow-up::before { content: "\e04a"; }
+.icon-check::before { content: "\e06c"; }
+.icon-chevron-left::before { content: "\e06e"; }
+.icon-circle-alert::before { content: "\e077"; }
+.icon-circle-check::before { content: "\e226"; }
+.icon-circle-stop::before { content: "\e083"; }
+.icon-clock::before { content: "\e087"; }
+.icon-cloud-upload::before { content: "\e091"; }
+.icon-credit-card::before { content: "\e0aa"; }
+.icon-download::before { content: "\e0b2"; }
+.icon-external-link::before { content: "\e0b9"; }
+.icon-eye::before { content: "\e0ba"; }
+.icon-eye-off::before { content: "\e0bb"; }
+.icon-folder-open::before { content: "\e247"; }
+.icon-image::before { content: "\e0f6"; }
+.icon-image-plus::before { content: "\e1f7"; }
+.icon-info::before { content: "\e0f9"; }
+.icon-key-round::before { content: "\e4a3"; }
+.icon-loader-circle::before { content: "\e10a"; }
+.icon-log-in::before { content: "\e10d"; }
+.icon-log-out::before { content: "\e10e"; }
+.icon-pencil::before { content: "\e1f9"; }
+.icon-plus::before { content: "\e13d"; }
+.icon-power::before { content: "\e140"; }
+.icon-refresh-cw::before { content: "\e145"; }
+.icon-save::before { content: "\e14d"; }
+.icon-send::before { content: "\e152"; }
+.icon-settings::before { content: "\e154"; }
+.icon-shirt::before { content: "\e1ca"; }
+.icon-sparkles::before { content: "\e412"; }
+.icon-trash-2::before { content: "\e18e"; }
+.icon-triangle-alert::before { content: "\e193"; }
+.icon-undo-2::before { content: "\e2a1"; }
+.icon-upload::before { content: "\e19e"; }
+.icon-wifi-off::before { content: "\e1af"; }
+.icon-x::before { content: "\e1b2"; }

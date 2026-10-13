@@ -107,7 +107,7 @@ Le profil Chrome (`browser-profile`) ne contient pas de chemin absolu bloquant :
 
 - `frontend/src/theme.ts` : preset `definePreset(Aura, …)` alimenté par les valeurs de `brand/tokens.json` (recopiées, le front ne lit pas en dehors de `frontend/`). Il fixe la primaire abricot, les surfaces crème et chaudes, des rayons de 12 px (16 px pour les cartes), des ombres douces, un focus visible, des boutons et champs un peu plus hauts, des tags en pilule, et les styles du Toast et du ConfirmDialog. `main.ts` l'utilise à la place du preset teal.
 - `frontend/src/style.css` : jetons `--w-*` (espacements, rayons, ombres, échelle typographique), `@font-face` des polices (`frontend/src/assets/fonts/`). Les utilitaires `.stack`, `.row` et `.muted` sont conservés.
-- Icônes : `lucide-vue-next` (MIT) remplace les `pi pi-*` de nos composants (une cinquantaine d'occurrences). `primeicons` est retiré des dépendances si plus rien ne s'en sert ; PrimeVue garde ses icônes internes.
+- Icônes : la police de `lucide-static` (ISC) remplace les `pi pi-*` de nos composants (une cinquantaine d'occurrences) en gardant l'API par classe (`icon="icon-refresh-cw"`). `frontend/scripts/icons.mjs` génère `src/icons.css` (woff2 seul, icônes utilisées seulement) ; un test vérifie qu'aucune classe utilisée ne manque. `primeicons` est retiré ; PrimeVue garde ses icônes internes.
 - Composants partagés, sans logique métier, dans `components/ui/` :
   - `AppLogo.vue` : logo SVG, avec ou sans le mot, et une taille ;
   - `PageHeader.vue` : titre, sous-titre, emplacement d'actions ;

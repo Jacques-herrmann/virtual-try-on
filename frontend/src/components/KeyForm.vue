@@ -49,7 +49,7 @@ async function verify() {
       <Button
         type="submit"
         label="Vérifier"
-        icon="pi pi-check"
+        icon="icon-check"
         :loading="checking"
         :disabled="!key.trim()"
       />

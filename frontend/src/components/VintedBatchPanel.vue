@@ -64,7 +64,7 @@ async function stopBatch() {
       <div>
         <Button
           label="Arrêter"
-          icon="pi pi-stop-circle"
+          icon="icon-circle-stop"
           severity="secondary"
           size="small"
           :disabled="stopping"

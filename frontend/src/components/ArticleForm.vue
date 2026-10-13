@@ -141,7 +141,7 @@ function submit() {
       <Button
         type="submit"
         :label="mode === 'create' ? 'Générer' : 'Enregistrer'"
-        :icon="mode === 'create' ? 'pi pi-sparkles' : 'pi pi-save'"
+        :icon="mode === 'create' ? 'icon-sparkles' : 'icon-save'"
         :disabled="!canSubmit || (mode === 'create' && locked)"
         :loading="busy"
       />

@@ -163,7 +163,7 @@ function deleteSelected() {
           <Button
             v-if="panel !== 'progress'"
             label="Modifier la saisie"
-            icon="pi pi-pencil"
+            icon="icon-pencil"
             severity="secondary"
             size="small"
             text
@@ -171,7 +171,7 @@ function deleteSelected() {
           />
           <Button
             v-if="panel !== 'progress'"
-            icon="pi pi-trash"
+            icon="icon-trash-2"
             severity="danger"
             size="small"
             text
@@ -190,7 +190,7 @@ function deleteSelected() {
           <div>
             <Button
               label="Générer"
-              icon="pi pi-sparkles"
+              icon="icon-sparkles"
               :loading="working"
               :disabled="!licensed"
               @click="generateDraft"

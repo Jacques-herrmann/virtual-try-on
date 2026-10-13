@@ -95,7 +95,7 @@ function saved() {
         v-if="license.state === 'active'"
         data-test="portal"
         label="Gérer mon abonnement"
-        icon="pi pi-credit-card"
+        icon="icon-credit-card"
         :loading="working === 'portal'"
         @click="openPage('portal')"
       />
@@ -103,7 +103,7 @@ function saved() {
         v-if="license.state === 'expired'"
         data-test="renew"
         label="Renouveler"
-        icon="pi pi-refresh"
+        icon="icon-refresh-cw"
         :loading="working === 'renew'"
         @click="openPage('renew')"
       />
@@ -117,7 +117,7 @@ function saved() {
         v-if="license.state !== 'none'"
         data-test="deactivate"
         label="Désactiver ce PC"
-        icon="pi pi-power-off"
+        icon="icon-power"
         severity="secondary"
         text
         :loading="working === 'deactivate'"
