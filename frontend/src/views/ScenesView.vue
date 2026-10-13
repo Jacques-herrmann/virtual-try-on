@@ -334,7 +334,6 @@ async function backgroundsChanged(scene: SceneDetail) {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  max-width: 980px;
 }
 
 .spacer {

@@ -131,7 +131,6 @@ const site = computed(() => license.value?.site_url ?? 'https://kaloe.fr')
 
 <style scoped>
 .page {
-  max-width: 900px;
   padding: 1.75rem var(--w-gutter) 3rem;
   gap: 1.25rem;
 }

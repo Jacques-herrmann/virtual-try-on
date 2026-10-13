@@ -294,7 +294,6 @@ function deleteSelected() {
 
 <style scoped>
 .page {
-  max-width: 1240px;
   padding: 1.75rem var(--w-gutter) 3rem;
   display: flex;
   flex-direction: column;

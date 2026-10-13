@@ -139,7 +139,12 @@ def main(argv: list[str] | None = None) -> None:
 
     webview.settings["OPEN_EXTERNAL_LINKS_IN_BROWSER"] = True
     webview.create_window(
-        "Kaloé", login_url(port, token), width=1280, height=800, min_size=(1024, 700)
+        "Kaloé",
+        login_url(port, token),
+        width=1280,
+        height=800,
+        min_size=(1024, 700),
+        maximized=True,
     )
     # Sans icône, la fenêtre prend celle de python.exe quand l'app tourne depuis les sources.
     webview.start(icon=str(Path(__file__).with_name("icon.ico")))
