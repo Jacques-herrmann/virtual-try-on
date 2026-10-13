@@ -54,7 +54,7 @@ jobs:
 
       - name: Test de fumée de l'exécutable
         run: |
-          ./dist/VirtualTryOn/VirtualTryOn.exe --self-check --output selfcheck.txt || { cat selfcheck.txt; exit 1; }
+          ./dist/Wearo/Wearo.exe --self-check --output selfcheck.txt || { cat selfcheck.txt; exit 1; }
           cat selfcheck.txt
 
       - name: Inno Setup
@@ -73,10 +73,10 @@ jobs:
             tail -15 iscc.log | sed 's/^/::error::/'; exit 1
           fi
           tail -3 iscc.log
-          echo "INSTALLER=packaging/Output/VirtualTryOn-Setup-$VERSION.exe" >> "$GITHUB_ENV"
+          echo "INSTALLER=packaging/Output/Wearo-Setup-$VERSION.exe" >> "$GITHUB_ENV"
 
       # À activer avec le certificat (sous-projet ultérieur) : signer
-      # dist/VirtualTryOn/VirtualTryOn.exe avant l'installeur, puis l'installeur lui-même.
+      # dist/Wearo/Wearo.exe avant l'installeur, puis l'installeur lui-même.
       - name: Signature
         if: false
         run: echo "signature non configurée"
@@ -89,14 +89,52 @@ jobs:
           "./$INSTALLER" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART '//TASKS=' \
             "//DIR=$ROOT\\vto-install" "//LOG=$ROOT\\install.log"
           sleep 5
-          taskkill //IM VirtualTryOn.exe //F || true  # relancée par l'installeur silencieux
-          "$RUNNER_TEMP/vto-install/VirtualTryOn.exe" --self-check --output installed.txt \
+          taskkill //IM Wearo.exe //F || true  # relancée par l'installeur silencieux
+          "$RUNNER_TEMP/vto-install/Wearo.exe" --self-check --output installed.txt \
             || { cat installed.txt; exit 1; }
           sleep 2
           "$RUNNER_TEMP/vto-install/unins000.exe" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART
           sleep 5
           test "$(cat "$RUNNER_TEMP/vto-data/temoin.txt")" = garder
-          test ! -e "$RUNNER_TEMP/vto-install/VirtualTryOn.exe"
+          test ! -e "$RUNNER_TEMP/vto-install/Wearo.exe"
+
+      # Chemin réel des clients : la dernière version publiée est installée à son emplacement par
+      # défaut, puis la nouvelle par-dessus ; l'app relancée déplace l'ancien dossier de données.
+      - name: Mise à jour depuis la dernière version publiée
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release download --repo "$GITHUB_REPOSITORY" --pattern '*.exe' --dir previous; then
+            echo "::notice::Aucune Release publiée : essai de mise à jour ignoré"; exit 0
+          fi
+          PREVIOUS=$(ls previous/*.exe)
+          echo "::notice::Mise à jour depuis $PREVIOUS"
+          LOCAL=$(cygpath -u "$LOCALAPPDATA")
+          MENU="$(cygpath -u "$APPDATA")/Microsoft/Windows/Start Menu/Programs"
+          "./$PREVIOUS" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART '//TASKS='
+          sleep 8
+          taskkill //IM VirtualTryOn.exe //F || true
+          taskkill //IM Wearo.exe //F || true
+          # Données d'un client d'avant Wearo (le dossier peut déjà exister si l'ancienne app est Wearo).
+          rm -rf "$LOCAL/Wearo"
+          mkdir -p "$LOCAL/VirtualTryOn/articles/temoin"
+          echo '{}' > "$LOCAL/VirtualTryOn/articles/temoin/article.json"
+          "./$INSTALLER" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART '//TASKS=' \
+            "//LOG=$(cygpath -w "$RUNNER_TEMP")\update.log"
+          sleep 10  # l'installeur relance l'app, qui migre les données au démarrage
+          taskkill //IM Wearo.exe //F || true
+          sleep 2
+          test -e "$LOCAL/Programs/Wearo/Wearo.exe"
+          test ! -e "$LOCAL/Programs/VirtualTryOn" || { echo "::error::Ancien dossier d'installation présent"; exit 1; }
+          test ! -e "$MENU/Virtual Try-On.lnk"
+          test -e "$MENU/Wearo.lnk"
+          test -e "$LOCAL/Wearo/articles/temoin/article.json" || { echo "::error::Données non migrées"; tail -20 "$LOCAL/VirtualTryOn/logs/vto.log" 2>/dev/null | sed 's/^/::error::/'; exit 1; }
+          test ! -e "$LOCAL/VirtualTryOn"
+          "$LOCAL/Programs/Wearo/Wearo.exe" --self-check --output updated.txt || { cat updated.txt; exit 1; }
+          "$LOCAL/Programs/Wearo/unins000.exe" //VERYSILENT //SUPPRESSMSGBOXES //NORESTART
+          sleep 5
+          test -e "$LOCAL/Wearo/articles/temoin/article.json"
+          test ! -e "$LOCAL/Programs/Wearo/Wearo.exe"
 
       - name: Manifeste
         run: |
@@ -115,5 +153,5 @@ jobs:
         run: |
           PRERELEASE=$(python -c "from packaging.version import Version; print('--prerelease' if Version('$VERSION').is_prerelease else '')")
           gh release create "$GITHUB_REF_NAME" --draft $PRERELEASE \
-            --title "Virtual Try-On $VERSION" --notes-file notes.txt \
+            --title "Wearo $VERSION" --notes-file notes.txt \
             "$INSTALLER" latest.json

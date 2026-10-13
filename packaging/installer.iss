@@ -1,14 +1,19 @@
 ﻿; Installeur Windows : `iscc /DAppVersion=X.Y.Z packaging\installer.iss` depuis la racine,
 ; après `pyinstaller packaging/vto.spec` et `packaging/fetch_redist.ps1`.
-; Installation par utilisateur (aucun UAC) ; les données du client (%LOCALAPPDATA%\VirtualTryOn)
-; ne sont jamais touchées, ni à l'installation ni à la désinstallation.
+; Installation par utilisateur (aucun UAC) ; les données du client (%LOCALAPPDATA%\Wearo) ne sont
+; jamais touchées, ni à l'installation ni à la désinstallation. L'app déplace elle-même l'ancien
+; dossier %LOCALAPPDATA%\VirtualTryOn au premier lancement (vto.core.paths).
 
 #ifndef AppVersion
   #error Passer la version : iscc /DAppVersion=X.Y.Z
 #endif
 
-#define AppName "Virtual Try-On"
-#define AppExe "VirtualTryOn.exe"
+#define AppName "Wearo"
+#define AppExe "Wearo.exe"
+; Avant le sous-projet 6 : dossier, exe et raccourcis retirés à la mise à jour.
+#define LegacyDir "VirtualTryOn"
+#define LegacyExe "VirtualTryOn.exe"
+#define LegacyName "Virtual Try-On"
 #define HelpUrl "https://github.com/Jacques-herrmann/virtual-try-on/blob/main/docs/aide/installation.md"
 
 [Setup]
@@ -23,7 +28,9 @@ AppSupportURL={#HelpUrl}
 VersionInfoTextVersion={#AppVersion}
 VersionInfoProductTextVersion={#AppVersion}
 PrivilegesRequired=lowest
-DefaultDirName={autopf}\VirtualTryOn
+DefaultDirName={autopf}\Wearo
+; Sinon Inno réinstallerait dans l'ancien dossier, retrouvé grâce à l'AppId.
+UsePreviousAppDir=no
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 DefaultGroupName={#AppName}
@@ -31,7 +38,7 @@ UninstallDisplayIcon={app}\{#AppExe}
 UninstallDisplayName={#AppName}
 SetupIconFile=icon.ico
 OutputDir=Output
-OutputBaseFilename=VirtualTryOn-Setup-{#AppVersion}
+OutputBaseFilename=Wearo-Setup-{#AppVersion}
 Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
@@ -53,9 +60,13 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [InstallDelete]
 ; Retire les fichiers de l'ancienne version (modules supprimés) avant de copier la nouvelle.
 Type: filesandordirs; Name: "{app}\_internal"
+; Ancienne installation « Virtual Try-On » (programme seul : les données sont ailleurs).
+Type: filesandordirs; Name: "{autopf}\{#LegacyDir}"
+Type: files; Name: "{autoprograms}\{#LegacyName}.lnk"
+Type: files; Name: "{autodesktop}\{#LegacyName}.lnk"
 
 [Files]
-Source: "..\dist\VirtualTryOn\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\Wearo\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "redist\MicrosoftEdgeWebview2Setup.exe"; Flags: dontcopy
 
 [Icons]
@@ -82,6 +93,39 @@ end;
 function WebView2Installed: Boolean;
 begin
   Result := HasVersion(HKLM32, 'SOFTWARE\' + WebView2Key) or HasVersion(HKCU, 'Software\' + WebView2Key);
+end;
+
+function IsProcessRunning(Name: String): Boolean;
+var
+  Locator, Service, Found: Variant;
+begin
+  Result := False;
+  try
+    Locator := CreateOleObject('WbemScripting.SWbemLocator');
+    Service := Locator.ConnectServer('.', 'root\CIMV2');
+    Found := Service.ExecQuery(Format('SELECT ProcessId FROM Win32_Process WHERE Name = ''%s''', [Name]));
+    Result := Found.Count > 0;
+  except
+    Log('Liste des processus indisponible : ' + GetExceptionMessage);
+  end;
+end;
+
+{ Mise à jour depuis « Virtual Try-On » : l'ancienne app se ferme d'elle-même après avoir lancé
+  l'installeur, mais CloseApplications ne la couvre pas (elle n'est pas dans le nouveau dossier).
+  On l'attend un peu pour pouvoir supprimer son dossier ; sinon il reste, sans danger. }
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+  Tries: Integer;
+begin
+  Tries := 0;
+  while IsProcessRunning('{#LegacyExe}') and (Tries < 30) do
+  begin
+    Sleep(500);
+    Tries := Tries + 1;
+  end;
+  if Tries > 0 then
+    Log(Format('Attente de {#LegacyExe} : %d ms', [Tries * 500]));
+  Result := '';
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
