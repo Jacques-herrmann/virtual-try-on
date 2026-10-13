@@ -86,13 +86,15 @@ Branche : `main` (travail direct).
 ### Tâche 7 — Déploiement (spec §5) — **avec l'utilisateur**
 
 - [x] `.github/workflows/worker.yml` : sur push `main` touchant `worker/**` ou `docs/aide/**` : tests puis `wrangler d1 migrations apply --remote` et `wrangler deploy` (secrets `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) ; sans jeton, seuls les tests tournent.
-- [ ] L'utilisateur : compte Cloudflare ; jeton API (Workers + D1) ajouté aux secrets GitHub ; `wrangler d1 create vto-licence` (l'identifiant va dans `wrangler.toml`).
-- [ ] Stripe **mode test** (l'utilisateur, guidé) : produit « Virtual Try-On », prix (montant à décider par l'utilisateur), essai 7 jours, Payment Link avec redirection `…/merci?session_id={CHECKOUT_SESSION_ID}`, portail client (résiliation, carte, factures), endpoint webhook `…/stripe/webhook` (événements de la tâche 3), relances de paiement sur 7 jours.
-- [ ] Resend : compte, clé API ; domaine plus tard (en test, Resend n'envoie qu'à l'adresse du compte — suffisant).
-- [ ] Jeton GitHub fine-grained (lecture seule, ce dépôt : Contents + Metadata ; Releases via Contents).
-- [ ] Secrets : `wrangler secret put` pour les 5 secrets ; clé de signature générée par `tools/make_signing_key.py`.
-- [ ] Vérifier : `/health`, `/`, un webhook de test envoyé depuis le tableau de bord Stripe → 200.
-- [ ] Commit `add worker deployment`.
+- [x] L'utilisateur : compte Cloudflare ; jeton API (Workers + D1) ajouté aux secrets GitHub ; `wrangler d1 create vto-licence` (l'identifiant va dans `wrangler.toml`).
+- [x] Stripe **mode test** (l'utilisateur, guidé) : produit « Virtual Try-On », prix (montant à décider par l'utilisateur), essai 7 jours, Payment Link avec redirection `…/merci?session_id={CHECKOUT_SESSION_ID}`, portail client (résiliation, carte, factures), endpoint webhook `…/stripe/webhook` (événements de la tâche 3), relances de paiement sur 7 jours.
+- [x] Resend : compte, clé API ; domaine plus tard (en test, Resend n'envoie qu'à l'adresse du compte — suffisant).
+- [x] Jeton GitHub fine-grained (lecture seule, ce dépôt : Contents + Metadata ; Releases via Contents).
+- [x] Secrets : `wrangler secret put` pour les 5 secrets ; clé de signature générée par `tools/make_signing_key.py`.
+- [x] Garde ajoutée au déploiement : seuls les abonnements portant un prix de `STRIPE_PRICE_IDS` (`wrangler.toml`) créent ou modifient une licence ; session sans abonnement ignorée ; abonnement illisible → 500 (Stripe relance) ou page « Paiement introuvable » sur `/merci`. Compte Stripe dédié à Virtual Try-On (l'ancien compte porte une autre activité).
+- [x] Vérifier : `/health`, `/`, un webhook de test envoyé depuis le tableau de bord Stripe → 200.
+- [x] Déployé le 2026-10-13 sur `https://vto-licence.vto-licence.workers.dev` (D1 `vto-licence`, WEUR). Portail client créé par l'API (résiliation en fin de période, carte, factures). Achat de test : licence en essai, webhooks livrés. `/telecharger` répond 502 tant qu'aucune Release n'est publiée sur GitHub (le dépôt n'en a plus).
+- [x] Commit `add worker deployment`.
 
 ## Partie B — App
 
