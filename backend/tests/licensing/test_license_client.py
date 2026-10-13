@@ -144,6 +144,17 @@ def test_portal_refused_is_unreachable():
         answer(401, {"code": "unauthorized"}).client().portal_url("jeton")
 
 
+def test_bearer_only_for_the_license_worker(monkeypatch):
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://licence.test")
+    assert client_mod.bearer("https://licence.test/updates/latest.json", "t") == {
+        "Authorization": "Bearer t"
+    }
+    assert client_mod.bearer("https://licence.test/updates/latest.json", None) == {}
+    assert client_mod.bearer("https://github.com/x/latest.json", "t") == {}
+    assert client_mod.bearer("https://licence.test.evil.com/x", "t") == {}
+    assert client_mod.bearer("http://licence.test/x", "t") == {}
+
+
 def test_default_url_and_override(monkeypatch):
     monkeypatch.delenv("VTO_LICENSE_URL", raising=False)
     assert client_mod.license_url() == client_mod.DEFAULT_URL

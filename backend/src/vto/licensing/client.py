@@ -53,6 +53,18 @@ def license_url() -> str:
     return (os.environ.get("VTO_LICENSE_URL") or DEFAULT_URL).rstrip("/")
 
 
+def same_origin(a: str, b: str) -> bool:
+    pa, pb = urlsplit(a), urlsplit(b)
+    return (pa.scheme, pa.netloc.lower()) == (pb.scheme, pb.netloc.lower())
+
+
+def bearer(url: str, token: str | None) -> dict[str, str]:
+    """En-tête d'autorisation, envoyé seulement au Worker de licence."""
+    if token and same_origin(url, license_url()):
+        return {"Authorization": f"Bearer {token}"}
+    return {}
+
+
 def _allowed_url(url: str) -> bool:
     parts = urlsplit(url)
     # http seulement en local, pour `wrangler dev`.

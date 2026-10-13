@@ -50,11 +50,24 @@ def test_manifest_is_valid(make_manifest, tmp_path, release):
     assert manifest.version == "0.3.0"
     assert manifest.minimum_version == "0.2.0"
     assert manifest.sha256 == hashlib.sha256(b"MZ installeur").hexdigest()
-    assert manifest.url == (
-        "https://github.com/Jacques-herrmann/virtual-try-on/releases/download/"
-        "v0.3.0/VirtualTryOn-Setup-0.3.0.exe"
-    )
+    from vto.licensing.client import DEFAULT_URL
+
+    assert manifest.url == f"{DEFAULT_URL}/updates/VirtualTryOn-Setup-0.3.0.exe"
     assert manifest.notes == "Bandeau de mise à jour."
+
+
+def test_base_url_can_be_overridden(make_manifest, tmp_path, release):
+    installer, minimum, notes = release
+    out = tmp_path / "latest.json"
+    make_manifest.main([
+        "--installer", str(installer),
+        "--version", "0.3.0",
+        "--minimum-file", str(minimum),
+        "--base-url", "https://licence.example/",
+        "--out", str(out),
+    ])
+    data = json.loads(out.read_text(encoding="utf-8"))
+    assert data["url"] == "https://licence.example/updates/VirtualTryOn-Setup-0.3.0.exe"
 
 
 def test_notes_are_optional(make_manifest, tmp_path, release):

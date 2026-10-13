@@ -47,8 +47,14 @@ def fail(exc):
     return Server(handler)
 
 
-def load(server):
-    return remote.load_vinted_data(transport=server.transport())
+@pytest.fixture(autouse=True)
+def worker_url(monkeypatch):
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://licence.test")
+    monkeypatch.delenv("VTO_VINTED_DATA_URL", raising=False)
+
+
+def load(server, token="jeton"):
+    return remote.load_vinted_data(transport=server.transport(), token=token)
 
 
 def cache_file():
@@ -72,7 +78,8 @@ def test_valid_remote_is_used_and_cached(data_dir, bundled, caplog):
     assert loaded.data.revision == "distante"
     assert json.loads(cache_file().read_bytes())["revision"] == "distante"
     assert etag_file().read_text(encoding="utf-8") == '"v2"'
-    assert server.requests[0].url == remote.DEFAULT_URL
+    assert server.requests[0].url == remote.default_url()
+    assert server.requests[0].headers["Authorization"] == "Bearer jeton"
     assert "If-None-Match" not in server.requests[0].headers
     assert "remote" in caplog.text and "distante" in caplog.text
 
@@ -154,7 +161,37 @@ def test_cache_write_is_atomic(data_dir, bundled, monkeypatch):
 def test_default_url_is_numbered_by_format():
     assert schema.FORMAT == 1
     assert get_args(schema.VintedData.model_fields["format"].annotation) == (schema.FORMAT,)
-    assert remote.DEFAULT_URL.endswith(f"/main/data/vinted-v{schema.FORMAT}.json")
+    assert remote.default_url() == f"https://licence.test/data/vinted-v{schema.FORMAT}.json"
+
+
+def test_without_token_no_request_and_cache_is_used(data_dir, bundled, caplog):
+    fill_cache("cache")
+    server = serve(content=payload("distante"))
+    loaded = load(server, token=None)
+    assert server.requests == []
+    assert (loaded.source, loaded.revision) == ("cache", "cache")
+    assert "abonnement" in caplog.text
+
+
+def test_without_token_and_cache_uses_bundled(data_dir, bundled):
+    server = serve(content=payload("distante"))
+    loaded = load(server, token=None)
+    assert server.requests == []
+    assert loaded.source == "bundled"
+
+
+def test_refused_token_falls_back_to_cache(data_dir, bundled, caplog):
+    fill_cache("cache")
+    loaded = load(serve(status=401))
+    assert loaded.source == "cache"
+    assert "401" in caplog.text
+
+
+def test_overridden_url_is_fetched_without_token(data_dir, bundled, monkeypatch):
+    monkeypatch.setenv("VTO_VINTED_DATA_URL", "https://example.com/v.json")
+    server = serve(content=payload("distante"))
+    assert load(server, token=None).source == "remote"
+    assert "Authorization" not in server.requests[0].headers
 
 
 def test_unnumbered_cache_is_ignored(data_dir, bundled):

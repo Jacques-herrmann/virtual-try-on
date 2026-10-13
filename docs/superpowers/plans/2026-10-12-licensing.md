@@ -127,9 +127,10 @@ Branche : `main` (travail direct).
 
 ### Tâche 11 — Mises à jour et `vinted.json` via le Worker (spec §3.3)
 
-- [ ] Tests : URL par défaut du manifeste et de `vinted.json` = Worker ; en-tête `Authorization: Bearer` envoyé quand un jeton valide existe (fournisseur de jeton injecté) ; sans jeton : pas de requête de manifeste (`unknown`), `vinted.json` depuis cache / copie embarquée sans requête ; téléchargement de l'installeur avec l'en-tête ; 401 du Worker → comme une indisponibilité (log).
-- [ ] `make_manifest.py --base-url` (défaut : URL du Worker) → `url` = `<base>/updates/<installeur>` ; tests mis à jour.
-- [ ] Commit `fetch updates and vinted data through the license worker`.
+- [x] Tests : URL par défaut du manifeste et de `vinted.json` = Worker ; en-tête `Authorization: Bearer` envoyé quand un jeton valide existe (fournisseur de jeton injecté) ; sans jeton : pas de requête de manifeste (`unknown`), `vinted.json` depuis cache / copie embarquée sans requête ; téléchargement de l'installeur avec l'en-tête ; 401 du Worker → comme une indisponibilité (log).
+- [x] `make_manifest.py --base-url` (défaut : URL du Worker) → `url` = `<base>/updates/<installeur>` ; tests mis à jour.
+- [x] L'en-tête `Authorization` n'est envoyé qu'à l'origine du Worker (`licensing.client.bearer`) ; `VTO_UPDATE_URL` / `VTO_VINTED_DATA_URL` vers un autre hôte restent utilisables sans jeton. `make_manifest.py --repo` remplacé par `--base-url`.
+- [x] Commit `fetch updates and vinted data through the license worker`.
 
 ### Tâche 12 — API (spec §3.4)
 

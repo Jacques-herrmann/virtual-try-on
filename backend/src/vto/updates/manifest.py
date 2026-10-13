@@ -8,10 +8,8 @@ import httpx
 from packaging.version import InvalidVersion, Version
 from pydantic import BaseModel, ConfigDict, ValidationError, field_validator, model_validator
 
-# Toujours la dernière Release publiée ; le sous-projet 5 la remplacera par le Worker.
-DEFAULT_URL = (
-    "https://github.com/Jacques-herrmann/virtual-try-on/releases/latest/download/latest.json"
-)
+from vto.licensing.client import bearer, license_url
+
 TIMEOUT = 5.0
 
 
@@ -65,19 +63,26 @@ class Manifest(BaseModel):
         return self
 
 
+def default_url() -> str:
+    """Manifeste de la dernière Release publiée, relayé par le Worker de licence."""
+    return f"{license_url()}/updates/latest.json"
+
+
 def manifest_url() -> str:
-    return os.environ.get("VTO_UPDATE_URL") or DEFAULT_URL
+    return os.environ.get("VTO_UPDATE_URL") or default_url()
 
 
 def fetch_manifest(
-    url: str | None = None, transport: httpx.BaseTransport | None = None
+    url: str | None = None,
+    transport: httpx.BaseTransport | None = None,
+    token: str | None = None,
 ) -> Manifest:
     url = url or manifest_url()
     if not _allowed_url(url):
         raise ManifestUnavailable(f"URL du manifeste refusée : {url}")
     try:
         with httpx.Client(transport=transport, timeout=TIMEOUT, follow_redirects=True) as client:
-            response = client.get(url)
+            response = client.get(url, headers=bearer(url, token))
         response.raise_for_status()
         return Manifest.model_validate_json(response.content)
     except httpx.HTTPError as exc:

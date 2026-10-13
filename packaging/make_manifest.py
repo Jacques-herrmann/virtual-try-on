@@ -9,9 +9,9 @@ import hashlib
 import json
 from pathlib import Path
 
+from vto.licensing.client import DEFAULT_URL
 from vto.updates.manifest import Manifest
 
-REPO = "Jacques-herrmann/virtual-try-on"
 DEFAULT_MINIMUM_FILE = Path(__file__).with_name("minimum_version.txt")
 
 
@@ -29,7 +29,8 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--version", required=True)
     parser.add_argument("--minimum-file", type=Path, default=DEFAULT_MINIMUM_FILE)
     parser.add_argument("--notes-file", type=Path)
-    parser.add_argument("--repo", default=REPO)
+    # Installeur relayé par le Worker de licence (le dépôt est privé).
+    parser.add_argument("--base-url", default=DEFAULT_URL)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
 
@@ -37,8 +38,7 @@ def main(argv: list[str] | None = None) -> None:
     data = {
         "version": args.version,
         "minimum_version": args.minimum_file.read_text(encoding="utf-8").strip(),
-        "url": f"https://github.com/{args.repo}/releases/download/v{args.version}/"
-        f"{args.installer.name}",
+        "url": f"{args.base_url.rstrip('/')}/updates/{args.installer.name}",
         "sha256": sha256(args.installer),
         "notes": notes,
     }

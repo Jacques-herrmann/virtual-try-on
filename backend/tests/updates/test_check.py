@@ -80,6 +80,18 @@ def test_required():
     assert checker.is_required() is True
 
 
+def test_no_check_without_license_token():
+    fetcher = Fetcher(make())
+    enabled = [False]
+    checker = UpdateChecker(current="0.1.0", fetch=fetcher, enabled=lambda: enabled[0])
+    checker.check_now()
+    assert fetcher.calls == 0
+    assert checker.snapshot()["status"] == "unknown"
+    enabled[0] = True
+    checker.check_now()
+    assert checker.snapshot()["status"] == "required"
+
+
 def test_failure_keeps_last_valid_state(caplog):
     checker = UpdateChecker(
         current="0.1.0", fetch=Fetcher(make(), ManifestUnavailable("réseau coupé"))

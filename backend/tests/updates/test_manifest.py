@@ -44,11 +44,33 @@ def test_valid_manifest():
     assert m == Manifest(**body())
 
 
-def test_default_url_follows_latest_release():
+def test_default_url_is_the_license_worker(monkeypatch):
+    monkeypatch.delenv("VTO_UPDATE_URL", raising=False)
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://licence.test")
     server = serve()
     manifest.fetch_manifest(transport=server.transport())
-    assert str(server.requests[0].url) == manifest.DEFAULT_URL
-    assert manifest.DEFAULT_URL.endswith("/releases/latest/download/latest.json")
+    assert str(server.requests[0].url) == "https://licence.test/updates/latest.json"
+
+
+def test_token_is_sent_to_the_worker(monkeypatch):
+    monkeypatch.delenv("VTO_UPDATE_URL", raising=False)
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://licence.test")
+    server = serve()
+    manifest.fetch_manifest(transport=server.transport(), token="jeton")
+    assert server.requests[0].headers["Authorization"] == "Bearer jeton"
+
+
+def test_no_authorization_without_token(monkeypatch):
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://licence.test")
+    server = serve()
+    manifest.fetch_manifest(transport=server.transport())
+    assert "Authorization" not in server.requests[0].headers
+
+
+def test_refused_token_is_unavailable(monkeypatch):
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://licence.test")
+    with pytest.raises(ManifestUnavailable):
+        manifest.fetch_manifest(transport=serve(status=401).transport(), token="vieux")
 
 
 def test_redirects_are_followed():

@@ -167,3 +167,35 @@ def test_clean_old_installers_only_removes_installers(data_dir):
     keep.write_text("x", encoding="utf-8")
     clean_old_installers()
     assert list(folder.iterdir()) == [keep]
+
+
+def test_download_sends_the_license_token_to_the_worker(data_dir, monkeypatch):
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://example.com")
+    seen = []
+
+    def handle(request):
+        seen.append(request)
+        return httpx.Response(200, content=CONTENT)
+
+    installer = Installer(
+        launcher=Launcher(),
+        on_launched=Shutdown(),
+        transport=httpx.MockTransport(handle),
+        token=lambda: "jeton",
+    )
+    installer.run(make())
+    assert seen[0].headers["Authorization"] == "Bearer jeton"
+
+
+def test_download_without_token_sends_no_authorization(data_dir, monkeypatch):
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://example.com")
+    seen = []
+
+    def handle(request):
+        seen.append(request)
+        return httpx.Response(200, content=CONTENT)
+
+    Installer(
+        launcher=Launcher(), on_launched=Shutdown(), transport=httpx.MockTransport(handle)
+    ).run(make())
+    assert "Authorization" not in seen[0].headers

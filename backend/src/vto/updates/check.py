@@ -39,8 +39,11 @@ class UpdateChecker:
         fetch: Callable[[], Manifest] = fetch_manifest,
         interval: float = INTERVAL,
         frozen: Callable[[], bool] | None = None,
+        enabled: Callable[[], bool] = lambda: True,
     ):
         self.current = current
+        # Sans abonnement actif, le Worker refuserait : on ne vérifie pas (état « inconnu »).
+        self._enabled = enabled
         self._fetch = fetch
         self._interval = interval
         self._frozen = frozen or paths.is_frozen
@@ -68,6 +71,9 @@ class UpdateChecker:
             self._stop.wait(self._interval)
 
     def check_now(self) -> None:
+        if not self._enabled():
+            log.info("Vérification des mises à jour sautée : pas d'abonnement actif")
+            return
         try:
             manifest = self._fetch()
         except ManifestUnavailable as exc:

@@ -11,18 +11,18 @@ import httpx
 from pydantic import ValidationError
 
 from vto.core import paths
+from vto.licensing.client import bearer, license_url, same_origin
 from vto.vinted.schema import FORMAT, VintedData
 
 log = logging.getLogger(__name__)
 
-# Une app ne lit que le format qu'elle comprend : le numéro fait partie du chemin.
-DEFAULT_URL = (
-    "https://raw.githubusercontent.com/Jacques-herrmann/virtual-try-on/main/data/"
-    f"vinted-v{FORMAT}.json"
-)
 TIMEOUT = 5.0
 
 Source = Literal["remote", "cache", "bundled"]
+
+
+class _NoToken(Exception):
+    pass
 
 
 @dataclass(frozen=True)
@@ -30,6 +30,11 @@ class LoadedData:
     data: VintedData
     source: Source
     revision: str
+
+
+def default_url() -> str:
+    """Relayé par le Worker de licence ; le numéro de format fait partie du chemin."""
+    return f"{license_url()}/data/vinted-v{FORMAT}.json"
 
 
 def bundled_text() -> str:
@@ -78,22 +83,33 @@ def _short(exc: Exception) -> str:
     return str(exc).splitlines()[0][:200]
 
 
-def _fetch(url: str, etag: str | None, transport: httpx.BaseTransport | None) -> httpx.Response:
-    headers = {"If-None-Match": etag} if etag else {}
+def _fetch(
+    url: str, etag: str | None, transport: httpx.BaseTransport | None, token: str | None
+) -> httpx.Response:
+    headers = bearer(url, token)
+    if etag:
+        headers["If-None-Match"] = etag
     with httpx.Client(transport=transport, timeout=TIMEOUT, follow_redirects=True) as client:
         return client.get(url, headers=headers)
 
 
-def load_vinted_data(transport: httpx.BaseTransport | None = None) -> LoadedData:
-    """Ne lève jamais : la copie embarquée est livrée avec l'app et testée."""
-    url = os.environ.get("VTO_VINTED_DATA_URL") or DEFAULT_URL
+def load_vinted_data(
+    transport: httpx.BaseTransport | None = None, token: str | None = None
+) -> LoadedData:
+    """Ne lève jamais : la copie embarquée est livrée avec l'app et testée.
+
+    Le Worker ne sert le fichier qu'aux abonnés : sans jeton, aucune requête.
+    """
+    url = os.environ.get("VTO_VINTED_DATA_URL") or default_url()
     cached = _read_cache()
     _, etag_file = _cache_files()
     etag = etag_file.read_text(encoding="utf-8").strip() if cached and etag_file.is_file() else None
 
     reason = None
     try:
-        response = _fetch(url, etag, transport)
+        if token is None and same_origin(url, license_url()):
+            raise _NoToken()
+        response = _fetch(url, etag, transport, token)
         if response.status_code == 304 and cached is not None:
             return _loaded(cached, "cache", "inchangée depuis le dernier téléchargement")
         if response.status_code == 200:
@@ -101,6 +117,8 @@ def load_vinted_data(transport: httpx.BaseTransport | None = None) -> LoadedData
             _write_cache(response.content, response.headers.get("ETag"))
             return _loaded(data, "remote")
         reason = f"HTTP {response.status_code}"
+    except _NoToken:
+        reason = "pas d'abonnement actif, fichier distant non demandé"
     except httpx.HTTPError as exc:
         reason = f"réseau : {type(exc).__name__} {_short(exc)}"
     except (ValidationError, ValueError) as exc:

@@ -12,6 +12,7 @@ from typing import Literal
 import httpx
 
 from vto.core import paths
+from vto.licensing.client import bearer
 from vto.updates import UpdateError
 from vto.updates.manifest import Manifest
 
@@ -62,8 +63,10 @@ class Installer:
         launcher: Callable[[list[str]], None] = launch_detached,
         on_launched: Callable[[], None] = lambda: None,
         transport: httpx.BaseTransport | None = None,
+        token: Callable[[], str | None] = lambda: None,
     ):
         self._launcher = launcher
+        self._token = token
         self._on_launched = on_launched
         self._transport = transport
         self._lock = threading.Lock()
@@ -130,7 +133,9 @@ class Installer:
                 httpx.Client(
                     transport=self._transport, timeout=TIMEOUT, follow_redirects=True
                 ) as client,
-                client.stream("GET", manifest.url) as response,
+                client.stream(
+                    "GET", manifest.url, headers=bearer(manifest.url, self._token())
+                ) as response,
             ):
                 response.raise_for_status()
                 length = response.headers.get("Content-Length")

@@ -25,6 +25,8 @@ from vto.core.logging import setup_logging
 from vto.licensing.state import LicenseManager
 from vto.updates.check import UpdateChecker
 from vto.updates.install import Installer, clean_old_installers
+from vto.updates.manifest import fetch_manifest
+from vto.vinted import remote
 from vto.vinted.worker import VintedWorker
 
 log = logging.getLogger(__name__)
@@ -83,10 +85,19 @@ def main(argv: list[str] | None = None) -> None:
     queue = GenerationQueue(licensed=license_manager.licensed)
     queue.start()
     clean_old_installers()
-    updates = UpdateChecker()
+    # Manifeste, installeur et vinted.json passent par le Worker, avec le jeton de licence.
+    license_token = license_manager.token
+    updates = UpdateChecker(
+        fetch=lambda: fetch_manifest(token=license_token()),
+        enabled=lambda: license_token() is not None,
+    )
     updates.start()
     # Charge les données Vinted en arrière-plan : la fenêtre n'attend pas le réseau.
-    vinted = VintedWorker(update_required=updates.is_required, licensed=license_manager.licensed)
+    vinted = VintedWorker(
+        update_required=updates.is_required,
+        licensed=license_manager.licensed,
+        load_data=lambda: remote.load_vinted_data(token=license_token()),
+    )
     vinted.start()
 
     port = DEV_PORT if args.dev else find_free_port()
@@ -97,7 +108,7 @@ def main(argv: list[str] | None = None) -> None:
         queue=queue,
         vinted_worker=vinted,
         update_checker=updates,
-        installer=Installer(on_launched=request_shutdown),
+        installer=Installer(on_launched=request_shutdown, token=license_token),
     )
     server = uvicorn.Server(
         uvicorn.Config(app, host="127.0.0.1", port=port, log_config=None, access_log=False)
