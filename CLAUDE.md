@@ -12,7 +12,7 @@
 | 4 | **Distribution** — PyInstaller, installeur Inno Setup, mise à jour en un clic, signature de code (plus tard) | 🟡 implémenté sur `main`, v0.2.2 publiée — mise à jour en un clic et mise à jour obligatoire validées sur le poste le 2026-10-12 ; reste l'essai d'installation chez un ami | `docs/superpowers/specs/2026-10-12-distribution-design.md`, `docs/superpowers/plans/2026-10-12-distribution.md` |
 | 5 | **Licence** — abonnement pour tout le monde (essai 7 jours), Stripe Managed Payments ; clé de licence, 2 PC ; Worker Cloudflare + D1 qui délivre des jetons signés et seul accès aux MAJ et sélecteurs ; dépôt privé | 🟡 code fait sur `main` (tâches 0–6 et 8–13 : Worker testé, app, front) ; Worker déployé le 2026-10-13 (tâche 7, sur `https://kaloe.fr` — l'adresse `vto-licence.vto-licence.workers.dev` reste active —, compte Stripe dédié en mode test) ; essai de bout en bout en mode test validé (14) ; page `/renouveler` (réabonnement, même clé) ajoutée ; domaine `kaloe.fr` branché (Worker, Resend vérifié, `licence@`/`contact@` renvoyés vers Gmail par Cloudflare Email Routing) ; reste avec l'utilisateur : mise en production et dépôt privé (15) | `docs/superpowers/specs/2026-10-12-licensing-design.md`, `docs/superpowers/plans/2026-10-12-licensing.md` |
 | 6 | **Marque & UI** — nom **Kaloé**, DA chaleureuse (abricot/crème), refonte des écrans, site et e-mails du Worker, renommage complet (exe, installeur, dossiers) avec migration des données | 🟡 spec et plan écrits le 2026-10-13 ; tâches 0–12 faites sur `main` (marque, migration, installeur, CI, thème, écrans, Worker, aide) ; reste l'essai réel (13) : préversion `v0.3.0rc1` puis mise à jour depuis la v0.2.2 du poste, et le déploiement du Worker | `docs/superpowers/specs/2026-10-13-brand-design.md`, `docs/superpowers/plans/2026-10-13-brand.md` |
-| 7 | **Tutoriel** — vidéo sous-titrée à la première ouverture (tournage scripté Playwright, données Gemini rejouées), bulles contextuelles driver.js par écran, vidéo « créer sa clé Gemini » | 🟡 spec et plan écrits le 2026-10-13 | `docs/superpowers/specs/2026-10-13-tutorial-design.md`, `docs/superpowers/plans/2026-10-13-tutorial.md` |
+| 7 | **Tutoriel** — vidéo sous-titrée à la première ouverture (tournage scripté Playwright, données Gemini rejouées), bulles contextuelles driver.js par écran, vidéo « créer sa clé Gemini » | 🟡 spec et plan écrits le 2026-10-13 ; tâches 1–6 faites sur `main` (visites guidées, lecteur vidéo, aide, self-check, outil `vto-tutorial`, vidéo provisoire) ; reste le tournage réel (7, 8 : données de démo, capture d'un brouillon Vinted, vidéo de la clé Gemini) et l'essai réel (10) | `docs/superpowers/specs/2026-10-13-tutorial-design.md`, `docs/superpowers/plans/2026-10-13-tutorial.md` |
 | 8 | **IA incluse** — abonnement où Kaloé paie Gemini (remet en cause le BYOK : coût, quotas par licence, CGU Google) | ⚪ à brainstormer | — |
 
 Ordre : 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. Chaque sous-projet suit le cycle brainstorming → spec → plan → implémentation. Mettre à jour le statut ci-dessus à chaque étape.
@@ -58,6 +58,11 @@ npm test                         # Vitest dans workerd, D1 locale, Stripe/Resend
 npm run typecheck
 npm run dev                      # wrangler dev (secrets dans worker/.dev.vars)
 python tools/make_signing_key.py k2  # nouvelle clé de signature des jetons (privée → secret Cloudflare)
+
+vto-tutorial capture             # une fois (GEMINI_API_KEY) : démo tools/tutorial/demo → tools/tutorial/capture
+vto-tutorial record              # après npm run build : filme la démo rejouée (sans réseau) → frontend/public/tutorial
+                                 # (kaloe.mp4/.vtt/.jpg) ; --short = 2 étapes ; plan final tools/tutorial/vinted-draft.png
+vto-tutorial edit-key f.mp4 --crop x,y,w,h --blur x,y,w,h@début-fin   # vidéo « clé Gemini » filmée à la main
 
 python brand/make_logo.py        # logo vectorisé depuis la police (fonttools + brotli)
 python packaging/make_icon.py    # icon.ico + favicon depuis brand/app-icon.svg (Playwright)
