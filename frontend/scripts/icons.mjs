@@ -8,7 +8,7 @@ const ICONS = [
   'arrow-down', 'arrow-left', 'arrow-right', 'arrow-up', 'check', 'chevron-left', 'circle-alert',
   'circle-check', 'circle-help', 'circle-stop', 'clock', 'cloud-upload', 'credit-card', 'download', 'external-link',
   'eye', 'eye-off', 'folder-open', 'image', 'image-plus', 'info', 'key-round', 'loader-circle', 'log-in',
-  'log-out', 'mail', 'pencil', 'plus', 'power', 'refresh-cw', 'save', 'send', 'settings', 'shirt', 'sparkles',
+  'log-out', 'mail', 'pencil', 'plus', 'power', 'refresh-cw', 'save', 'search', 'send', 'settings', 'shirt', 'sparkles',
   'trash-2', 'triangle-alert', 'undo-2', 'upload', 'wifi-off', 'x',
 ]
 

@@ -56,6 +56,7 @@
 .icon-power::before { content: "\e140"; }
 .icon-refresh-cw::before { content: "\e145"; }
 .icon-save::before { content: "\e14d"; }
+.icon-search::before { content: "\e151"; }
 .icon-send::before { content: "\e152"; }
 .icon-settings::before { content: "\e154"; }
 .icon-shirt::before { content: "\e1ca"; }

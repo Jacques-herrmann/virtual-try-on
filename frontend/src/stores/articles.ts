@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 
 import { api } from '@/api'
-import type { Article, ArticleStatus, QueueStatus } from '@/types'
+import { type Article, type ArticleStatus, type Audience, type GarmentType, label, type QueueStatus } from '@/types'
 
 export const POLL_INTERVAL = 1500
 
@@ -56,6 +56,99 @@ export type FilterKey = (typeof FILTERS)[number]['key']
 export function matches(filter: FilterKey, article: Article): boolean {
   const statuses = FILTERS.find((f) => f.key === filter)!.statuses as ArticleStatus[] | null
   return statuses === null || statuses.includes(article.status)
+}
+
+// --- Recherche, filtres, tri, pagination de la liste ---------------------------------------
+
+/** « Été » → « ete » : recherche insensible à la casse et aux accents. */
+export function fold(text: string): string {
+  return text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+}
+
+/** Tous les mots de la recherche figurent dans le titre, le type, la marque, la taille ou la couleur. */
+export function searchMatches(query: string, article: Article): boolean {
+  const words = fold(query).split(/\s+/).filter(Boolean)
+  if (!words.length) return true
+  const { input, listing } = article
+  const haystack = fold(
+    [
+      listing?.title,
+      label(input.garment_type),
+      input.brand,
+      listing?.brand,
+      input.size,
+      listing?.size,
+      input.color,
+      ...(listing?.color ?? []),
+    ]
+      .filter(Boolean)
+      .join(' '),
+  )
+  return words.every((w) => haystack.includes(w))
+}
+
+export const SORTS = [
+  { key: 'recent', label: 'Plus récents' },
+  { key: 'oldest', label: 'Plus anciens' },
+  { key: 'price_desc', label: 'Prix décroissant' },
+  { key: 'price_asc', label: 'Prix croissant' },
+] as const
+export type SortKey = (typeof SORTS)[number]['key']
+
+function priceOf(article: Article): number | null {
+  return article.listing?.price ?? article.input.price ?? null
+}
+
+/** Trie sans modifier la liste ; les articles sans prix vont en dernier. */
+export function sortArticles(articles: Article[], sort: SortKey): Article[] {
+  const byDate = (a: Article, b: Article) => a.created_at.localeCompare(b.created_at)
+  return [...articles].sort((a, b) => {
+    if (sort === 'recent') return byDate(b, a)
+    if (sort === 'oldest') return byDate(a, b)
+    const pa = priceOf(a)
+    const pb = priceOf(b)
+    if (pa === pb) return byDate(b, a)
+    if (pa === null) return 1
+    if (pb === null) return -1
+    return sort === 'price_asc' ? pa - pb : pb - pa
+  })
+}
+
+export interface ListFilters {
+  query: string
+  status: FilterKey
+  type: GarmentType | null
+  audience: Audience | null
+  sort: SortKey
+}
+
+/** Articles retenus par la recherche et les filtres (hors statut), puis triés. */
+export function applyFilters(articles: Article[], f: Omit<ListFilters, 'status'>): Article[] {
+  return sortArticles(
+    articles.filter(
+      (a) =>
+        searchMatches(f.query, a) &&
+        (!f.type || a.input.garment_type === f.type) &&
+        (!f.audience || a.input.audience === f.audience),
+    ),
+    f.sort,
+  )
+}
+
+export const PAGE_SIZES = [12, 24, 48]
+
+// Gardés en mémoire pendant la session : on retrouve sa recherche en revenant d'un article.
+const listFilters = ref<ListFilters>({
+  query: '',
+  status: 'all',
+  type: null,
+  audience: null,
+  sort: 'recent',
+})
+const listPage = ref({ first: 0, rows: 24 })
+
+export function useListFilters() {
+  return { filters: listFilters, page: listPage }
 }
 
 /**

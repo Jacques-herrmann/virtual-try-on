@@ -2,7 +2,18 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { makeArticle as article } from '@/testing'
 
-import { createPoller, deletable, isBusy, matches, panelFor, pruneSelection } from './articles'
+import {
+  applyFilters,
+  createPoller,
+  deletable,
+  fold,
+  isBusy,
+  matches,
+  panelFor,
+  pruneSelection,
+  searchMatches,
+  sortArticles,
+} from './articles'
 
 describe('panelFor', () => {
   it.each([
@@ -45,6 +56,56 @@ describe('sélection', () => {
   it('retire de la sélection les articles disparus', () => {
     const articles = [article('validated', { id: 'a' }), article('to_review', { id: 'b' })]
     expect(pruneSelection(['a', 'x', 'b'], articles)).toEqual(['a', 'b'])
+  })
+})
+
+describe('recherche, filtres et tri', () => {
+  const robe = article('to_review', {
+    id: 'robe',
+    created_at: '2026-10-01T10:00:00Z',
+    input: { garment_type: 'robe', audience: 'femme', brand: 'Zara', price: 20 },
+    listing: { title: 'Robe d’été fleurie', description: '', color: ['Rouge'], price: 16 },
+  })
+  const jean = article('validated', {
+    id: 'jean',
+    created_at: '2026-10-03T10:00:00Z',
+    input: { garment_type: 'pantalon', audience: 'homme', brand: 'Kiabi', size: 'S' },
+    listing: { title: 'Jean bleu clair', description: '', color: [], price: 7 },
+  })
+  const sac = article('draft', {
+    id: 'sac',
+    created_at: '2026-10-02T10:00:00Z',
+    input: { garment_type: 'sac' },
+    listing: null,
+  })
+  const all = [robe, jean, sac]
+  const none = { query: '', type: null, audience: null, sort: 'recent' } as const
+
+  it('ignore la casse et les accents', () => {
+    expect(fold('Été FLEURI')).toBe('ete fleuri')
+    expect(searchMatches('ETE', robe)).toBe(true)
+  })
+
+  it('cherche chaque mot dans le titre, le type, la marque, la taille et la couleur', () => {
+    expect(searchMatches('zara rouge', robe)).toBe(true)
+    expect(searchMatches('kiabi s', jean)).toBe(true)
+    expect(searchMatches('pantalon', jean)).toBe(true)
+    expect(searchMatches('zara bleu', robe)).toBe(false)
+    expect(searchMatches('  ', sac)).toBe(true)
+  })
+
+  it('trie par date ou par prix, les articles sans prix en dernier', () => {
+    const ids = (sort: Parameters<typeof sortArticles>[1]) => sortArticles(all, sort).map((a) => a.id)
+    expect(ids('recent')).toEqual(['jean', 'sac', 'robe'])
+    expect(ids('oldest')).toEqual(['robe', 'sac', 'jean'])
+    expect(ids('price_asc')).toEqual(['jean', 'robe', 'sac'])
+    expect(ids('price_desc')).toEqual(['robe', 'jean', 'sac'])
+  })
+
+  it('filtre par type et par public', () => {
+    expect(applyFilters(all, { ...none, type: 'robe' }).map((a) => a.id)).toEqual(['robe'])
+    expect(applyFilters(all, { ...none, audience: 'homme' }).map((a) => a.id)).toEqual(['jean'])
+    expect(applyFilters(all, { ...none, query: 'jean' }).map((a) => a.id)).toEqual(['jean'])
   })
 })
 

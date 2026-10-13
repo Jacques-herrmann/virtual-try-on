@@ -72,7 +72,8 @@ const site = computed(() => license.value?.site_url ?? 'https://kaloe.fr')
       </ol>
       <p class="muted">
         La même sélection sert à supprimer plusieurs articles d’un coup. La suppression est
-        définitive.
+        définitive. Pour retrouver un article, tape un mot de son titre, sa marque, sa taille ou
+        sa couleur dans la barre de recherche, ou filtre par type, public et statut.
       </p>
     </SectionCard>
 

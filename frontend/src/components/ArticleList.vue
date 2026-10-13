@@ -1,15 +1,29 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
 import Checkbox from 'primevue/checkbox'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
+import InputText from 'primevue/inputtext'
+import Paginator from 'primevue/paginator'
+import Select from 'primevue/select'
 import SelectButton from 'primevue/selectbutton'
 import { computed, ref, watch } from 'vue'
 
 import { articleFile } from '@/api'
 import StatusTag from '@/components/StatusTag.vue'
-import { deletable, FILTERS, type FilterKey, matches, pruneSelection } from '@/stores/articles'
+import {
+  applyFilters,
+  deletable,
+  FILTERS,
+  matches,
+  PAGE_SIZES,
+  pruneSelection,
+  SORTS,
+  useListFilters,
+} from '@/stores/articles'
 import { useLicense } from '@/stores/license'
 import { sendable } from '@/stores/vinted'
-import { type Article, label } from '@/types'
+import { type Article, AUDIENCES, GARMENT_TYPES, label } from '@/types'
 
 const props = defineProps<{
   articles: Article[]
@@ -24,10 +38,52 @@ const emit = defineEmits<{
 }>()
 
 const { licensed } = useLicense()
-const filter = ref<FilterKey>('all')
+const { filters, page } = useListFilters()
 const checked = ref<string[]>([])
 
-const visible = computed(() => props.articles.filter((a) => matches(filter.value, a)))
+/** Recherche, type et public appliqués (les compteurs de statut en dépendent). */
+const found = computed(() => applyFilters(props.articles, filters.value))
+const visible = computed(() => found.value.filter((a) => matches(filters.value.status, a)))
+const pageItems = computed(() =>
+  visible.value.slice(page.value.first, page.value.first + page.value.rows),
+)
+const narrowed = computed(
+  () => !!filters.value.query.trim() || !!filters.value.type || !!filters.value.audience,
+)
+
+// Un filtre qui change ramène à la première page.
+watch(
+  () => [filters.value.query, filters.value.status, filters.value.type, filters.value.audience],
+  () => {
+    page.value.first = 0
+  },
+)
+// Une page devenue vide (suppression…) recule sur la dernière page existante.
+watch(
+  () => visible.value.length,
+  (n) => {
+    if (page.value.first >= n) page.value.first = Math.max(0, n - 1 - ((n - 1) % page.value.rows))
+  },
+)
+
+function resetFilters() {
+  filters.value = { ...filters.value, query: '', type: null, audience: null }
+}
+
+const typeOptions = computed(() =>
+  GARMENT_TYPES.filter((t) => props.articles.some((a) => a.input.garment_type === t)).map(
+    (t) => ({ value: t, label: label(t) }),
+  ),
+)
+const audienceOptions = AUDIENCES.map((a) => ({ value: a, label: label(a) }))
+
+const root = ref<HTMLElement | null>(null)
+
+function onPage(e: { first: number; rows: number }) {
+  page.value = { first: e.first, rows: e.rows }
+  root.value?.scrollIntoView({ block: 'start' })
+}
+
 const visibleIds = computed(() => visible.value.map((a) => a.id))
 const allChecked = computed(
   () => visibleIds.value.length > 0 && visibleIds.value.every((id) => checked.value.includes(id)),
@@ -60,7 +116,7 @@ function remove() {
 const options = computed(() =>
   FILTERS.map((f) => ({
     value: f.key,
-    label: `${f.label} (${props.articles.filter((a) => matches(f.key, a)).length})`,
+    label: `${f.label} (${found.value.filter((a) => matches(f.key, a)).length})`,
   })),
 )
 
@@ -72,10 +128,50 @@ function thumbnail(article: Article): string {
 </script>
 
 <template>
-  <div class="list">
+  <div ref="root" class="list">
+    <div class="search-row">
+      <IconField class="search">
+        <InputIcon class="icon-search" />
+        <InputText
+          v-model="filters.query"
+          placeholder="Rechercher : titre, marque, taille, couleur…"
+          aria-label="Rechercher un article"
+          fluid
+        />
+      </IconField>
+      <Select
+        v-model="filters.type"
+        :options="typeOptions"
+        option-label="label"
+        option-value="value"
+        placeholder="Type"
+        show-clear
+        class="pick-filter"
+        aria-label="Filtrer par type"
+      />
+      <Select
+        v-model="filters.audience"
+        :options="audienceOptions"
+        option-label="label"
+        option-value="value"
+        placeholder="Public"
+        show-clear
+        class="pick-filter"
+        aria-label="Filtrer par public"
+      />
+      <Select
+        v-model="filters.sort"
+        :options="[...SORTS]"
+        option-label="label"
+        option-value="key"
+        class="pick-filter"
+        aria-label="Trier"
+      />
+    </div>
+
     <div class="toolbar">
       <SelectButton
-        v-model="filter"
+        v-model="filters.status"
         :options="options"
         option-label="label"
         option-value="value"
@@ -91,7 +187,7 @@ function thumbnail(article: Article): string {
           input-id="check-all"
           @update:model-value="toggleAll"
         />
-        <label for="check-all">Tout sélectionner</label>
+        <label for="check-all">Tout sélectionner ({{ visible.length }})</label>
       </div>
     </div>
 
@@ -127,10 +223,19 @@ function thumbnail(article: Article): string {
       </span>
     </div>
 
-    <p v-if="!visible.length" class="muted empty">Aucun article ici.</p>
+    <div v-if="!visible.length" class="empty">
+      <p class="muted">Aucun article ne correspond.</p>
+      <Button
+        v-if="narrowed"
+        label="Effacer la recherche et les filtres"
+        severity="secondary"
+        size="small"
+        @click="resetFilters"
+      />
+    </div>
     <div v-else class="grid">
       <article
-        v-for="article in visible"
+        v-for="article in pageItems"
         :key="article.id"
         class="card"
         :class="{ selected: article.id === selectedId, checked: checked.includes(article.id) }"
@@ -162,6 +267,17 @@ function thumbnail(article: Article): string {
         />
       </article>
     </div>
+
+    <Paginator
+      v-if="visible.length > PAGE_SIZES[0]!"
+      :first="page.first"
+      :rows="page.rows"
+      :total-records="visible.length"
+      :rows-per-page-options="PAGE_SIZES"
+      template="PrevPageLink PageLinks NextPageLink RowsPerPageDropdown"
+      class="pager"
+      @page="onPage"
+    />
   </div>
 </template>
 
@@ -217,10 +333,32 @@ function thumbnail(article: Article): string {
   margin-left: auto;
 }
 
+.search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.search {
+  flex: 1 1 320px;
+}
+
+.pick-filter {
+  min-width: 10.5rem;
+}
+
 .empty {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
   margin: 3rem 0;
 }
+
+.empty p {
+  margin: 0;
+}
+
 
 .grid {
   display: grid;
