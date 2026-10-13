@@ -169,7 +169,7 @@ Branche : `main` (travail direct).
 
 ### Tâche 15 — Mise en production et migration (spec §6) — **avec l'utilisateur**
 
-- [ ] Stripe Managed Payments activé en production (éligibilité confirmée), mêmes réglages qu'en test ; secrets de production ; domaine + Resend vérifié ; `PUBLIC_BASE_URL` et constante de l'app sur le domaine.
+- [ ] Stripe Managed Payments activé en production (éligibilité confirmée), mêmes réglages qu'en test ; secrets de production. (Fait le 2026-10-13 : domaine `kaloe.fr` chez IONOS, DNS sur Cloudflare, Worker en domaine personnalisé, Resend vérifié, expéditeur `licence@kaloe.fr`, routage `licence@`/`contact@` vers Gmail ; `PUBLIC_BASE_URL`, `DEFAULT_URL` de l'app et URLs Stripe de test sur `https://kaloe.fr`. En production, recréer le webhook, le Payment Link et le portail avec ces URLs.)
 - [ ] Release **0.3.0** ; installation via `/telecharger` avec une licence offerte (code promo 100 %).
 - [ ] Mise à jour 0.3.0 → 0.3.1 via le Worker.
 - [ ] L'utilisateur passe le dépôt en **privé** ; vérifier : CI, `release.yml`, relais du Worker (`latest.json`, installeur, `vinted-v1.json`) toujours OK.

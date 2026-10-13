@@ -11,7 +11,7 @@ from vto.licensing import LicenseError
 log = logging.getLogger(__name__)
 
 # Worker de licence (Cloudflare) ; surchargeable par VTO_LICENSE_URL (développement, essais).
-DEFAULT_URL = "https://vto-licence.vto-licence.workers.dev"
+DEFAULT_URL = "https://kaloe.fr"
 TIMEOUT = 10.0
 MAX_DEVICES = 2
 
