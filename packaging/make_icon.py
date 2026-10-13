@@ -1,19 +1,50 @@
-"""Icône provisoire (`packaging/icon.ico`) en attendant celle du produit."""
+"""Icône de l'app (`packaging/icon.ico`) et favicon du front, rendus depuis `brand/app-icon.svg`.
 
+    python packaging/make_icon.py
+
+Le SVG est rendu par Chromium (Playwright, déjà une dépendance de l'app), puis PIL
+assemble l'ICO multi-tailles.
+"""
+
+import io
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
+from playwright.sync_api import sync_playwright
 
-SIZE = 256
-image = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
-draw = ImageDraw.Draw(image)
-draw.rounded_rectangle((8, 8, SIZE - 8, SIZE - 8), radius=48, fill=(13, 148, 136))
-try:
-    font = ImageFont.truetype("segoeuib.ttf", 110)
-except OSError:
-    font = ImageFont.load_default(110)
-draw.text((SIZE / 2, SIZE / 2), "VT", font=font, fill="white", anchor="mm")
-image.save(
-    Path(__file__).with_name("icon.ico"),
-    sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)],
-)
+ROOT = Path(__file__).resolve().parent.parent
+SOURCE = ROOT / "brand" / "app-icon.svg"
+ICO_SIZES = [16, 24, 32, 48, 64, 128, 256]
+
+
+def render(svg: str, size: int) -> Image.Image:
+    html = (
+        "<html><body style='margin:0;background:transparent'>"
+        f"<div style='width:{size}px;height:{size}px'>"
+        f"{svg.replace('<svg ', f'<svg width=\"{size}\" height=\"{size}\" ', 1)}</div></body></html>"
+    )
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page(viewport={"width": size, "height": size})
+        page.set_content(html)
+        png = page.screenshot(omit_background=True, clip={"x": 0, "y": 0, "width": size, "height": size})
+        browser.close()
+    return Image.open(io.BytesIO(png)).convert("RGBA")
+
+
+def main() -> None:
+    svg = SOURCE.read_text(encoding="utf-8")
+    # Chaque taille est rendue à part : un 16 px rendu directement reste plus net
+    # qu'un 256 px réduit.
+    images = {size: render(svg, size) for size in ICO_SIZES}
+    images[256].save(
+        Path(__file__).with_name("icon.ico"),
+        sizes=[(s, s) for s in ICO_SIZES],
+        append_images=[images[s] for s in ICO_SIZES if s != 256],
+    )
+    render(svg, 64).save(ROOT / "frontend" / "public" / "favicon.png")
+    print("packaging/icon.ico, frontend/public/favicon.png")
+
+
+if __name__ == "__main__":
+    main()
