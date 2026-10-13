@@ -3,6 +3,7 @@ export interface Env {
   PUBLIC_BASE_URL: string;
   GITHUB_REPO: string;
   PAYMENT_LINK_URL: string;
+  TOKEN_KEY_ID: string;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
   TOKEN_PRIVATE_KEY: string;

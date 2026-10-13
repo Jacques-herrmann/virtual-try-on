@@ -35,11 +35,11 @@ Branche : `main` (travail direct).
 
 ### Tâche 2 — Jetons Ed25519 (spec §2.4)
 
-- [ ] `tools/make_signing_key.py` : génère la paire (`cryptography`), affiche la clé privée (PKCS8 base64, à passer à `wrangler secret put TOKEN_PRIVATE_KEY`) et la clé publique (raw base64, à embarquer dans l'app) avec un `kid`.
-- [ ] Tests `tokens.test.ts` : contenu (`v`, `kid`, `lic` = sha256 tronqué, `dev`, `status`, `period_end`, `iat`) ; `exp = min(period_end, iat + 7 j)` ; signature vérifiable par la clé publique ; `verifyToken` refuse signature fausse, `kid` inconnu, `exp` passé.
-- [ ] **Vecteur partagé** : un jeton signé avec une clé de test fixe, écrit dans `worker/test/fixtures/token.json` et relu par les tests Python (tâche 8) pour garantir la compatibilité des deux implémentations.
-- [ ] Implémenter `src/tokens.ts` (WebCrypto `Ed25519`, base64url).
-- [ ] Commit `add signed license tokens`.
+- [x] `tools/make_signing_key.py` : génère la paire (`cryptography`), affiche la clé privée (PKCS8 base64, à passer à `wrangler secret put TOKEN_PRIVATE_KEY`) et la clé publique (raw base64, à embarquer dans l'app) avec un `kid`.
+- [x] Tests `tokens.test.ts` : contenu (`v`, `kid`, `lic` = sha256 tronqué, `dev`, `status`, `period_end`, `iat`) ; `exp = min(period_end, iat + 7 j)` ; signature vérifiable par la clé publique ; `verifyToken` refuse signature fausse, `kid` inconnu, `exp` passé.
+- [x] **Vecteur partagé** : un jeton signé avec une clé de test fixe, écrit dans `worker/test/fixtures/token.json` et relu par les tests Python (tâche 8) pour garantir la compatibilité des deux implémentations.
+- [x] Implémenter `src/tokens.ts` (WebCrypto `Ed25519`, base64url).
+- [x] Commit `add signed license tokens`.
 
 ### Tâche 3 — Webhooks Stripe et e-mail (spec §2.3)
 

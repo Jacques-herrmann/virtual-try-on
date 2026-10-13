@@ -7,6 +7,8 @@ compatibility_flags = ["nodejs_compat"]
 PUBLIC_BASE_URL = "https://vto-licence.workers.dev"
 GITHUB_REPO = "Jacques-herrmann/virtual-try-on"
 PAYMENT_LINK_URL = "https://buy.stripe.com/test"
+# Identifiant de la clé de signature (TOKEN_PRIVATE_KEY) ; l'app embarque les clés publiques par identifiant.
+TOKEN_KEY_ID = "k1"
 
 # Identifiant réel renseigné au déploiement (`wrangler d1 create vto-licence`).
 [[d1_databases]]
