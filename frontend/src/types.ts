@@ -189,3 +189,18 @@ export interface UpdateProgress {
   total: number | null
   message: string | null
 }
+
+export type LicenseState = 'none' | 'active' | 'expired' | 'unverified'
+
+export interface LicenseSnapshot {
+  state: LicenseState
+  key_hint: string | null
+  status: string | null
+  /** Fin de la période payée (secondes depuis 1970), ou null. */
+  period_end: number | null
+  devices_max: number
+  /** Dernier refus du serveur de licence à montrer (2 PC déjà actifs…). */
+  message: string | null
+  /** Site de vente : essai, renouvellement, aide. */
+  site_url: string
+}

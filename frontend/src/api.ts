@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import type {
   Article,
   ArticleStatus,
+  LicenseSnapshot,
   Listing,
   QueueStatus,
   SceneDetail,
@@ -118,6 +119,12 @@ export const api = {
   resetListingPrompt: () => request<SettingsView>('POST', '/api/settings/reset-listing-prompt'),
   checkKey: (key: string) => request<SettingsView>('POST', '/api/settings/check-key', { key }),
   openLogs: () => request<void>('POST', '/api/system/open-logs'),
+
+  // Licence
+  license: () => request<LicenseSnapshot>('GET', '/api/license'),
+  activateLicense: (key: string) => request<LicenseSnapshot>('POST', '/api/license', { key }),
+  deactivateLicense: () => request<LicenseSnapshot>('DELETE', '/api/license'),
+  licensePortal: () => request<{ url: string }>('GET', '/api/license/portal'),
 
   // Mises à jour
   update: () => request<UpdateSnapshot>('GET', '/api/update'),

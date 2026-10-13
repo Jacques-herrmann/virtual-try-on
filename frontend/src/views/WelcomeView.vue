@@ -1,17 +1,53 @@
 <script setup lang="ts">
 import Card from 'primevue/card'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import KeyForm from '@/components/KeyForm.vue'
+import LicenseForm from '@/components/LicenseForm.vue'
+import { useLicense } from '@/stores/license'
+import { useSettings } from '@/stores/settings'
 
 const router = useRouter()
+const { license } = useLicense()
+const { settings } = useSettings()
 const AI_STUDIO = 'https://aistudio.google.com/apikey'
+
+// Étape 1 : clé de licence ; étape 2 : clé Gemini.
+const step = computed(() => ((license.value?.state ?? 'none') === 'none' ? 'license' : 'gemini'))
+
+function licenseSaved() {
+  if (settings.value?.has_key) router.push('/articles')
+}
 </script>
 
 <template>
   <div class="welcome">
-    <Card class="card">
+    <Card v-if="step === 'license'" class="card" data-test="license-step">
       <template #title>Bienvenue dans Virtual Try-On</template>
+      <template #subtitle>
+        Pour commencer, colle la clé de licence reçue par e-mail après ton inscription.
+      </template>
+      <template #content>
+        <LicenseForm @saved="licenseSaved" />
+        <p class="muted note">
+          Pas encore de clé ?
+          <a
+            data-test="trial"
+            :href="`${license?.site_url ?? ''}/`"
+            target="_blank"
+            rel="noopener"
+          >Essayer 7 jours</a>
+          ·
+          <a :href="`${license?.site_url ?? ''}/retrouver`" target="_blank" rel="noopener">
+            Retrouver ma clé
+          </a>
+        </p>
+      </template>
+    </Card>
+
+    <Card v-else class="card" data-test="gemini-step">
+      <template #title>Ta clé Gemini</template>
       <template #subtitle>
         L'application utilise Gemini, l'IA de Google, pour créer tes photos et tes annonces. Il te
         faut une clé personnelle, gratuite à créer.

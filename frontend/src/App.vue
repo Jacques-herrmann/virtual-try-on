@@ -6,6 +6,7 @@ import { computed } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 import { disconnected } from './api'
+import LicenseBanner from './components/LicenseBanner.vue'
 import UpdateBanner from './components/UpdateBanner.vue'
 
 const route = useRoute()
@@ -35,6 +36,7 @@ const links = [
       </RouterLink>
     </nav>
     <div class="main">
+      <LicenseBanner />
       <UpdateBanner />
       <main class="content">
         <RouterView />

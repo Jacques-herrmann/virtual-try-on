@@ -142,10 +142,11 @@ Branche : `main` (travail direct).
 
 ### Tâche 13 — Front (spec §3.4)
 
-- [ ] Types et appels API.
-- [ ] Tests Vitest : accueil → étape clé de licence avant la clé Gemini (route `welcome` tant que licence `none` ou clé Gemini absente) ; erreurs affichées ; lien d'essai ; section Licence (état, date, gérer l'abonnement, désactiver ce PC avec confirmation, changer de clé) ; bandeau `expired` / `unverified` ; boutons de génération et d'envoi désactivés hors `active` avec explication.
-- [ ] Implémenter (`WelcomeView.vue`, `LicenseSection.vue`, `LicenseBanner.vue`, garde du routeur).
-- [ ] Commit `add license screens`.
+- [x] Types et appels API.
+- [x] Tests Vitest : accueil → étape clé de licence avant la clé Gemini (route `welcome` tant que licence `none` ou clé Gemini absente) ; erreurs affichées ; lien d'essai ; section Licence (état, date, gérer l'abonnement, désactiver ce PC avec confirmation, changer de clé) ; bandeau `expired` / `unverified` ; boutons de génération et d'envoi désactivés hors `active` avec explication.
+- [x] Implémenter (`WelcomeView.vue`, `LicenseSection.vue`, `LicenseBanner.vue`, garde du routeur).
+- [x] En plus : `site_url` (Worker) exposé par `GET /api/license` pour les liens d'essai, de renouvellement et d'aide (le lien d'aide du bandeau de mise à jour pointait vers GitHub). Rendu vérifié dans Chrome (accueil, erreur Worker injoignable).
+- [x] Commit `add license screens`.
 
 ## Partie C — Acceptation
 

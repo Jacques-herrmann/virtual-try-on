@@ -9,6 +9,7 @@ import GalleryEditor from '@/components/GalleryEditor.vue'
 import ListingForm from '@/components/ListingForm.vue'
 import { useNotify } from '@/composables/notify'
 import { useArticles } from '@/stores/articles'
+import { useLicense } from '@/stores/license'
 import { useScenes } from '@/stores/scenes'
 import { useVinted } from '@/stores/vinted'
 import type { Article, Listing } from '@/types'
@@ -19,6 +20,8 @@ const props = defineProps<{ article: Article; mode: 'review' | 'validated' | 'er
 const { upsert, imageVersions } = useArticles()
 const { nameOf } = useScenes()
 const vinted = useVinted()
+// Génération et envoi réservés aux abonnés ; relire, corriger et valider restent possibles.
+const { licensed } = useLicense()
 const notify = useNotify()
 const confirm = useConfirm()
 
@@ -154,6 +157,7 @@ async function validate() {
           severity="secondary"
           size="small"
           :loading="working === 'all'"
+          :disabled="!licensed"
           @click="mode === 'error' ? run('all', () => api.generate(id)) : regenerateAll()"
         />
       </div>
@@ -185,6 +189,7 @@ async function validate() {
               size="small"
               text
               :loading="working === `scene:${scene.scene}`"
+              :disabled="!licensed"
               @click="regenerateScene(scene.scene)"
             />
             <Button
@@ -225,6 +230,7 @@ async function validate() {
           severity="secondary"
           size="small"
           :loading="working === 'listing'"
+          :disabled="!licensed"
           @click="regenerateListing"
         />
       </div>
@@ -275,7 +281,7 @@ async function validate() {
             :label="sent?.status === 'error' ? 'Réessayer' : 'Envoyer sur Vinted'"
             :icon="sent?.status === 'error' ? 'pi pi-refresh' : 'pi pi-send'"
             :loading="working === 'send'"
-            :disabled="batchRunning"
+            :disabled="batchRunning || !licensed"
             @click="sendToVinted"
           />
           <Button

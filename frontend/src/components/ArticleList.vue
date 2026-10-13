@@ -7,6 +7,7 @@ import { computed, ref, watch } from 'vue'
 import { articleFile } from '@/api'
 import StatusTag from '@/components/StatusTag.vue'
 import { FILTERS, type FilterKey, matches } from '@/stores/articles'
+import { useLicense } from '@/stores/license'
 import { pruneSelection, sendable } from '@/stores/vinted'
 import { type Article, label } from '@/types'
 
@@ -18,6 +19,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ select: [id: string]; create: []; send: [ids: string[]] }>()
 
+const { licensed } = useLicense()
 const filter = ref<FilterKey>('all')
 const checked = ref<string[]>([])
 
@@ -78,7 +80,7 @@ const visible = computed(() => props.articles.filter((a) => matches(filter.value
         :label="`Envoyer sur Vinted (${checked.length})`"
         icon="pi pi-send"
         size="small"
-        :disabled="!checked.length || sending"
+        :disabled="!checked.length || sending || !licensed"
         @click="send"
       />
     </div>

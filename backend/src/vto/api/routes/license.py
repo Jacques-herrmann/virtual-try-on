@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
 from vto.licensing import LicenseError
-from vto.licensing.client import MAX_DEVICES, LicenseUnreachable
+from vto.licensing.client import MAX_DEVICES, LicenseUnreachable, license_url
 
 router = APIRouter(prefix="/api/license")
 
@@ -39,25 +39,30 @@ def _call(action):
         raise HTTPException(400, exc.user_message) from exc
 
 
+def _snapshot(manager) -> dict:
+    # La clé entière n'est jamais renvoyée : seulement un indice.
+    snapshot = manager.snapshot() if manager is not None else dict(NO_LICENSE)
+    # Site du Worker : essai, renouvellement, aide (le dépôt est privé).
+    return {**snapshot, "site_url": license_url()}
+
+
 @router.get("")
 def status(request: Request) -> dict:
-    manager = request.app.state.license
-    # La clé entière n'est jamais renvoyée : seulement un indice.
-    return manager.snapshot() if manager is not None else dict(NO_LICENSE)
+    return _snapshot(request.app.state.license)
 
 
 @router.post("")
 def activate(request: Request, body: KeyRequest) -> dict:
     manager = _manager(request)
     _call(lambda: manager.activate(body.key))
-    return manager.snapshot()
+    return _snapshot(manager)
 
 
 @router.delete("")
 def deactivate(request: Request) -> dict:
     manager = _manager(request)
     _call(manager.deactivate)
-    return manager.snapshot()
+    return _snapshot(manager)
 
 
 @router.get("/portal")

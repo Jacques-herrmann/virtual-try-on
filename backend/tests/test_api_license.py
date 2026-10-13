@@ -53,10 +53,12 @@ def lapi(make_api, fake, manager):
     return make_api(lambda key: fake, license_manager=manager)
 
 
-def test_get_without_license(lapi):
+def test_get_without_license(lapi, monkeypatch):
+    monkeypatch.setenv("VTO_LICENSE_URL", "https://licence.test")
     r = lapi.get("/api/license")
     assert r.status_code == 200
     assert r.json()["state"] == "none"
+    assert r.json()["site_url"] == "https://licence.test"
 
 
 def test_activate_returns_the_state_with_a_hint_only(lapi, manager):

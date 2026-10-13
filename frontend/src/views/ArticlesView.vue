@@ -15,6 +15,7 @@ import StatusTag from '@/components/StatusTag.vue'
 import VintedBatchPanel from '@/components/VintedBatchPanel.vue'
 import { useNotify } from '@/composables/notify'
 import { panelFor, useArticles } from '@/stores/articles'
+import { useLicense } from '@/stores/license'
 import { useScenes } from '@/stores/scenes'
 import { useVinted } from '@/stores/vinted'
 import { label, type UserInput } from '@/types'
@@ -26,6 +27,7 @@ const notify = useNotify()
 const { articles, load, upsert, remove, stopPolling } = useArticles()
 const scenes = useScenes()
 const vinted = useVinted()
+const { licensed } = useLicense()
 
 const creating = ref(false)
 const formKey = ref(0) // change pour vider le formulaire après une création
@@ -144,7 +146,13 @@ function deleteSelected() {
           Ajoute les photos et le type. Les autres informations sont facultatives : l'IA les
           proposera, tu pourras les corriger à la relecture.
         </p>
-        <ArticleForm :key="formKey" mode="create" :busy="creating" @submit="create" />
+        <ArticleForm
+          :key="formKey"
+          mode="create"
+          :busy="creating"
+          :locked="!licensed"
+          @submit="create"
+        />
       </template>
 
       <template v-else-if="selected">
@@ -180,7 +188,13 @@ function deleteSelected() {
           <p class="muted">Génération annulée. Relance-la quand tu veux.</p>
           <img :src="articleFile(selected, selected.photos[0] ?? '')" alt="" class="draft-photo" />
           <div>
-            <Button label="Générer" icon="pi pi-sparkles" :loading="working" @click="generateDraft" />
+            <Button
+              label="Générer"
+              icon="pi pi-sparkles"
+              :loading="working"
+              :disabled="!licensed"
+              @click="generateDraft"
+            />
           </div>
         </div>
 

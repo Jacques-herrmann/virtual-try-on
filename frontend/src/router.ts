@@ -1,6 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { useLicense } from './stores/license'
 import { useSettings } from './stores/settings'
+import type { LicenseSnapshot } from './types'
+
+/** L'accueil guide la saisie de la clé de licence puis de la clé Gemini. */
+export function needsWelcome(hasGeminiKey: boolean, license: LicenseSnapshot | null): boolean {
+  return !hasGeminiKey || (license?.state ?? 'none') === 'none'
+}
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -19,18 +26,20 @@ export const router = createRouter({
   ],
 })
 
-// Sans clé enregistrée, seul l'écran d'accueil est accessible.
+// Sans clé de licence ou sans clé Gemini, seul l'écran d'accueil est accessible.
 router.beforeEach(async (to) => {
   const { settings, load } = useSettings()
-  if (!settings.value) {
-    try {
-      await load()
-    } catch {
-      return true // API injoignable : le bandeau de déconnexion s'affiche
-    }
+  const { license, load: loadLicense } = useLicense()
+  try {
+    await Promise.all([
+      settings.value ? null : load(),
+      license.value ? null : loadLicense(),
+    ])
+  } catch {
+    return true // API injoignable : le bandeau de déconnexion s'affiche
   }
-  const hasKey = settings.value?.has_key ?? false
-  if (!hasKey && to.name !== 'welcome') return { name: 'welcome' }
-  if (hasKey && to.name === 'welcome') return { name: 'articles' }
+  const welcome = needsWelcome(settings.value?.has_key ?? false, license.value)
+  if (welcome && to.name !== 'welcome') return { name: 'welcome' }
+  if (!welcome && to.name === 'welcome') return { name: 'articles' }
   return true
 })

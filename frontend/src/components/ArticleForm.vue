@@ -8,10 +8,17 @@ import Textarea from 'primevue/textarea'
 import { computed, reactive, ref } from 'vue'
 
 import PhotoDrop from '@/components/PhotoDrop.vue'
+import { BLOCKED } from '@/stores/license'
 import { AUDIENCES, CONDITIONS, GARMENT_TYPES, label, type UserInput } from '@/types'
 
 /** `create` : photos + « Générer » ; `edit` : correction de la saisie d'un article existant. */
-const props = defineProps<{ mode: 'create' | 'edit'; initial?: UserInput; busy?: boolean }>()
+const props = defineProps<{
+  mode: 'create' | 'edit'
+  initial?: UserInput
+  busy?: boolean
+  /** Création refusée (pas d'abonnement actif) : le bouton « Générer » est désactivé. */
+  locked?: boolean
+}>()
 const emit = defineEmits<{ submit: [input: UserInput, photos: File[]]; cancel: [] }>()
 
 const input = reactive<UserInput>({
@@ -135,7 +142,7 @@ function submit() {
         type="submit"
         :label="mode === 'create' ? 'Générer' : 'Enregistrer'"
         :icon="mode === 'create' ? 'pi pi-sparkles' : 'pi pi-save'"
-        :disabled="!canSubmit"
+        :disabled="!canSubmit || (mode === 'create' && locked)"
         :loading="busy"
       />
       <Button
@@ -146,7 +153,10 @@ function submit() {
         text
         @click="emit('cancel')"
       />
-      <small v-if="mode === 'create' && !canSubmit" class="muted">
+      <small v-if="mode === 'create' && locked" class="muted" data-test="locked">
+        {{ BLOCKED }}
+      </small>
+      <small v-else-if="mode === 'create' && !canSubmit" class="muted">
         Ajoute au moins une photo, choisis le type et pour qui est le vêtement.
       </small>
       <small v-else-if="mode === 'edit' && !canSubmit" class="muted">

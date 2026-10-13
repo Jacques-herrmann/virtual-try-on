@@ -9,6 +9,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import { api } from '@/api'
 import KeyForm from '@/components/KeyForm.vue'
+import LicenseSection from '@/components/LicenseSection.vue'
 import { useNotify } from '@/composables/notify'
 import { useSettings } from '@/stores/settings'
 import { useVinted } from '@/stores/vinted'
@@ -141,6 +142,10 @@ function keySaved() {
 <template>
   <div class="page stack">
     <h1>Réglages</h1>
+
+    <Panel header="Licence">
+      <LicenseSection />
+    </Panel>
 
     <Panel header="Clé Gemini">
       <div v-if="!changingKey" class="row">

@@ -5,12 +5,14 @@ import ProgressBar from 'primevue/progressbar'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 import { api, ApiError } from '@/api'
+import { useLicense } from '@/stores/license'
 import type { UpdateProgress, UpdateSnapshot } from '@/types'
 
 const CHECK_EVERY = 10 * 60 * 1000
 const POLL_EVERY = 1000
-const HELP_URL =
-  'https://github.com/Jacques-herrmann/virtual-try-on/blob/main/docs/aide/installation.md'
+// Page d'aide servie par le site de licence (le dépôt est privé).
+const { license } = useLicense()
+const helpUrl = computed(() => `${license.value?.site_url ?? ''}/aide`)
 
 const snapshot = ref<UpdateSnapshot | null>(null)
 const progress = ref<UpdateProgress | null>(null)
@@ -114,7 +116,7 @@ onUnmounted(() => {
 
       <span v-if="error" class="error">
         {{ error }}
-        <a data-test="help" :href="HELP_URL" target="_blank" rel="noopener">Aide</a>
+        <a data-test="help" :href="helpUrl" target="_blank" rel="noopener">Aide</a>
       </span>
     </div>
 
