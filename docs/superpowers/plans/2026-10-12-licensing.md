@@ -154,11 +154,18 @@ Branche : `main` (travail direct).
 
 ### Tâche 14 — Bout en bout en mode test Stripe (spec §4, §7) — **avec l'utilisateur**
 
-- [ ] App en dev avec `VTO_LICENSE_URL` → Worker déployé (mode test).
-- [ ] Achat par le Payment Link de test (carte 4242), e-mail reçu, `/merci` affiche la clé, activation dans l'app, génération, envoi Vinted.
-- [ ] Horloges de test Stripe : fin d'essai → `active` ; paiement refusé (carte 4000 0000 0000 0341) → `past_due` puis `unpaid` → bandeau, génération et envoi refusés, articles consultables ; réabonnement → même clé, débloqué.
-- [ ] 3ᵉ PC refusé (troisième `device_id` simulé) ; désactivation ; Worker coupé (`VTO_LICENSE_URL` injoignable) → `active` puis `unverified` à l'expiration du jeton (jeton de test court).
-- [ ] Noter dans ce plan les écarts constatés.
+- [x] App en dev (`vto-app`, sans `VTO_DEV_LICENSE`) → Worker déployé (mode test) ; `DEFAULT_URL` pointe déjà dessus.
+- [x] Achat par le Payment Link de test (carte 4242), e-mail reçu, `/merci` affiche la clé, activation dans l'app, génération, envoi Vinted.
+- [x] Horloges de test Stripe (client, abonnement et cartes créés par l'API) : fin d'essai → `active` ; carte 4000 0000 0000 0341 au renouvellement → `past_due` (message « Le dernier paiement a échoué… », génération et envoi encore permis) → `canceled` (« Ton abonnement est terminé. », génération et envoi refusés, articles consultables) ; nouvel abonnement du même client → même clé, débloqué.
+- [x] 3ᵉ PC refusé (`too_many_devices`, 409, noms des 2 PC dans le message) ; désactivation puis activation ailleurs ; Worker coupé (`VTO_LICENSE_URL=http://127.0.0.1:9`) → reste `active`, génération OK, « jeton conservé » dans le log.
+- [x] Écarts constatés :
+  - Relances Stripe : par défaut ~2 semaines et 9 tentatives, puis un délai de 7 jours avant l'action finale (l'abonnement restait `past_due`, donc utilisable sans payer). Réglé par l'utilisateur : 7 jours puis résiliation, vérifié par horloge (`canceled` à J+8). **À reproduire à l'identique en production.**
+  - Portail client absent du nouveau compte : créé par l'API (tâche 7). À recréer en production.
+  - Passage à `unverified` à l'expiration du jeton non essayé en réel (jeton de 7 jours, pas de jeton court) : couvert par `backend/tests/licensing/test_state.py`.
+  - Réabonnement essayé sur le même client Stripe (API) : même clé. Par le Payment Link, un ancien client devient un nouveau client Stripe → **nouvelle clé** (point ouvert, à traiter avant la production : route `/renouveler?cle=` créant une Checkout Session sur le client existant).
+  - Une licence créée par `customer.subscription.created` sans paiement Checkout n'a pas d'e-mail (abonnements créés par l'API uniquement ; le parcours réel passe toujours par Checkout).
+  - L'app ne relit la licence qu'au démarrage puis toutes les 24 h : un changement de statut apparaît au plus tard le lendemain (ou à la relance de l'app). Conforme à la spec.
+  - `/telecharger` en 502 : aucune Release publiée sur GitHub (à régler par la 0.3.0, tâche 15).
 
 ### Tâche 15 — Mise en production et migration (spec §6) — **avec l'utilisateur**
 
