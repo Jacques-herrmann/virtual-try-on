@@ -55,3 +55,17 @@ def test_vinted_mode_round_trip(data_dir):
     s.vinted_mode = "publish"
     config.save_settings(s)
     assert config.load_settings().vinted_mode == "publish"
+
+
+def test_tutorial_defaults_for_old_settings_file(data_dir):
+    paths.settings_file().write_text(json.dumps({"signature": "Merci !"}), encoding="utf-8")
+    s = config.load_settings()
+    assert s.tutorial.video_seen is False and s.tutorial.tours_seen == []
+
+
+def test_tutorial_round_trip(data_dir):
+    s = config.load_settings()
+    s.tutorial = config.TutorialState(video_seen=True, tours_seen=["articles", "scenes"])
+    config.save_settings(s)
+    loaded = config.load_settings().tutorial
+    assert loaded.video_seen is True and loaded.tours_seen == ["articles", "scenes"]

@@ -122,6 +122,13 @@ export interface SettingsView {
   image_model: string
   text_model: string
   vinted_mode: VintedMode
+  tutorial: TutorialState
+}
+
+/** Ce que le vendeur a déjà vu : la vidéo d'accueil et les visites guidées (par écran). */
+export interface TutorialState {
+  video_seen: boolean
+  tours_seen: string[]
 }
 
 export type VintedMode = 'draft' | 'publish'

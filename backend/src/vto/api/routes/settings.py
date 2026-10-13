@@ -19,6 +19,7 @@ class SettingsView(BaseModel):
     image_model: str
     text_model: str
     vinted_mode: Literal["draft", "publish"]
+    tutorial: config.TutorialState
 
 
 class SettingsUpdate(BaseModel):
@@ -27,6 +28,7 @@ class SettingsUpdate(BaseModel):
     image_model: str | None = None
     text_model: str | None = None
     vinted_mode: Literal["draft", "publish"] | None = None
+    tutorial: config.TutorialState | None = None
 
 
 class KeyCheck(BaseModel):
@@ -43,6 +45,7 @@ def _view(settings: config.Settings) -> SettingsView:
         image_model=settings.image_model,
         text_model=settings.text_model,
         vinted_mode=settings.vinted_mode,
+        tutorial=settings.tutorial,
     )
 
 
@@ -54,7 +57,12 @@ def get_settings() -> SettingsView:
 @router.put("")
 def update_settings(update: SettingsUpdate) -> SettingsView:
     settings = config.load_settings()
-    changes = update.model_dump(exclude_none=True)
+    # Valeurs gardées telles quelles (pas model_dump) : `tutorial` reste un TutorialState.
+    changes = {
+        field: value
+        for field in update.model_fields_set
+        if (value := getattr(update, field)) is not None
+    }
     for field in ("image_model", "text_model"):
         if field in changes:
             changes[field] = changes[field].strip()

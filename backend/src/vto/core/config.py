@@ -20,6 +20,13 @@ def default_listing_prompt() -> str:
     return files("vto.core.prompts").joinpath("listing_default.md").read_text(encoding="utf-8")
 
 
+class TutorialState(BaseModel):
+    """Ce que le vendeur a déjà vu : la vidéo d'accueil et les visites guidées (par écran)."""
+
+    video_seen: bool = False
+    tours_seen: list[str] = Field(default_factory=list)
+
+
 class Settings(BaseModel):
     gemini_api_key: str | None = None
     image_model: str = DEFAULT_IMAGE_MODEL
@@ -27,6 +34,7 @@ class Settings(BaseModel):
     listing_prompt: str = Field(default_factory=default_listing_prompt)
     signature: str = ""
     vinted_mode: Literal["draft", "publish"] = "draft"
+    tutorial: TutorialState = Field(default_factory=TutorialState)
 
     def api_key(self) -> str | None:
         """Clé effective : GEMINI_API_KEY (développement, CI) prioritaire sur le fichier."""

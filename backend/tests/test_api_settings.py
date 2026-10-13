@@ -75,3 +75,21 @@ def test_queue_routes(api):
     }
     api.app.state.queue._paused = True
     assert api.post("/api/queue/resume").json()["paused"] is False
+
+
+def test_get_settings_exposes_tutorial(api):
+    body = api.get("/api/settings").json()
+    assert body["tutorial"] == {"video_seen": False, "tours_seen": []}
+
+
+def test_put_tutorial_replaces_it(api):
+    tutorial = {"video_seen": True, "tours_seen": ["articles"]}
+    r = api.put("/api/settings", json={"tutorial": tutorial})
+    assert r.json()["tutorial"] == tutorial
+    assert config.load_settings().tutorial.tours_seen == ["articles"]
+
+    api.put("/api/settings", json={"signature": "Merci !"})
+    assert config.load_settings().tutorial.video_seen is True  # intact sans `tutorial`
+
+    r = api.put("/api/settings", json={"tutorial": {"video_seen": True, "tours_seen": []}})
+    assert r.json()["tutorial"]["tours_seen"] == []
