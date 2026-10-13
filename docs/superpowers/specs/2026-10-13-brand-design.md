@@ -1,7 +1,7 @@
 # Sous-projet 6 — Marque & UI (Wearo) — Design
 
 Date : 2026-10-13
-Statut : validé en brainstorming ; piste typo/logo à choisir sur la planche (§3)
+Statut : validé en brainstorming ; **piste A retenue** le 2026-10-13 sur la planche (https://claude.ai/artifact/Ey7VNekjAuGPJexc4mTDRV)
 
 ## 1. Contexte
 
@@ -48,7 +48,7 @@ Chaque couple texte/fond utilisé doit atteindre le contraste **AA** (4,5:1 ; 3:
 
 ### 2.2 Typographie et logo
 
-Deux pistes, départagées sur la planche (§3) :
+Deux pistes, départagées sur la planche (§3) — **la piste A est retenue** :
 
 - **A** — *Plus Jakarta Sans* partout ; logo en mot-symbole arrondi « wearo » dont le « o » final dessine un cintre.
 - **B** — titres en *Fraunces* (serif douce, axe « SOFT »), interface en *Plus Jakarta Sans* ; pictogramme cintre et étincelle à côté du mot.
@@ -151,3 +151,12 @@ On relit les textes au passage (français, tutoiement, sans jargon) sans en chan
 - **CI** (`release.yml`) : en plus du parcours actuel, installer en silencieux la dernière Release publiée (VirtualTryOn), créer `%LOCALAPPDATA%\VirtualTryOn\articles\témoin`, installer la nouvelle, lancer `Wearo.exe --self-check` puis la vraie app quelques secondes (pour déclencher la migration), et vérifier : `%LOCALAPPDATA%\Wearo\articles\témoin` présent, ancien dossier de données et ancien dossier d'installation absents.
 - **Essai réel sur le poste** : depuis la v0.2.2 installée et pleine de données, mise à jour en un clic vers une préversion Wearo. Vérifier un seul raccourci « Wearo », les articles, les scènes et la licence retrouvés, un brouillon Vinted envoyé **sans reconnexion**, puis une désinstallation qui conserve les données.
 - **Visuel** : tour de tous les écrans en `vto-app --dev` + `npm run dev` (accueil, articles vide et rempli, génération, relecture, scènes, réglages, chaque bandeau), comparé à la planche.
+
+## 9. Choix sur la planche (2026-10-13)
+
+Piste **A** retenue : *Plus Jakarta Sans* seule (400 à 800), logo « wear » + « o » cintre (cercle épais abricot surmonté d'un crochet), icône abricot avec le « o » cintre prune. Repris des maquettes :
+
+- boutons principaux en abricot 500 avec texte prune (5,3:1), le blanc sur abricot étant écarté ;
+- liste des articles en grille de cartes avec filtres (Tous, À relire, Prêts à envoyer, Publiés) ; la fiche d'un article s'ouvre en pleine largeur avec un lien « Mes articles » ;
+- relecture en deux colonnes (photos, annonce) avec une barre d'actions collante en bas ;
+- barre latérale sable 100, élément actif sur fond blanc avec une icône abricot.
