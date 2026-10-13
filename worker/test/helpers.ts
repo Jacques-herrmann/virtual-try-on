@@ -84,7 +84,7 @@ export function subscription(over: Record<string, unknown> = {}) {
     object: "subscription",
     customer: "cus_1",
     status: "trialing",
-    items: { data: [{ current_period_end: 1_900_000_000 }] },
+    items: { data: [{ current_period_end: 1_900_000_000, price: { id: "price_vto" } }] },
     ...over,
   };
 }

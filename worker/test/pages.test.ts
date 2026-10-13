@@ -11,13 +11,13 @@ afterEach(() => {
 const resendOk = (r: Recorded) =>
   r.url === "https://api.resend.com/emails" ? jsonResponse({ id: "em_1" }) : undefined;
 
-function stripeCheckout(session: object | null) {
+function stripeCheckout(session: object | null, sub: object | null = subscription()) {
   return (r: Recorded) => {
     if (r.url.startsWith("https://api.stripe.com/v1/checkout/sessions/")) {
       return session ? jsonResponse(session) : jsonResponse({ error: {} }, 404);
     }
     if (r.url.startsWith("https://api.stripe.com/v1/subscriptions/")) {
-      return jsonResponse(subscription());
+      return sub ? jsonResponse(sub) : jsonResponse({ error: {} }, 500);
     }
     return undefined;
   };
@@ -79,6 +79,24 @@ describe("GET /merci", () => {
     const res = await call("/merci?session_id=cs_test_nope");
     expect(res.status).toBe(404);
     expect(await res.text()).toContain("Retrouver ma clé");
+  });
+
+  it("shows an error page for a payment of another product", async () => {
+    const other = subscription({
+      items: { data: [{ current_period_end: 1_900_000_000, price: { id: "price_gym" } }] },
+    });
+    mockFetch(stripeCheckout(session, other));
+    const res = await call("/merci?session_id=cs_test_1");
+    expect(res.status).toBe(404);
+    expect(await getLicenseByCustomer(env.DB, "cus_1")).toBeNull();
+  });
+
+  it("shows an error page when the subscription cannot be read", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    mockFetch(stripeCheckout(session, null));
+    const res = await call("/merci?session_id=cs_test_1");
+    expect(res.status).toBe(404);
+    expect(await getLicenseByCustomer(env.DB, "cus_1")).toBeNull();
   });
 
   it("shows an error page for an unfinished session", async () => {

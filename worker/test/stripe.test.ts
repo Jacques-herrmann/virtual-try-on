@@ -128,15 +128,49 @@ describe("checkout.session.completed", () => {
     expect(err).toHaveBeenCalled();
   });
 
-  it("creates the license even when Stripe cannot be read", async () => {
+  it("answers 500 so Stripe retries when the subscription cannot be read", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
-    mockFetch(
+    const { calls } = mockFetch(
       (r) => (r.url.includes("api.stripe.com") ? jsonResponse({}, 500) : undefined),
       resendOk,
     );
+    expect((await postWebhook(checkoutCompleted())).status).toBe(500);
+    expect(await getLicenseByCustomer(env.DB, "cus_1")).toBeNull();
+    expect(calls.filter((c) => c.url.includes("resend"))).toHaveLength(0);
+
+    // L'événement n'est pas marqué reçu : la relance de Stripe crée la licence.
+    vi.restoreAllMocks();
+    mockFetch(stripeSub(subscription()), resendOk);
     expect((await postWebhook(checkoutCompleted())).status).toBe(200);
-    const lic = await getLicenseByCustomer(env.DB, "cus_1");
-    expect(lic).toMatchObject({ stripe_subscription: "sub_1", status: null });
+    expect(await getLicenseByCustomer(env.DB, "cus_1")).not.toBeNull();
+  });
+
+  it("ignores a payment for another product of the Stripe account", async () => {
+    const other = subscription({
+      items: { data: [{ current_period_end: 1_900_000_000, price: { id: "price_gym" } }] },
+    });
+    const { calls } = mockFetch(stripeSub(other), resendOk);
+    expect((await postWebhook(checkoutCompleted())).status).toBe(200);
+    expect(await getLicenseByCustomer(env.DB, "cus_1")).toBeNull();
+    expect(calls.filter((c) => c.url.includes("resend"))).toHaveLength(0);
+  });
+
+  it("ignores a one-off payment without subscription", async () => {
+    const { calls } = mockFetch(resendOk);
+    expect((await postWebhook(checkoutCompleted("evt_1", { subscription: null }))).status).toBe(
+      200,
+    );
+    expect(await getLicenseByCustomer(env.DB, "cus_1")).toBeNull();
+    expect(calls).toHaveLength(0);
+  });
+
+  it("accepts every configured price", async () => {
+    const old = subscription({
+      items: { data: [{ current_period_end: 1_900_000_000, price: { id: "price_old" } }] },
+    });
+    mockFetch(stripeSub(old), resendOk);
+    await postWebhook(checkoutCompleted());
+    expect(await getLicenseByCustomer(env.DB, "cus_1")).not.toBeNull();
   });
 });
 
@@ -161,7 +195,7 @@ describe("customer.subscription.*", () => {
     mockFetch();
     const sub = {
       ...subscription({ status: "past_due", current_period_end: 1_950_000_000 }),
-      items: { data: [] },
+      items: { data: [{ price: { id: "price_vto" } }] },
     };
     await postWebhook(subscriptionEvent("customer.subscription.updated", "evt_s", sub));
     expect(await getLicenseByCustomer(env.DB, "cus_1")).toMatchObject({
@@ -211,6 +245,19 @@ describe("customer.subscription.*", () => {
       stripe_subscription: "sub_2",
       status: "active",
     });
+  });
+
+  it("ignores a subscription to another product of the Stripe account", async () => {
+    mockFetch();
+    const other = subscription({
+      status: "active",
+      items: { data: [{ current_period_end: 1_900_000_000, price: { id: "price_gym" } }] },
+    });
+    const res = await postWebhook(
+      subscriptionEvent("customer.subscription.created", "evt_s", other),
+    );
+    expect(res.status).toBe(200);
+    expect(await getLicenseByCustomer(env.DB, "cus_1")).toBeNull();
   });
 
   it("acknowledges other events without effect", async () => {

@@ -19,8 +19,11 @@ export interface StripeSubscription {
   customer: string | { id: string };
   status: string;
   current_period_end?: number;
-  items?: { data?: { current_period_end?: number }[] };
+  items?: { data?: { current_period_end?: number; price?: { id: string } }[] };
 }
+
+/** Abonnement illisible dans Stripe : impossible de savoir s'il concerne Virtual Try-On. */
+export class StripeUnavailable extends Error {}
 
 export interface StripeCheckoutSession {
   id: string;
@@ -54,7 +57,14 @@ export async function handleWebhook(request: Request, env: Env): Promise<Respons
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as StripeCheckoutSession;
-      const license = await licenseFromSession(env, session, now);
+      let license: License | null;
+      try {
+        license = await licenseFromSession(env, session, now);
+      } catch (e) {
+        if (!(e instanceof StripeUnavailable)) throw e;
+        // Événement non noté : Stripe le renverra.
+        return error(500, "stripe_unavailable", "Stripe injoignable, réessayer plus tard.");
+      }
       if (license?.email) await sendLicenseEmail(env, license.email, license.key);
       break;
     }
@@ -74,7 +84,8 @@ export async function handleWebhook(request: Request, env: Env): Promise<Respons
 
 /**
  * Crée ou reprend la licence d'une session de paiement terminée (webhook ou page /merci).
- * `null` si la session n'est pas liée à un client.
+ * `null` si la session n'est pas un abonnement à Virtual Try-On (le compte Stripe peut
+ * vendre autre chose) ; `StripeUnavailable` si l'abonnement ne peut pas être lu.
  */
 export async function licenseFromSession(
   env: Env,
@@ -82,20 +93,23 @@ export async function licenseFromSession(
   now: number,
 ): Promise<License | null> {
   const customer = idOf(session.customer);
-  if (!customer) return null;
   const subId = idOf(session.subscription);
-  const sub = subId ? await fetchSubscription(env, subId) : null;
+  if (!customer || !subId) return null;
+  const sub = await fetchSubscription(env, subId);
+  if (!sub) throw new StripeUnavailable(subId);
+  if (!isOurs(env, sub)) return null;
   return upsertLicense(env.DB, {
     customer,
     email: session.customer_details?.email ?? session.customer_email ?? null,
     subscription: subId,
-    status: sub?.status ?? null,
-    periodEnd: sub ? periodEnd(sub) : null,
+    status: sub.status,
+    periodEnd: periodEnd(sub),
     now,
   });
 }
 
 async function applySubscription(env: Env, sub: StripeSubscription, now: number): Promise<void> {
+  if (!isOurs(env, sub)) return;
   const customer = idOf(sub.customer)!;
   const current = await getLicenseByCustomer(env.DB, customer);
   // Fin tardive d'un ancien abonnement alors qu'un nouveau a pris le relais : rien à faire.
@@ -162,6 +176,12 @@ async function fetchSubscription(env: Env, id: string): Promise<StripeSubscripti
     console.error("stripe: injoignable", e);
     return null;
   }
+}
+
+/** L'abonnement porte-t-il un des prix de Virtual Try-On (`STRIPE_PRICE_IDS`) ? */
+function isOurs(env: Env, sub: StripeSubscription): boolean {
+  const prices = new Set(env.STRIPE_PRICE_IDS.split(",").map((p) => p.trim()).filter(Boolean));
+  return (sub.items?.data ?? []).some((item) => item.price && prices.has(item.price.id));
 }
 
 /** Fin de la période en cours ; portée par les éléments de l'abonnement depuis l'API 2025-03-31. */

@@ -3,7 +3,12 @@ import { sendLicenseEmail } from "./email";
 import type { Env } from "./env";
 import { escapeHtml, nowSeconds } from "./http";
 import { getLicenseByEmail, type License } from "./licenses";
-import { licenseFromSession, stripeApi, type StripeCheckoutSession } from "./stripe";
+import {
+  licenseFromSession,
+  stripeApi,
+  StripeUnavailable,
+  type StripeCheckoutSession,
+} from "./stripe";
 import { toHex } from "./tokens";
 
 /** Demandes « Retrouver ma clé » acceptées par adresse et par heure. */
@@ -92,7 +97,12 @@ export async function thanksPage(url: URL, env: Env): Promise<Response> {
   }
   if (!session || session.status !== "complete") return sessionNotFound();
   // Le webhook peut arriver après le retour du client : la licence est créée ici si besoin.
-  const license = await licenseFromSession(env, session, nowSeconds());
+  let license: License | null = null;
+  try {
+    license = await licenseFromSession(env, session, nowSeconds());
+  } catch (e) {
+    if (!(e instanceof StripeUnavailable)) throw e;
+  }
   if (!license) return sessionNotFound();
   return keyPage(env, license);
 }
