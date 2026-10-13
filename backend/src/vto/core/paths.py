@@ -27,6 +27,11 @@ def settings_file() -> Path:
     return data_dir() / "settings.json"
 
 
+def license_file() -> Path:
+    """Clé de licence, identifiant du PC et jeton : jamais effacé implicitement."""
+    return data_dir() / "license.json"
+
+
 def scenes_dir() -> Path:
     return _ensure(data_dir() / "scenes")
 

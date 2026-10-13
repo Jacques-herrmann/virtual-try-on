@@ -107,15 +107,16 @@ Branche : `main` (travail direct).
 
 ### Tâche 9 — Client et état (spec §3.1)
 
-- [ ] Tests `test_client.py` : activate / refresh / deactivate (corps envoyés, erreurs `unknown_key`, `expired`, `too_many_devices`, `not_activated` traduites en `LicenseError` avec les messages de la spec §3.5 ; réseau en erreur → `LicenseUnreachable`).
-- [ ] Tests `test_state.py` :
+- [x] Tests `test_license_client.py` : activate / refresh / deactivate (corps envoyés, erreurs `unknown_key`, `expired`, `too_many_devices`, `not_activated` traduites en `LicenseError` avec les messages de la spec §3.5 ; réseau en erreur → `LicenseUnreachable`).
+- [x] Tests `test_state.py` :
   - `device_id` créé une fois et conservé ; `license.json` écrit de façon atomique ;
   - états `none` / `active` / `expired` / `unverified` (spec §3.1), y compris jeton valide + Worker injoignable → `active` ;
   - `not_activated` au rafraîchissement → réactivation silencieuse ;
   - thread : au démarrage puis toutes les 24 h (intervalle injecté), `stop()` ;
   - `VTO_DEV_LICENSE=1` → `active` hors exécutable, ignoré si `sys.frozen`.
-- [ ] Implémenter `client.py`, `state.py` ; URL de base `VTO_LICENSE_URL` sinon constante de production.
-- [ ] Commit `add license client and state`.
+- [x] Implémenter `client.py`, `state.py` ; URL de base `VTO_LICENSE_URL` sinon constante de production.
+- [x] `DEFAULT_URL` provisoire (`https://vto-licence.workers.dev`) : à remplacer par l'URL réelle à la tâche 7. `paths.license_file()` ajouté. Refus autre qu'`expired` au rafraîchissement (ex. 2 PC déjà actifs lors d'une réactivation) : jeton conservé, message exposé dans `snapshot()["message"]`.
+- [x] Commit `add license client and state`.
 
 ### Tâche 10 — Blocage de la génération et de l'envoi (spec §3.2)
 

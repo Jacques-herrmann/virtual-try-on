@@ -20,6 +20,7 @@ def test_data_dir_defaults_to_platform_dir(monkeypatch):
 
 def test_sub_paths_are_under_data_dir(data_dir):
     assert paths.settings_file() == data_dir / "settings.json"
+    assert paths.license_file() == data_dir / "license.json"
     assert paths.scenes_dir() == data_dir / "scenes"
     assert paths.articles_dir() == data_dir / "articles"
     assert paths.article_dir("abc") == data_dir / "articles" / "abc"
