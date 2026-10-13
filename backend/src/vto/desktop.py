@@ -20,7 +20,7 @@ from vto import self_check
 from vto.api.app import create_app
 from vto.api.queue import GenerationQueue
 from vto.api.security import LOGIN_PATH
-from vto.core import scenes
+from vto.core import paths, scenes
 from vto.core.logging import setup_logging
 from vto.licensing.state import LicenseManager
 from vto.updates.check import UpdateChecker
@@ -75,9 +75,13 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--output", type=Path, help="fichier du rapport de --self-check")
     args = parser.parse_args(argv)
 
-    setup_logging(console=args.dev)
     if args.self_check:
+        setup_logging(console=args.dev)
         raise SystemExit(self_check.run(args.output))
+    # Avant le log : `logs_dir()` créerait sinon un dossier Wearo vide qui bloquerait la migration.
+    migration = paths.migrate_legacy_data_dir()
+    setup_logging(console=args.dev)
+    log.info("Dossier de données : %s", migration)
     scenes.ensure_default_scenes()
     # Le jeton enregistré suffit hors ligne ; le rafraîchissement se fait en arrière-plan.
     license_manager = LicenseManager()

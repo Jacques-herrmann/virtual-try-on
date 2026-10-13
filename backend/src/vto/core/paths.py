@@ -7,7 +7,9 @@ from pathlib import Path
 
 import platformdirs
 
-APP_NAME = "VirtualTryOn"
+APP_NAME = "Wearo"
+# Nom d'avant le sous-projet 6 : son dossier de données est déplacé au premier lancement.
+LEGACY_APP_NAME = "VirtualTryOn"
 
 
 def _ensure(path: Path) -> Path:
@@ -15,12 +17,42 @@ def _ensure(path: Path) -> Path:
     return path
 
 
+def _platform_dir(name: str) -> Path:
+    return Path(platformdirs.user_data_dir(name, appauthor=False))
+
+
 def data_dir() -> Path:
     override = os.environ.get("VTO_DATA_DIR")
-    root = Path(override) if override else Path(
-        platformdirs.user_data_dir(APP_NAME, appauthor=False)
-    )
+    if override:
+        return _ensure(Path(override))
+    root = _platform_dir(APP_NAME)
+    legacy = _platform_dir(LEGACY_APP_NAME)
+    # Migration pas encore faite (ou ratée) : on reste sur l'ancien dossier.
+    if not root.exists() and legacy.exists():
+        return legacy
     return _ensure(root)
+
+
+def migrate_legacy_data_dir() -> str:
+    """Déplace `%LOCALAPPDATA%\\VirtualTryOn` vers `%LOCALAPPDATA%\\Wearo` s'il y a lieu.
+
+    Un simple renommage (même volume) : ni copie ni suppression. En cas d'échec
+    (fichier verrouillé), `data_dir()` continue sur l'ancien dossier et l'app
+    retente au lancement suivant. Ne lève jamais ; rend une phrase pour le log.
+    """
+    if os.environ.get("VTO_DATA_DIR"):
+        return "VTO_DATA_DIR défini : rien à migrer"
+    root = _platform_dir(APP_NAME)
+    legacy = _platform_dir(LEGACY_APP_NAME)
+    if not legacy.exists():
+        return "rien à migrer"
+    if root.exists():
+        return f"{root} existe déjà : {legacy} laissé en place"
+    try:
+        os.rename(legacy, root)
+    except OSError as exc:
+        return f"déplacement de {legacy} vers {root} impossible ({exc}) : ancien dossier conservé"
+    return f"données déplacées de {legacy} vers {root}"
 
 
 def settings_file() -> Path:

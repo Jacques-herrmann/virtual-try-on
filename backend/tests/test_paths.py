@@ -13,9 +13,83 @@ def test_data_dir_uses_env_override(data_dir):
 
 def test_data_dir_defaults_to_platform_dir(monkeypatch):
     monkeypatch.delenv("VTO_DATA_DIR", raising=False)
-    expected = Path(platformdirs.user_data_dir("VirtualTryOn", appauthor=False))
+    expected = Path(platformdirs.user_data_dir("Wearo", appauthor=False))
     monkeypatch.setattr(Path, "mkdir", lambda *a, **k: None)
+    monkeypatch.setattr(Path, "exists", lambda self: self == expected)
     assert paths.data_dir() == expected
+
+
+@pytest.fixture
+def platform_root(tmp_path, monkeypatch) -> Path:
+    """Dossier parent des données (%LOCALAPPDATA%), sans VTO_DATA_DIR."""
+    monkeypatch.delenv("VTO_DATA_DIR", raising=False)
+    monkeypatch.setattr(
+        paths.platformdirs, "user_data_dir", lambda name, appauthor=None: str(tmp_path / name)
+    )
+    return tmp_path
+
+
+def _fill_legacy(root: Path) -> Path:
+    old = root / "VirtualTryOn"
+    (old / "articles" / "a1").mkdir(parents=True)
+    (old / "articles" / "a1" / "article.json").write_text("{}", encoding="utf-8")
+    (old / "license.json").write_text('{"key": "K"}', encoding="utf-8")
+    (old / "browser-profile" / "Default").mkdir(parents=True)
+    (old / "browser-profile" / "Default" / "Cookies").write_bytes(b"session")
+    return old
+
+
+def test_migration_without_legacy_folder_does_nothing(platform_root):
+    assert "rien" in paths.migrate_legacy_data_dir()
+    assert not (platform_root / "Wearo").exists()
+    assert paths.data_dir() == platform_root / "Wearo"
+
+
+def test_migration_moves_legacy_folder(platform_root):
+    old = _fill_legacy(platform_root)
+    new = platform_root / "Wearo"
+
+    assert "déplacées" in paths.migrate_legacy_data_dir()
+
+    assert not old.exists()
+    assert (new / "articles" / "a1" / "article.json").read_text(encoding="utf-8") == "{}"
+    assert (new / "license.json").read_text(encoding="utf-8") == '{"key": "K"}'
+    assert (new / "browser-profile" / "Default" / "Cookies").read_bytes() == b"session"
+    assert paths.data_dir() == new
+
+
+def test_migration_leaves_both_folders_when_new_exists(platform_root):
+    old = _fill_legacy(platform_root)
+    (platform_root / "Wearo").mkdir()
+
+    paths.migrate_legacy_data_dir()
+
+    assert (old / "license.json").exists()
+    assert paths.data_dir() == platform_root / "Wearo"
+
+
+def test_failed_migration_keeps_using_legacy_folder(platform_root, monkeypatch):
+    old = _fill_legacy(platform_root)
+
+    def locked(src, dst):
+        raise PermissionError("fichier verrouillé")
+
+    monkeypatch.setattr(paths.os, "rename", locked)
+
+    assert "impossible" in paths.migrate_legacy_data_dir()
+    assert paths.data_dir() == old
+    assert (old / "license.json").exists()
+    assert not (platform_root / "Wearo").exists()
+
+
+def test_env_override_disables_migration(platform_root, monkeypatch):
+    old = _fill_legacy(platform_root)
+    monkeypatch.setenv("VTO_DATA_DIR", str(platform_root / "custom"))
+
+    paths.migrate_legacy_data_dir()
+
+    assert (old / "license.json").exists()
+    assert paths.data_dir() == platform_root / "custom"
 
 
 def test_sub_paths_are_under_data_dir(data_dir):
