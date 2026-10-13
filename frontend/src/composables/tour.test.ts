@@ -224,3 +224,16 @@ describe('useAutoTour', () => {
     again.unmount()
   })
 })
+
+describe('closeIntro', () => {
+  it('ferme la vidéo et la marque vue, ce qui libère les visites', async () => {
+    const settings = settingsWith()
+    settings.tutorial.video_seen = false
+    useSettings().set(settings)
+    const { videoOpen, closeIntro } = useTutorial()
+    videoOpen.value = true
+    await closeIntro()
+    expect(videoOpen.value).toBe(false)
+    expect(updateSettings).toHaveBeenCalledWith({ tutorial: { video_seen: true, tours_seen: [] } })
+  })
+})

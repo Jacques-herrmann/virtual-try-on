@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import KeyForm from '@/components/KeyForm.vue'
 import LicenseForm from '@/components/LicenseForm.vue'
+import TutorialVideo from '@/components/TutorialVideo.vue'
 import AppLogo from '@/components/ui/AppLogo.vue'
 import { useLicense } from '@/stores/license'
 import { useSettings } from '@/stores/settings'
+import { KEY_VIDEO, videoAvailable } from '@/stores/tutorial'
 
 const router = useRouter()
 const { license } = useLicense()
@@ -15,6 +17,13 @@ const AI_STUDIO = 'https://aistudio.google.com/apikey'
 
 // Étape 1 : clé de licence ; étape 2 : clé Gemini.
 const step = computed(() => ((license.value?.state ?? 'none') === 'none' ? 'license' : 'gemini'))
+
+// Lien vers la vidéo de la clé Gemini, seulement si elle est livrée avec l'app.
+const keyVideoReady = ref(false)
+const keyVideoOpen = ref(false)
+onMounted(async () => {
+  keyVideoReady.value = await videoAvailable(KEY_VIDEO.src)
+})
 
 function licenseSaved() {
   if (settings.value?.has_key) router.push('/articles')
@@ -82,6 +91,15 @@ function licenseSaved() {
             <span>Colle-la ci-dessous et clique sur « Vérifier ».</span>
           </li>
         </ol>
+        <button
+          v-if="keyVideoReady"
+          type="button"
+          class="watch"
+          data-test="key-video"
+          @click="keyVideoOpen = true"
+        >
+          <i class="icon-circle-play" aria-hidden="true" /> Voir comment faire (30 s)
+        </button>
         <KeyForm @saved="router.push('/articles')" />
         <p class="muted note">
           <i class="icon-key-round" aria-hidden="true" />
@@ -90,10 +108,32 @@ function licenseSaved() {
         </p>
       </section>
     </div>
+    <TutorialVideo v-if="keyVideoOpen" v-bind="KEY_VIDEO" @close="keyVideoOpen = false" />
   </div>
 </template>
 
 <style scoped>
+.watch {
+  all: unset;
+  cursor: pointer;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  color: var(--p-apricot-700);
+}
+
+.watch:hover {
+  color: var(--p-apricot-800);
+  text-decoration: underline;
+}
+
+.watch:focus-visible {
+  outline: 2px solid var(--p-apricot-600);
+  outline-offset: 2px;
+}
+
 .welcome {
   min-height: 100%;
   display: grid;

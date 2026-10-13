@@ -1,19 +1,34 @@
 <script setup lang="ts">
 import ConfirmDialog from 'primevue/confirmdialog'
 import Toast from 'primevue/toast'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 import { api, disconnected } from './api'
 import LicenseBanner from './components/LicenseBanner.vue'
+import TutorialVideo from './components/TutorialVideo.vue'
 import AppBanner from './components/ui/AppBanner.vue'
 import AppLogo from './components/ui/AppLogo.vue'
 import UpdateBanner from './components/UpdateBanner.vue'
 import { formatDate, useLicense } from './stores/license'
+import { useSettings } from './stores/settings'
+import { INTRO_VIDEO, useTutorial } from './stores/tutorial'
 
 const route = useRoute()
 const bare = computed(() => route.meta.bare === true)
 const { license } = useLicense()
+const { settings } = useSettings()
+const { videoOpen, closeIntro } = useTutorial()
+
+// Vidéo de présentation à la première arrivée dans l'app (après l'accueil). Synchrone : elle doit
+// être ouverte avant le montage de l'écran, pour que ses visites guidées attendent sa fermeture.
+watch(
+  () => !bare.value && settings.value?.tutorial.video_seen === false,
+  (show) => {
+    if (show) videoOpen.value = true
+  },
+  { immediate: true, flush: 'sync' },
+)
 
 const links = [
   { to: '/articles', label: 'Articles', icon: 'icon-shirt', tour: 'nav-articles' },
@@ -42,6 +57,8 @@ onMounted(async () => {
   <AppBanner v-if="disconnected" tone="danger" icon="icon-wifi-off" class="disconnected">
     <strong>Kaloé ne répond plus.</strong> Ferme l'application et relance-la.
   </AppBanner>
+
+  <TutorialVideo v-if="videoOpen && !bare" v-bind="INTRO_VIDEO" @close="closeIntro" />
 
   <RouterView v-if="bare" />
   <div v-else class="layout">

@@ -34,6 +34,7 @@
 .icon-circle-alert::before { content: "\e077"; }
 .icon-circle-check::before { content: "\e226"; }
 .icon-circle-help::before { content: "\e082"; }
+.icon-circle-play::before { content: "\e080"; }
 .icon-circle-stop::before { content: "\e083"; }
 .icon-clock::before { content: "\e087"; }
 .icon-cloud-upload::before { content: "\e091"; }
@@ -51,7 +52,10 @@
 .icon-log-in::before { content: "\e10d"; }
 .icon-log-out::before { content: "\e10e"; }
 .icon-mail::before { content: "\e10f"; }
+.icon-map::before { content: "\e110"; }
+.icon-pause::before { content: "\e12e"; }
 .icon-pencil::before { content: "\e1f9"; }
+.icon-play::before { content: "\e13c"; }
 .icon-plus::before { content: "\e13d"; }
 .icon-power::before { content: "\e140"; }
 .icon-refresh-cw::before { content: "\e145"; }

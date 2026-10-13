@@ -1,19 +1,49 @@
 <script setup lang="ts">
+import Button from 'primevue/button'
 import { computed } from 'vue'
 
 import PageHeader from '@/components/ui/PageHeader.vue'
 import SectionCard from '@/components/ui/SectionCard.vue'
+import { useNotify } from '@/composables/notify'
+import { useTour } from '@/composables/tour'
 import { useLicense } from '@/stores/license'
+import { useTutorial } from '@/stores/tutorial'
 
 const CONTACT = 'contact@kaloe.fr'
 
 const { license } = useLicense()
 const site = computed(() => license.value?.site_url ?? 'https://kaloe.fr')
+
+const { videoOpen } = useTutorial()
+const { resetTours } = useTour()
+const notify = useNotify()
+
+async function replayTours() {
+  await resetTours()
+  notify.success('Les visites guidées reviendront sur chaque écran.')
+}
 </script>
 
 <template>
   <div class="page stack">
     <PageHeader title="Aide" subtitle="Comment Kaloé transforme une photo en annonce Vinted." />
+
+    <SectionCard
+      title="Découvrir Kaloé"
+      subtitle="La vidéo de présentation et les bulles d’aide affichées sur chaque écran."
+      icon="icon-circle-play"
+    >
+      <div class="row">
+        <Button label="Revoir la vidéo" icon="icon-play" data-test="replay-video" @click="videoOpen = true" />
+        <Button
+          label="Relancer les visites guidées"
+          icon="icon-map"
+          severity="secondary"
+          data-test="replay-tours"
+          @click="replayTours"
+        />
+      </div>
+    </SectionCard>
 
     <SectionCard title="1. Ajouter un vêtement" icon="icon-image-plus">
       <ol>
