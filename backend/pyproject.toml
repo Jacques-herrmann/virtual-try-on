@@ -31,6 +31,7 @@ build = ["pyinstaller>=6.22"]
 vto = "vto.cli:app"
 vto-app = "vto.desktop:main"
 vto-vinted-catalog = "vto.tools.vinted_catalog:main"
+vto-tutorial = "vto.tools.tutorial:main"
 
 [tool.hatch.version]
 path = "src/vto/__init__.py"
