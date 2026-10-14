@@ -2,7 +2,7 @@ import { EXPIRED_MESSAGE, UNKNOWN_KEY_MESSAGE, lookupLicense } from "./activatio
 import type { Env } from "./env";
 import { error, notFound, nowSeconds } from "./http";
 import { getLicenseByHash, isValidStatus } from "./licenses";
-import { errorPage } from "./pages";
+import { errorPage } from "./site/layout";
 import { stripeApi } from "./stripe";
 import { verifyToken, type TokenClaims } from "./tokens";
 
