@@ -20,7 +20,7 @@ export interface Publisher {
 // Éditeur du site et vendeur de l'abonnement : à remplir avant la mise en production.
 export const PUBLISHER: Publisher = {
   name: TO_FILL,
-  status: TO_FILL,
+  status: "Entrepreneur individuel (micro-entreprise)",
   siret: TO_FILL,
   address: TO_FILL,
   director: TO_FILL,
