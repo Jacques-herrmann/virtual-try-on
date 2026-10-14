@@ -238,9 +238,23 @@ describe("/telecharger", () => {
     expect(await res.text()).toContain("abonnement est terminé");
   });
 
-  it("shows an error page without key", async () => {
+  it("streams the installer without key", async () => {
     mockFetch(github());
-    expect((await call("/telecharger")).status).toBe(404);
+    const res = await call("/telecharger");
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-disposition")).toContain(INSTALLER);
+    expect(await res.text()).toBe("MZ-installer-bytes");
+  });
+
+  it("shows an error page without key when the release has no installer", async () => {
+    mockFetch((r) =>
+      r.url === `${API}/releases/latest`
+        ? jsonResponse({ tag_name: "v0.3.0", assets: [{ id: 11, name: "latest.json" }] })
+        : undefined,
+    );
+    const res = await call("/telecharger");
+    expect(res.status).toBe(502);
+    expect(await res.text()).toContain("momentanément indisponible");
   });
 });
 

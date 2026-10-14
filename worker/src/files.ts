@@ -48,11 +48,16 @@ export async function handleFile(request: Request, env: Env, path: string): Prom
   });
 }
 
-/** `/telecharger?cle=` : le dernier installeur, pour une clé dont l'abonnement est en cours. */
+/** `/telecharger` : le dernier installeur (avec `cle=`, seulement si l'abonnement est en cours). */
 export async function handleDownload(url: URL, env: Env): Promise<Response> {
-  const license = await lookupLicense(env, url.searchParams.get("cle") ?? "", nowSeconds());
-  if (!license) return errorPage(404, UNKNOWN_KEY_MESSAGE);
-  if (!isValidStatus(license.status)) return errorPage(403, EXPIRED_MESSAGE);
+  // Sans clé : téléchargement libre depuis le site (l'app demande une clé au premier lancement).
+  // Avec une clé (lien de l'e-mail) : elle doit être valide.
+  const key = url.searchParams.get("cle") ?? "";
+  if (key) {
+    const license = await lookupLicense(env, key, nowSeconds());
+    if (!license) return errorPage(404, UNKNOWN_KEY_MESSAGE);
+    if (!isValidStatus(license.status)) return errorPage(403, EXPIRED_MESSAGE);
+  }
 
   const release = await latestRelease(env);
   const installer = release?.assets.find((a) => a.name.toLowerCase().endsWith(".exe"));
