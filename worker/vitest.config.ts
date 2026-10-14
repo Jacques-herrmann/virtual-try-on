@@ -14,6 +14,7 @@ export default defineConfig(async () => {
             TEST_MIGRATIONS: migrations,
             PUBLIC_BASE_URL: "https://licence.test",
             PAYMENT_LINK_URL: "https://buy.stripe.test/essai",
+            PRICE_LABEL: "14,90 €",
             STRIPE_PRICE_IDS: "price_vto, price_old",
             TOKEN_KEY_ID: tokenFixture.kid,
             TOKEN_PRIVATE_KEY: tokenFixture.private_key_pkcs8,

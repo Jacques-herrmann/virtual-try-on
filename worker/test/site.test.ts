@@ -12,3 +12,11 @@ describe("site layout", () => {
     }
   });
 });
+
+describe("/essai", () => {
+  it("redirects to the Stripe payment link", async () => {
+    const res = await call("/essai", { redirect: "manual" });
+    expect(res.status).toBe(302);
+    expect(res.headers.get("location")).toBe("https://buy.stripe.test/essai");
+  });
+});

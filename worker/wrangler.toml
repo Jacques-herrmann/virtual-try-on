@@ -13,6 +13,8 @@ directory = "public"
 [vars]
 PUBLIC_BASE_URL = "https://kaloe.fr"
 GITHUB_REPO = "Jacques-herrmann/virtual-try-on"
+# Prix affiché sur le site, par mois ; à garder égal au prix Stripe en tête de STRIPE_PRICE_IDS.
+PRICE_LABEL = "14,90 €"
 PAYMENT_LINK_URL = "https://buy.stripe.com/test_3cIcN55nA7Y43ACgzTeAg00"
 # Prix Stripe de Kaloé (séparés par des virgules) : les paiements d'autres produits
 # du compte Stripe sont ignorés. Le premier est le tarif actuel (réabonnement par /renouveler) ;
