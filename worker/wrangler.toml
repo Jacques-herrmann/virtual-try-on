@@ -6,6 +6,10 @@ workers_dev = true
 compatibility_date = "2026-08-15"
 compatibility_flags = ["nodejs_compat"]
 
+# Médias du site (public/media, générés par scripts/build-media.mjs), servis avant le Worker.
+[assets]
+directory = "public"
+
 [vars]
 PUBLIC_BASE_URL = "https://kaloe.fr"
 GITHUB_REPO = "Jacques-herrmann/virtual-try-on"

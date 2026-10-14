@@ -6,6 +6,8 @@ on:
     paths:
       - "worker/**"
       - "docs/aide/**"
+      - "frontend/public/tutorial/**"
+      - "tools/tutorial/**"
       - ".github/workflows/worker.yml"
   workflow_dispatch:
 

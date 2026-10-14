@@ -65,3 +65,5 @@ worker/.wrangler/
 worker/.dev.vars
 worker/src/aide.generated.ts
 worker/src/logo.generated.ts
+worker/src/site/example.generated.ts
+worker/public/
