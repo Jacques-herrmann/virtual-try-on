@@ -15,11 +15,11 @@ PUBLIC_BASE_URL = "https://kaloe.fr"
 GITHUB_REPO = "Jacques-herrmann/virtual-try-on"
 # Prix affiché sur le site, par mois ; à garder égal au prix Stripe en tête de STRIPE_PRICE_IDS.
 PRICE_LABEL = "14,90 €"
-PAYMENT_LINK_URL = "https://buy.stripe.com/test_3cIcN55nA7Y43ACgzTeAg00"
+PAYMENT_LINK_URL = "https://buy.stripe.com/fZu9ATbT63l5f2i4Ma3cc00"
 # Prix Stripe de Kaloé (séparés par des virgules) : les paiements d'autres produits
 # du compte Stripe sont ignorés. Le premier est le tarif actuel (réabonnement par /renouveler) ;
 # garder les anciens prix à la suite tant que des abonnements les portent.
-STRIPE_PRICE_IDS = "price_1UQ1h9DoMopLYumvQq7RoLk2"
+STRIPE_PRICE_IDS = "price_1UQTykDYmGe59AbKDo3SBZh5"
 # Identifiant de la clé de signature (TOKEN_PRIVATE_KEY) ; l'app embarque les clés publiques par identifiant.
 TOKEN_KEY_ID = "k1"
 # Expéditeur des e-mails (Resend, domaine kaloe.fr vérifié).
