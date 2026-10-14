@@ -18,16 +18,17 @@ ICO_SIZES = [16, 24, 32, 48, 64, 128, 256]
 
 
 def render(svg: str, size: int) -> Image.Image:
+    sized = svg.replace("<svg ", f'<svg width="{size}" height="{size}" ', 1)
     html = (
         "<html><body style='margin:0;background:transparent'>"
-        f"<div style='width:{size}px;height:{size}px'>"
-        f"{svg.replace('<svg ', f'<svg width=\"{size}\" height=\"{size}\" ', 1)}</div></body></html>"
+        f"<div style='width:{size}px;height:{size}px'>{sized}</div></body></html>"
     )
+    box = {"x": 0, "y": 0, "width": size, "height": size}
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page(viewport={"width": size, "height": size})
         page.set_content(html)
-        png = page.screenshot(omit_background=True, clip={"x": 0, "y": 0, "width": size, "height": size})
+        png = page.screenshot(omit_background=True, clip=box)
         browser.close()
     return Image.open(io.BytesIO(png)).convert("RGBA")
 
