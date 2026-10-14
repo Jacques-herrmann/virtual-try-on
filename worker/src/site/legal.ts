@@ -22,7 +22,7 @@ export const PUBLISHER: Publisher = {
   name: "Jacques Herrmann EI",
   status: "Entrepreneur individuel (micro-entreprise)",
   siret: "898 663 695 00010",
-  address: TO_FILL,
+  address: "Bât. Flat Iron, appt 404, 135 boulevard du Pont de Vivaux, 13010 Marseille",
   director: "Jacques Herrmann",
 };
 
