@@ -1,4 +1,5 @@
-"""Scénario de la vidéo : chaque étape porte son sous-titre, minuté pendant le tournage."""
+"""Scénario de la vidéo : chaque étape porte son sous-titre (lu par la voix off), minuté
+pendant le tournage, ainsi que les instants des bruitages."""
 
 import base64
 import time
@@ -12,6 +13,29 @@ from vto.tools.tutorial.captions import Cue
 MIN_CUE = 2.5  # secondes : durée minimale d'un sous-titre
 READING_SPEED = 15  # caractères lus par seconde
 GAP = 0.15  # blanc entre deux sous-titres
+VOICE_LEAD = 0.15  # la voix démarre juste après l'apparition du sous-titre
+VOICE_TAIL = 0.4  # silence après la phrase, avant l'étape suivante
+TYPING_DELAY = 0.09  # secondes entre deux frappes
+
+# Textes du film, dans l'ordre : sous-titres et voix off (générée avant le tournage).
+LINES = {
+    "welcome": "Bienvenue ! Une photo de ton vêtement suffit pour créer ton annonce Vinted.",
+    "new": "Clique sur « Nouvel article ».",
+    "photos": "Ajoute une ou plusieurs photos de ton vêtement.",
+    "type": "Choisis le type de vêtement et pour qui il est.",
+    "optional": "Le reste est facultatif : l’IA propose marque, taille, état et prix.",
+    "generate": "Clique sur « Générer ».",
+    "waiting": "Kaloé crée les photos portées et rédige l’annonce, pendant que tu continues.",
+    "ready": "C’est prêt : ouvre l’article pour le relire.",
+    "review": "Vérifie les photos : « Régénérer » en refait une, « Écarter » la retire.",
+    "listing": "Relis l’annonce et corrige ce que tu veux, ici le prix.",
+    "validate": "Tout est bon ? Valide l’article. Rien ne part sans ta validation.",
+    "check": "Dans tes articles, coche ceux à envoyer…",
+    "send": "… puis clique sur « Envoyer sur Vinted ».",
+    "sending": "Kaloé remplit le formulaire Vinted à ta place, article par article.",
+    "done": "Et voilà : ton annonce t’attend en brouillon sur Vinted.",
+}
+SHORT = ("welcome", "new")
 
 
 def reading_time(text: str) -> float:
@@ -35,23 +59,30 @@ def label(value: str) -> str:
 class Director:
     page: object
     t0: float  # instant du début de l'enregistrement vidéo
+    voice_lengths: dict[str, float] = field(default_factory=dict)  # texte → secondes
     cues: list[Cue] = field(default_factory=list)
+    sounds: list[tuple[float, str]] = field(default_factory=list)  # (instant, bruitage)
     pos: tuple[float, float] = (640.0, 400.0)
 
     def now(self) -> float:
         return time.monotonic() - self.t0
 
     @contextmanager
-    def say(self, text: str, min_seconds: float | None = None) -> Iterator[None]:
+    def say(self, key: str, min_seconds: float = 0.0) -> Iterator[None]:
+        text = LINES[key]
         start = self.now()
         yield
-        remaining = (min_seconds or reading_time(text)) - (self.now() - start)
+        spoken = self.voice_lengths.get(text, 0.0) + VOICE_LEAD + VOICE_TAIL
+        remaining = max(min_seconds, reading_time(text), spoken) - (self.now() - start)
         if remaining > 0:
             self.wait(remaining)
         self.cues.append(Cue(start, self.now() - GAP, text))
 
     def wait(self, seconds: float) -> None:
         self.page.wait_for_timeout(seconds * 1000)
+
+    def ding(self) -> None:
+        self.sounds.append((self.now(), "ding"))
 
     def move_to(self, locator, duration: float = 0.6) -> tuple[float, float]:
         locator.scroll_into_view_if_needed()
@@ -72,21 +103,24 @@ class Director:
     def click(self, locator) -> None:
         self.move_to(locator)
         self.wait(0.15)
+        self.sounds.append((self.now(), "click"))
         self.page.mouse.click(*self.pos)
         self.wait(0.3)
 
     def type(self, locator, text: str) -> None:
         self.click(locator)
         self.page.keyboard.press("Control+A")
-        self.page.keyboard.type(text, delay=90)
+        start = self.now()
+        self.sounds += [(start + i * TYPING_DELAY, "key") for i in range(len(text))]
+        self.page.keyboard.type(text, delay=TYPING_DELAY * 1000)
 
 
 def intro(d: Director) -> None:
     page = d.page
     page.get_by_text("Ajoute ton premier vêtement").wait_for()
-    with d.say("Bienvenue ! Une photo de ton vêtement suffit pour créer ton annonce Vinted."):
+    with d.say("welcome"):
         d.wait(1.0)
-    with d.say("Clique sur « Nouvel article »."):
+    with d.say("new"):
         d.click(page.locator('[data-tour="new-article"]'))
 
 
@@ -95,50 +129,52 @@ def full(d: Director, demo: Demo) -> None:
     intro(d)
     dialog = page.locator(".p-dialog")
 
-    with d.say("Ajoute une ou plusieurs photos de ton vêtement."):
+    with d.say("photos"):
         d.move_to(dialog.locator('[data-tour="photos"]'))
         dialog.locator("input[type=file]").set_input_files(str(demo.photo))
         d.wait(0.8)
-    with d.say("Choisis le type de vêtement et pour qui il est."):
+    with d.say("type"):
         d.click(dialog.locator("#type"))
         d.click(page.locator(".p-select-option", has_text=label(demo.garment_type)).first)
         d.click(dialog.locator(".p-selectbutton button", has_text=label(demo.audience)))
-    with d.say("Le reste est facultatif : l’IA propose marque, taille, état et prix."):
+    with d.say("optional"):
         d.move_to(dialog.locator('[data-tour="optional-fields"]'))
         d.wait(0.6)
-    with d.say("Clique sur « Générer »."):
+    with d.say("generate"):
         d.click(dialog.locator('[data-tour="generate"]'))
 
     card = page.locator('[data-tour="article-card"]').first
-    with d.say("Kaloé crée les photos portées et rédige l’annonce, pendant que tu continues."):
+    with d.say("waiting"):
         card.get_by_text("À relire").wait_for(timeout=180_000)
-    with d.say("C’est prêt : ouvre l’article pour le relire."):
+        d.ding()
+    with d.say("ready"):
         d.click(card.locator(".open"))
 
-    with d.say("Vérifie les photos : « Régénérer » en refait une, « Écarter » la retire."):
+    with d.say("review"):
         page.locator('[data-tour="scene-photos"] img').last.wait_for()
         d.move_to(page.locator('[data-tour="scene-photos"] .tile').nth(1))
         d.wait(0.6)
         d.move_to(page.locator('[data-tour="scene-photos"] .tile').last)
-    with d.say("Relis l’annonce et corrige ce que tu veux, ici le prix."):
+    with d.say("listing"):
         d.move_to(page.locator("#title"))
         d.type(page.locator("#lprice"), demo.price)
         page.keyboard.press("Tab")
-    with d.say("Tout est bon ? Valide l’article. Rien ne part sans ta validation."):
+    with d.say("validate"):
         d.click(page.locator('[data-tour="validate"]'))
         page.get_by_text("Article validé : il est prêt").wait_for()
 
-    with d.say("Dans tes articles, coche ceux à envoyer…"):
+    with d.say("check"):
         d.click(page.locator(".back"))
         d.click(page.locator('[data-tour="article-card"] .pick').first)
-    with d.say("… puis clique sur « Envoyer sur Vinted »."):
+    with d.say("send"):
         d.click(page.locator('[data-test="selection-bar"] button', has_text="Envoyer sur Vinted"))
-    with d.say("Kaloé remplit le formulaire Vinted à ta place, article par article."):
+    with d.say("sending"):
         card.get_by_text("Brouillon Vinted").wait_for(timeout=60_000)
+        d.ding()
 
     if demo.draft_image is not None:
         data = base64.b64encode(demo.draft_image.read_bytes()).decode()
-        with d.say("Et voilà : ton annonce t’attend en brouillon sur Vinted.", min_seconds=4.0):
+        with d.say("done", min_seconds=4.0):
             page.set_content(
                 "<body style='margin:0;background:#fbf7f2;display:grid;place-items:center;"
                 f"height:100vh'><img src='data:image/png;base64,{data}' "

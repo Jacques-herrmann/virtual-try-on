@@ -69,5 +69,7 @@
 .icon-triangle-alert::before { content: "\e193"; }
 .icon-undo-2::before { content: "\e2a1"; }
 .icon-upload::before { content: "\e19e"; }
+.icon-volume-2::before { content: "\e1ab"; }
+.icon-volume-x::before { content: "\e1ac"; }
 .icon-wifi-off::before { content: "\e1af"; }
 .icon-x::before { content: "\e1b2"; }

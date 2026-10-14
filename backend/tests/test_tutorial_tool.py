@@ -110,6 +110,14 @@ def test_record_short_video(tmp_path):
     vtt = (tmp_path / "out" / "kaloe.vtt").read_text(encoding="utf-8")
     assert vtt.startswith("WEBVTT") and "Nouvel article" in vtt
     assert (tmp_path / "out" / "kaloe.jpg").is_file()
+    # Bruitages des clics, même sans voix off ni musique.
+    import subprocess
+
+    streams = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "stream=codec_type", "-of", "csv=p=0",
+         str(mp4)], capture_output=True, text=True, check=True,
+    ).stdout.split()
+    assert "audio" in streams
 
 
 def _generated_article(tmp_path):
@@ -171,3 +179,84 @@ def test_capture_from_article_refuses_ambiguous_or_foreign_photos(data_dir, tmp_
     Image.new("RGB", (4, 4)).save(base / "demo" / "autre.jpg")
     with pytest.raises(CaptureError, match="autre.jpg"):
         capture_from_article("fleurie", base / "demo", base / "capture")
+
+
+def test_sound_effects_are_short_and_audible(tmp_path):
+    import wave
+
+    from vto.tools.tutorial import sfx
+
+    files = sfx.write_all(tmp_path)
+    for name, longest in (("click", 0.05), ("key", 0.03), ("ding", 1.0)):
+        with wave.open(str(files[name])) as w:
+            assert 0 < w.getnframes() / w.getframerate() <= longest
+            assert max(w.readframes(w.getnframes())) > 0
+
+
+def test_voice_is_cached_and_billed_once(tmp_path):
+    import httpx
+
+    from vto.tools.tutorial.voice import VoiceConfig, synthesize
+
+    calls = []
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        assert request.headers["xi-api-key"] == "k"
+        return httpx.Response(200, content=b"ID3 mp3")
+
+    config = VoiceConfig(voice_id="v1")
+    transport = httpx.MockTransport(handler)
+    first = synthesize(["Bonjour", "Bonjour", "Salut"], tmp_path, config, api_key="k",
+                       transport=transport)
+    assert [c["text"] for c in calls] == ["Bonjour", "Salut"]
+    assert first["Bonjour"].read_bytes() == b"ID3 mp3"
+
+    # Tout est en cache : aucune clé ni requête nécessaires.
+    again = synthesize(["Bonjour"], tmp_path, config, api_key=None, transport=transport)
+    assert again == {"Bonjour": first["Bonjour"]} and len(calls) == 2
+
+
+def test_voice_without_key_explains(tmp_path, monkeypatch):
+    from vto.tools.tutorial.voice import VoiceConfig, VoiceError, synthesize
+
+    monkeypatch.delenv("ELEVENLABS_API_KEY", raising=False)
+    with pytest.raises(VoiceError, match="ELEVENLABS_API_KEY"):
+        synthesize(["Bonjour"], tmp_path, VoiceConfig(voice_id="v1"))
+
+
+def test_soundtrack_graph_places_and_ducks(tmp_path):
+    from pathlib import Path
+
+    from vto.tools.tutorial.video import Sound, Soundtrack, mix_graph
+
+    click, voice, music = Path("click.wav"), Path("v1.mp3"), Path("music.mp3")
+    track = Soundtrack(
+        voices=[Sound(1.15, voice)],
+        effects=[Sound(2.0, click, 0.6), Sound(3.5, click, 0.6)],
+        music=music,
+    )
+    inputs, graph = mix_graph(track, duration=60.0)
+    assert inputs == ["-i", "v1.mp3", "-i", "click.wav", "-stream_loop", "-1", "-i", "music.mp3"]
+    assert "[2:a]asplit=2[s2_0][s2_1]" in graph
+    assert "adelay=1150:all=1" in graph and "adelay=3500:all=1,volume=0.6" in graph
+    assert "[bed][voicekey]sidechaincompress" in graph
+    assert "afade=t=out:st=58.000:d=2.0" in graph
+    assert graph.endswith("[mixed]atrim=0:60.000[aout]")
+
+
+def test_steps_last_as_long_as_their_voice():
+    from vto.tools.tutorial.scenario import LINES, Director
+
+    class Page:
+        waited = 0.0
+
+        def wait_for_timeout(self, ms):
+            Page.waited += ms / 1000
+
+    d = Director(Page(), t0=0.0, voice_lengths={LINES["new"]: 6.0})
+    d.now = lambda: Page.waited
+    with d.say("new"):
+        pass
+    assert Page.waited == pytest.approx(6.0 + 0.15 + 0.4)
+    assert d.cues[0].text == LINES["new"]

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 /** Vidéo du tutoriel, avec ses sous-titres (WebVTT) dessinés par-dessus l'image. */
 const props = defineProps<{ src: string; captions: string; poster?: string; title: string }>()
@@ -13,6 +13,9 @@ const playing = ref(false)
 const ended = ref(false)
 const failed = ref(false)
 const progress = ref(0)
+const muted = ref(false)
+/** La fenêtre a refusé la lecture automatique avec le son : lecture muette, bouton pour l'activer. */
+const soundBlocked = ref(false)
 
 const percent = computed(() => `${Math.round(progress.value * 1000) / 10}%`)
 
@@ -43,6 +46,29 @@ function onEnded() {
 function onError() {
   failed.value = true
   console.warn('Vidéo du tutoriel illisible :', props.src, video.value?.error)
+}
+
+async function start() {
+  const el = video.value
+  if (!el) return
+  try {
+    el.muted = false
+    await el.play()
+  } catch (e) {
+    if ((e as DOMException | undefined)?.name !== 'NotAllowedError') return // @error s'en charge
+    el.muted = muted.value = soundBlocked.value = true
+    await el.play().catch(() => {})
+  }
+}
+
+onMounted(start)
+
+function toggleSound() {
+  const el = video.value
+  if (!el) return
+  el.muted = !el.muted
+  muted.value = el.muted
+  soundBlocked.value = false
 }
 
 function toggle() {
@@ -77,8 +103,6 @@ function seek(event: MouseEvent) {
         ref="video"
         :src="src"
         :poster="poster"
-        autoplay
-        muted
         playsinline
         preload="auto"
         @play="playing = true"
@@ -90,6 +114,14 @@ function seek(event: MouseEvent) {
         <track kind="subtitles" srclang="fr" label="Français" :src="captions" default @load="trackLoaded" />
       </video>
       <p v-if="cue && !failed" class="cue" data-test="cue">{{ cue }}</p>
+      <Button
+        v-if="soundBlocked && !failed"
+        label="Activer le son"
+        icon="icon-volume-2"
+        class="unmute"
+        data-test="unmute"
+        @click="toggleSound"
+      />
       <div v-if="failed" class="failed" data-test="failed">
         <i class="icon-circle-alert" aria-hidden="true" />
         <p>La vidéo n'a pas pu être lue. Tu peux la revoir plus tard depuis l'Aide.</p>
@@ -110,6 +142,16 @@ function seek(event: MouseEvent) {
         <div class="fill" :style="{ width: percent }" />
       </div>
       <span v-else class="grow" />
+      <Button
+        v-if="!failed"
+        :icon="muted ? 'icon-volume-x' : 'icon-volume-2'"
+        :aria-label="muted ? 'Activer le son' : 'Couper le son'"
+        severity="secondary"
+        text
+        rounded
+        data-test="sound"
+        @click="toggleSound"
+      />
       <Button
         v-if="failed"
         label="Fermer"
@@ -162,6 +204,12 @@ video {
   line-height: 1.4;
   text-align: center;
   white-space: pre-line;
+}
+
+.unmute {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
 
 .failed {

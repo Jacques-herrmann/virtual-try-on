@@ -2,7 +2,8 @@
 
     vto-tutorial capture     une fois, avec GEMINI_API_KEY : génère et enregistre la démo
                              (--from-article : reprend un article déjà généré dans l'app)
-    vto-tutorial record      rejoue la démo dans l'app et filme (sans réseau)
+    vto-tutorial record      rejoue la démo dans l'app et filme (sans réseau si la voix off
+                             est en cache), avec voix off, bruitages et musique
     vto-tutorial edit-key    monte la vidéo « clé Gemini » enregistrée à la main
 
 À lancer depuis la racine du dépôt (données dans tools/tutorial, sortie dans
@@ -16,17 +17,18 @@ import tempfile
 import time
 from pathlib import Path
 
-from vto.tools.tutorial import captions, video
-from vto.tools.tutorial.scenario import Demo, Director, full, short
+from vto.tools.tutorial import captions, sfx, video
+from vto.tools.tutorial.scenario import LINES, SHORT, VOICE_LEAD, Demo, Director, full, short
 
 SIZE = {"width": 1280, "height": 800}
 # Erreurs prévues (données ou outil manquants) : message seul, sans pile d'appels.
-USER_ERRORS = {"MissingCapture", "MissingFront", "MissingFfmpeg", "CaptureError"}
+USER_ERRORS = {"MissingCapture", "MissingFront", "MissingFfmpeg", "CaptureError", "VoiceError"}
+EFFECT_VOLUME = {"click": 0.6, "key": 0.35, "ding": 0.5}
 CURSOR = Path(__file__).with_name("cursor.js")
 
 
 def _load_env(file: Path = Path(".env")) -> None:
-    """Variables du fichier .env (GEMINI_API_KEY), sans écraser celles déjà définies."""
+    """Variables du fichier .env (clés Gemini, ElevenLabs), sans écraser celles déjà définies."""
     if not file.is_file():
         return
     for line in file.read_text(encoding="utf-8").splitlines():
@@ -42,7 +44,40 @@ def _launch(playwright):
         return playwright.chromium.launch()
 
 
-def record(base: Path, out: Path, *, short_version: bool, price: str, delay: float) -> Path:
+def _voices(base: Path, keys: tuple[str, ...]) -> dict[str, Path]:
+    """Voix off des phrases du film (cache tools/tutorial/voice), si voice.json existe."""
+    from vto.tools.tutorial.voice import VoiceConfig, synthesize
+
+    config = VoiceConfig.load(base / "voice.json")
+    if config is None:
+        print(f"(pas de {base / 'voice.json'} : vidéo sans voix off)")
+        return {}
+    _load_env()
+    return synthesize([LINES[k] for k in keys], base / "voice", config)
+
+
+def _music(base: Path) -> Path | None:
+    found = sorted(base.glob("music.*"))
+    if not found:
+        print(f"(pas de {base / 'music.mp3'} : vidéo sans musique)")
+    return found[0] if found else None
+
+
+def _soundtrack(director: Director, trim: float, voices: dict[str, Path], music: Path | None,
+                folder: Path) -> video.Soundtrack:
+    effects = sfx.write_all(folder)
+    return video.Soundtrack(
+        voices=[video.Sound(cue.start - trim + VOICE_LEAD, voices[cue.text])
+                for cue in director.cues if cue.text in voices],
+        effects=[video.Sound(at - trim, effects[name], EFFECT_VOLUME[name])
+                 for at, name in director.sounds if at >= trim],
+        music=music,
+    )
+
+
+def record(
+    base: Path, out: Path, *, short_version: bool, price: str, delay: float, mute: bool = False,
+) -> Path:
     """Filme le scénario ; écrit kaloe.mp4, kaloe.vtt et kaloe.jpg dans `out`."""
     from playwright.sync_api import sync_playwright
 
@@ -64,6 +99,12 @@ def record(base: Path, out: Path, *, short_version: bool, price: str, delay: flo
         if demo.draft_image is None:
             print(f"(pas de {draft} : la vidéo s'arrête sans le plan du brouillon Vinted)")
 
+    from vto.tools.tutorial.voice import duration
+
+    keys = SHORT if short_version else tuple(LINES)
+    voices = {} if mute else _voices(base, keys)
+    music = None if mute else _music(base)
+
     # Ordre de sortie : le navigateur se ferme avant la suppression de la vidéo brute.
     with (
         tempfile.TemporaryDirectory(prefix="kaloe-video-", ignore_cleanup_errors=True) as raw_dir,
@@ -81,7 +122,7 @@ def record(base: Path, out: Path, *, short_version: bool, price: str, delay: flo
         page.get_by_text("Ajoute ton premier vêtement").wait_for()
         trim = time.monotonic() - t0  # écran blanc et chargement : coupés au montage
 
-        director = Director(page, t0)
+        director = Director(page, t0, voice_lengths={t: duration(f) for t, f in voices.items()})
         (short if short_version else full)(director, demo)
         director.wait(1.0)
 
@@ -90,7 +131,10 @@ def record(base: Path, out: Path, *, short_version: bool, price: str, delay: flo
         browser.close()
 
         mp4 = out / "kaloe.mp4"
-        video.finalize(raw, mp4, out / "kaloe.jpg", trim=trim)
+        soundtrack = None if mute else _soundtrack(
+            director, trim, voices, music, Path(raw_dir) / "sfx"
+        )
+        video.finalize(raw, mp4, out / "kaloe.jpg", trim=trim, soundtrack=soundtrack)
     (out / "kaloe.vtt").write_text(captions.to_webvtt(director.cues, offset=trim), encoding="utf-8")
     return mp4
 
@@ -108,6 +152,7 @@ def main(argv: list[str] | None = None) -> None:
     rec = commands.add_parser("record", help="filme la démo dans l'app (sans réseau)")
     rec.add_argument("--short", action="store_true", help="deux étapes seulement (test)")
     rec.add_argument("--price", default="15", help="prix saisi à la relecture")
+    rec.add_argument("--mute", action="store_true", help="sans voix off, bruitages ni musique")
     rec.add_argument("--delay", type=float, default=2.5, help="durée d'une génération rejouée (s)")
     key = commands.add_parser("edit-key", help="monte la vidéo « clé Gemini »")
     key.add_argument("source", type=Path)
@@ -128,7 +173,7 @@ def main(argv: list[str] | None = None) -> None:
                 print(capture(demo, out))
         elif args.command == "record":
             mp4 = record(args.data, args.out, short_version=args.short, price=args.price,
-                         delay=args.delay)
+                         delay=args.delay, mute=args.mute)
             print(f"Vidéo : {mp4} ({mp4.stat().st_size // 1024} Ko)")
         else:
             target = args.out / "cle-gemini.mp4"
