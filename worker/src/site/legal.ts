@@ -19,11 +19,11 @@ export interface Publisher {
 
 // Éditeur du site et vendeur de l'abonnement : à remplir avant la mise en production.
 export const PUBLISHER: Publisher = {
-  name: TO_FILL,
+  name: "Jacques Herrmann EI",
   status: "Entrepreneur individuel (micro-entreprise)",
-  siret: TO_FILL,
+  siret: "898 663 695 00010",
   address: TO_FILL,
-  director: TO_FILL,
+  director: "Jacques Herrmann",
 };
 
 const CONTACT = "contact@kaloe.fr";
