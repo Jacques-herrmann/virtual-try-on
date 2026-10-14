@@ -11,6 +11,7 @@ import {
 } from "./pages";
 import { json, notFound } from "./http";
 import { homePage } from "./site/home";
+import { legalPage } from "./site/legal";
 import { handleWebhook } from "./stripe";
 
 export default {
@@ -26,6 +27,9 @@ async function route(request: Request, env: Env, _ctx: ExecutionContext): Promis
   if (method === "GET" && url.pathname === "/health") return json({ ok: true });
   if (method === "GET" && url.pathname === "/") return homePage(env);
   if (method === "GET" && url.pathname === "/essai") return Response.redirect(env.PAYMENT_LINK_URL, 302);
+  if (method === "GET" && url.pathname === "/mentions-legales") return legalPage("mentions", env);
+  if (method === "GET" && url.pathname === "/cgv") return legalPage("cgv", env);
+  if (method === "GET" && url.pathname === "/confidentialite") return legalPage("confidentialite", env);
   if (method === "GET" && url.pathname === "/merci") return thanksPage(url, env);
   if (method === "GET" && url.pathname === "/retrouver") return recoverForm();
   if (method === "POST" && url.pathname === "/retrouver") return handleRecover(request, env);

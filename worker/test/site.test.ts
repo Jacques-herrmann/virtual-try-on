@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { missingPublisherFields, TO_FILL } from "../src/site/legal";
 import { call } from "./helpers";
 
 describe("site layout", () => {
@@ -18,5 +19,23 @@ describe("/essai", () => {
     const res = await call("/essai", { redirect: "manual" });
     expect(res.status).toBe(302);
     expect(res.headers.get("location")).toBe("https://buy.stripe.test/essai");
+  });
+});
+
+describe("legal pages", () => {
+  it.each([
+    ["/mentions-legales", "Mentions légales"],
+    ["/cgv", "Conditions générales de vente"],
+    ["/confidentialite", "Politique de confidentialité"],
+  ])("%s", async (path, title) => {
+    const res = await call(path);
+    expect(res.status).toBe(200);
+    expect(await res.text()).toContain(`<h1>${title}</h1>`);
+  });
+
+  it("lists the publisher fields left to fill", () => {
+    const filled = { name: "Jeanne Martin", status: "Micro-entreprise", siret: "123", address: "Paris", director: "Jeanne Martin" };
+    expect(missingPublisherFields(filled)).toEqual([]);
+    expect(missingPublisherFields({ ...filled, siret: TO_FILL, address: TO_FILL })).toEqual(["siret", "address"]);
   });
 });

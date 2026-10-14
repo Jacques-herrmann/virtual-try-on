@@ -12,7 +12,7 @@
     "build:media": "node scripts/build-media.mjs",
     "build:generated": "npm run build:aide && npm run build:logo && npm run build:media",
     "dev": "npm run build:generated && wrangler dev",
-    "deploy": "npm run build:generated && wrangler deploy",
+    "deploy": "npm run build:generated && node scripts/check-legal.mjs && wrangler deploy",
     "pretest": "npm run build:generated",
     "test": "vitest run",
     "pretypecheck": "npm run build:generated",
