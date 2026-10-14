@@ -50,7 +50,7 @@ input[type=email] { width:100%; padding: 12px 14px; font-size:1rem; border:1.5px
 .site-footer a { color: var(--muted); font-weight: 600; text-decoration: none; }
 .site-footer a:hover { color: var(--link); }
 .todo { background: var(--soft); color: var(--link); padding: 0 6px; border-radius: 6px; font-weight: 700; }
-img, video { max-width: 100%; }
+img, video { max-width: 100%; height: auto; }
 `;
 
 function header(): string {

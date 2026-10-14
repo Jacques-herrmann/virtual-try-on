@@ -48,7 +48,7 @@ section { padding: 72px 0; }
 .example { display:grid; grid-template-columns: 7fr 4fr; gap: 32px; align-items:start; }
 .shots { display:grid; grid-template-columns: 1fr auto 1fr 1fr; gap: 14px; align-items:center; }
 .shots figure { margin:0; }
-.shots img { display:block; width:100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 14px; border:1px solid var(--border); }
+.shots img { display:block; width:100%; height:auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 14px; border:1px solid var(--border); }
 .shots figcaption { font-size:.85rem; font-weight:700; margin-top: 8px; text-align:center; }
 .shots .before img { filter: saturate(.85); }
 .shots .then { color: var(--link); }
