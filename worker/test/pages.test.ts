@@ -1,6 +1,8 @@
 import { env } from "cloudflare:workers";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { escapeHtml } from "../src/http";
 import { getLicenseByCustomer, upsertLicense } from "../src/licenses";
+import { EXAMPLE } from "../src/site/example.generated";
 import { call, jsonResponse, mockFetch, now, resetDb, subscription, type Recorded } from "./helpers";
 
 beforeEach(resetDb);
@@ -32,15 +34,21 @@ const session = {
 };
 
 describe("GET /", () => {
-  it("offers the trial and the key recovery", async () => {
+  it("presents the app with trial, download, video, example and price", async () => {
     const res = await call("/");
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toContain("text/html");
     const html = await res.text();
-    expect(html).toContain('href="https://buy.stripe.test/essai"');
+    expect(html).toContain('href="/essai"');
+    expect(html).toContain('href="/telecharger"');
     expect(html).toContain("Essayer 7 jours");
+    expect(html).toContain("14,90 €");
+    expect(html).toContain("<video");
+    expect(html).toContain('src="/media/kaloe.vtt"');
+    expect(html).toContain('src="/media/exemple-mannequin.jpg"');
+    expect(html).toContain(escapeHtml(EXAMPLE.title));
+    for (const id of ["etapes", "exemples", "tarif", "questions"]) expect(html).toContain(`id="${id}"`);
     expect(html).toContain('href="/retrouver"');
-    expect(html).toContain("Retrouver ma clé");
     expect(html).toContain('name="viewport"');
   });
 });

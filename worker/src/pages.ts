@@ -18,20 +18,6 @@ const RECOVER_LIMIT = 3;
 const SESSION_ID = /^cs_[A-Za-z0-9_]{1,200}$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function homePage(env: Env): Response {
-  return htmlPage(
-    "Photos portées pour Vinted",
-    `<h1>Tes vêtements, portés et prêts à vendre.</h1>
-<p>Ajoute une photo de ton vêtement : Kaloé crée des photos portées, rédige l'annonce et prépare le brouillon sur Vinted. Tu relis, tu valides, c'est en ligne. Une application Windows, ta clé Gemini, tes décors.</p>
-<div class="card">
-  <p><strong>7 jours d'essai</strong>, puis abonnement résiliable à tout moment.<br>
-  <span class="muted">La carte est demandée au début de l'essai ; rien n'est prélevé avant la fin des 7 jours.</span></p>
-  <p><a class="button" href="${escapeHtml(env.PAYMENT_LINK_URL)}">Essayer 7 jours</a></p>
-</div>
-<p>Déjà abonné ? <a href="/retrouver">Retrouver ma clé</a> · <a href="/aide">Aide à l'installation</a></p>`,
-  );
-}
-
 export async function thanksPage(url: URL, env: Env): Promise<Response> {
   const id = url.searchParams.get("session_id") ?? "";
   if (!SESSION_ID.test(id)) return sessionNotFound();

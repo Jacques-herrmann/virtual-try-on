@@ -5,12 +5,12 @@ import {
   handleRecover,
   handleRenew,
   helpPage,
-  homePage,
   recoverForm,
   renewPage,
   thanksPage,
 } from "./pages";
 import { json, notFound } from "./http";
+import { homePage } from "./site/home";
 import { handleWebhook } from "./stripe";
 
 export default {
