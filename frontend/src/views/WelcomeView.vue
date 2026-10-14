@@ -57,7 +57,7 @@ function licenseSaved() {
           Pas encore de clé ?
           <a
             data-test="trial"
-            :href="`${license?.site_url ?? ''}/`"
+            :href="`${license?.site_url ?? ''}/essai`"
             target="_blank"
             rel="noopener"
           >Essayer 7 jours</a>

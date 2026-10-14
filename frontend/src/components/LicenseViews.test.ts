@@ -88,7 +88,7 @@ describe('WelcomeView', () => {
     const wrapper = mountWith(WelcomeView)
     expect(wrapper.find('[data-test="license-step"]').exists()).toBe(true)
     expect(wrapper.find('[data-test="gemini-step"]').exists()).toBe(false)
-    expect(wrapper.find('[data-test="trial"]').attributes('href')).toBe('https://licence.test/')
+    expect(wrapper.find('[data-test="trial"]').attributes('href')).toBe('https://licence.test/essai')
     expect(wrapper.text()).toContain('Essayer 7 jours')
   })
 
