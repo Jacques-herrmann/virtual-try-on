@@ -15,6 +15,9 @@ const ICONS = {
   check: `<path d="M20 6 9 17l-5-5"/>`,
   download: `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>`,
   arrow: `<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>`,
+  gift: `<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>`,
+  coins: `<circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>`,
+  gauge: `<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>`,
 };
 
 function icon(name: keyof typeof ICONS, size = 24): string {
@@ -69,6 +72,17 @@ section { padding: 72px 0; }
 .pricing .actions { flex-direction: column; }
 .pricing .actions .button { justify-content:center; }
 .note { font-size: .85rem; color: var(--muted); margin: 18px 0 0; }
+.gemini { display:grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items:start; }
+.gemini .card { margin:0; }
+.gemini h3 { margin: 0 0 16px; font-size: 1.15rem; }
+.costs { list-style:none; padding:0; margin:0; display:grid; gap: 18px; }
+.costs li { display:flex; gap: 14px; }
+.costs .badge { flex:none; width: 40px; height: 40px; margin:0; border-radius: 12px; }
+.costs strong { display:block; }
+.costs span.muted { font-size: .95rem; }
+.howto { list-style:none; padding:0; margin:0; display:grid; gap: 14px; counter-reset: howto; }
+.howto li { display:flex; gap: 14px; align-items:flex-start; }
+.howto li::before { counter-increment: howto; content: counter(howto); flex:none; width: 28px; height: 28px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-weight: 800; display:flex; align-items:center; justify-content:center; font-size: .9rem; margin-top: 1px; }
 .faq { max-width: 760px; margin: 0 auto; }
 .faq details { border-bottom: 1px solid var(--border); padding: 18px 4px; }
 .faq summary { cursor:pointer; font-weight: 700; font-size: 1.05rem; list-style:none; display:flex; justify-content:space-between; gap: 16px; }
@@ -79,7 +93,7 @@ section { padding: 72px 0; }
 .final { text-align:center; padding-bottom: 88px; }
 .final .actions { justify-content:center; }
 @media (max-width: 900px) {
-  .hero .wrap, .example { grid-template-columns: 1fr; }
+  .hero .wrap, .example, .gemini { grid-template-columns: 1fr; }
   .benefits { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
@@ -108,7 +122,7 @@ const FAQ: [string, string][] = [
   ],
   [
     "Faut-il un compte Google ?",
-    "Oui : Kaloé utilise Gemini, l'IA de Google, avec ta propre clé. Elle se crée gratuitement en deux minutes sur Google AI Studio, et l'application te guide pas à pas. Google peut facturer au-delà de son quota gratuit ; tu suis ta consommation dans ton compte Google.",
+    "Oui : Kaloé utilise Gemini, l'IA de Google, avec ta propre clé. Elle se crée en quelques minutes sur Google AI Studio (voir « Ta clé Gemini » plus haut), et l'application te guide pas à pas.",
   ],
   [
     "Mon compte Vinted est-il en sécurité ?",
@@ -217,11 +231,39 @@ export function homePage(env: Env): Response {
 <li>${icon("check", 18)}<span>Sans engagement, résiliable en un clic</span></li>
 </ul>
 <div class="actions">${ctas}</div>
-<p class="note">Kaloé utilise ta clé Gemini (Google) : gratuite à créer ; Google peut facturer au-delà de son quota gratuit.</p>
+<p class="note">En plus : l'usage de Gemini, facturé par Google sur ton compte, avec un crédit offert au départ. <a href="#gemini">Comment ça marche ?</a></p>
 </div>
 </div></section>
 
-<section id="questions"><div class="wrap">
+<section id="gemini"><div class="wrap">
+<div class="center">
+<span class="eyebrow">Ta clé Gemini</span>
+<h2 class="section-title">L'IA de Google, avec ton propre compte.</h2>
+<p class="section-lead">Kaloé utilise Gemini, l'IA de Google, pour créer tes photos et rédiger tes annonces. Tu la branches avec ta clé personnelle : tu paies seulement ce que tu utilises, directement à Google.</p>
+</div>
+<div class="gemini">
+<div class="card">
+<h3>Combien ça coûte ?</h3>
+<ul class="costs">
+<li><span class="badge">${icon("gift", 20)}</span><span><strong>Gratuit pour démarrer</strong><span class="muted">À l'ouverture d'un compte de facturation, Google offre un crédit d'essai aux nouveaux comptes (selon ses conditions du moment) : de quoi faire tes premiers articles sans rien payer.</span></span></li>
+<li><span class="badge">${icon("coins", 20)}</span><span><strong>Ensuite, à l'usage</strong><span class="muted">Quelques centimes par photo générée, facturés par Google sur ton compte. Pas d'abonnement Google à prendre.</span></span></li>
+<li><span class="badge">${icon("gauge", 20)}</span><span><strong>Tu gardes la main</strong><span class="muted">Tu suis ta consommation dans ton compte Google et tu peux y régler une alerte de budget.</span></span></li>
+</ul>
+</div>
+<div class="card">
+<h3>Créer ta clé en quelques minutes</h3>
+<ol class="howto">
+<li><span>Ouvre <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> et connecte-toi avec ton compte Google.</span></li>
+<li><span>Clique sur « Créer une clé API », puis copie la clé affichée.</span></li>
+<li><span>Active la facturation de ta clé : Google demande une carte et applique d'abord le crédit offert.</span></li>
+<li><span>Au premier lancement de Kaloé, colle ta clé : l'application la vérifie et te guide pas à pas.</span></li>
+</ol>
+<p class="note">Ta clé reste sur ton PC : elle n'est jamais envoyée à Kaloé.</p>
+</div>
+</div>
+</div></section>
+
+<section id="questions" class="alt"><div class="wrap">
 <div class="center">
 <span class="eyebrow">Questions</span>
 <h2 class="section-title">Questions fréquentes</h2>
@@ -233,7 +275,7 @@ ${faq}
 </div>
 </div></section>
 
-<section class="final alt"><div class="wrap">
+<section class="final"><div class="wrap">
 <h2 class="section-title">Ta prochaine annonce en quelques minutes.</h2>
 <p class="section-lead">7 jours pour essayer, sans engagement.</p>
 <div class="actions">${ctas}</div>

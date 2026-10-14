@@ -47,7 +47,8 @@ describe("GET /", () => {
     expect(html).toContain('src="/media/kaloe.vtt"');
     expect(html).toContain('src="/media/exemple-mannequin.jpg"');
     expect(html).toContain(escapeHtml(EXAMPLE.title));
-    for (const id of ["etapes", "exemples", "tarif", "questions"]) expect(html).toContain(`id="${id}"`);
+    for (const id of ["etapes", "exemples", "tarif", "gemini", "questions"]) expect(html).toContain(`id="${id}"`);
+    expect(html).toContain('href="https://aistudio.google.com/apikey"');
     expect(html).toContain('href="/retrouver"');
     expect(html).toContain('name="viewport"');
   });
